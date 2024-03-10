@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Fictioneer Chapter Notifications
  * Description: Subscribe to chapter updates via email.
- * Version: 1.0.0
+ * Version: 0.1.0
  * Requires at least: 6.1
  * Requires PHP: 7.4
  * Author: Tetrakern
@@ -14,13 +14,52 @@
 defined( 'ABSPATH' ) OR exit;
 
 // Version
-define( 'FCNCN_VERSION', '1.0.0' );
+define( 'FCNCN_VERSION', '0.1.0' );
 
 // =======================================================================================
 // INSTALLATION
 // =======================================================================================
 
+/**
+ * Create the subscriber database table
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ */
 
+function fcncn_create_subscribers_table() {
+  global $wpdb;
+
+  if ( ! function_exists( 'dbDelta' ) ) {
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+  }
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $charset_collate = $wpdb->get_charset_collate();
+
+  // Skip if the table already exists
+  if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
+    return;
+  }
+
+  // Table creation query
+  $sql = "CREATE TABLE $table_name (
+    id INT NOT NULL AUTO_INCREMENT,
+    email VARCHAR(191) NOT NULL,
+    code VARCHAR(32) NOT NULL,
+    post_ids LONGTEXT NOT NULL,
+    confirmed TINYINT(1) NOT NULL DEFAULT 0,
+    trashed TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE (email)
+  ) $charset_collate;";
+
+  dbDelta( $sql );
+}
+register_activation_hook( __FILE__, 'fcncn_create_subscribers_table' );
 
 // =======================================================================================
 // REGISTER WITH THEME
@@ -29,7 +68,7 @@ define( 'FCNCN_VERSION', '1.0.0' );
 /**
  * Adds plugin card to theme settings plugin tab
  *
- * @since 1.0.0
+ * @since 0.1.0
  */
 
 function fcncn_settings_card() {
@@ -61,7 +100,7 @@ add_action( 'fictioneer_admin_settings_plugins', 'fcncn_settings_card' );
 /**
  * Checks for the Fictioneer (parent) theme, deactivates plugin if not found
  *
- * @since 1.0.0
+ * @since 0.1.0
  */
 
 function fcncn_check_theme() {
@@ -91,7 +130,7 @@ add_action( 'after_setup_theme', 'fcncn_check_theme' );
 /**
  * Show admin notice if plugin has been deactivated due to wrong theme
  *
- * @since 1.0.0
+ * @since 0.1.0
  */
 
 function fcncn_admin_notice_wrong_theme() {
@@ -111,7 +150,7 @@ function fcncn_admin_notice_wrong_theme() {
 /**
  * Compare installed WordPress version against version string
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @global wpdb $wp_version  Current WordPress version string.
  *
  * @param string $version   The version string to test against.
@@ -129,7 +168,7 @@ function fcncn_compare_wp_version( $version, $operator = '>=' ) {
 /**
  * Enqueue frontend scripts and styles for the plugin
  *
- * @since 1.0.0
+ * @since 0.1.0
  */
 
 function fcncn_enqueue_frontend_scripts() {
@@ -158,7 +197,7 @@ add_action( 'wp_enqueue_scripts', 'fcncn_enqueue_frontend_scripts' );
 /**
  * Enqueues styles and scripts in the admin
  *
- * @since 1.0.0
+ * @since 0.1.0
  *
  * @param string $hook_suffix  The current admin page.
  */
