@@ -247,7 +247,7 @@ function fcncn_get_subscription_button( $post_id = null ) {
     $attributes = "data-story-id='{$post_id}'";
   }
 
-  return '<button id="fcncn-modal-toggle" class="_align-left" tabindex="0" ' . $attributes . '><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcncn' ) . '</span></button>';
+  return '<button type="button" data-click-action="fcncn-open-modal" class="_align-left" tabindex="0" ' . $attributes . '><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcncn' ) . '</span></button>';
 }
 
 /**
@@ -268,6 +268,26 @@ function fcncn_filter_extend_subscribe_buttons( $buttons, $post_id ) {
   return $buttons;
 }
 add_filter( 'fictioneer_filter_subscribe_buttons', 'fcncn_filter_extend_subscribe_buttons', 20, 2 );
+
+// =======================================================================================
+// MODAL
+// =======================================================================================
+
+/**
+ * Adds subscription modal
+ *
+ * @since 0.1.0
+ */
+
+function fcncn_subscription_modal() {
+  // Start HTML ---> ?>
+  <dialog id="fcncn-subscription-modal">
+    <button data-click-action="fcncn-close-modal" autofocus>Close</button>
+    <p>This is the subscription modal!</p>
+  </dialog>
+  <?php // <--- End HTML
+}
+add_action( 'fictioneer_modals', 'fcncn_subscription_modal', 10 );
 
 // =======================================================================================
 // SUBSCRIBERS
