@@ -166,7 +166,7 @@ function fcncn_admin_notices() {
       $class = 'notice-error';
       break;
     case 'delete-subscriber-success':
-      $notice = sprintf( __( 'Subscriber (#%s) deleted.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $notice = sprintf( __( 'Subscriber (#%s) permanently deleted.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
       $class = 'notice-success';
       break;
     case 'delete-subscriber-failure':
@@ -190,6 +190,30 @@ function fcncn_admin_notices() {
       break;
     case 'bulk-unconfirm-subscribers-failure':
       $notice = __( 'Error. Could not unconfirm subscribers.', 'fcncn' );
+      $class = 'notice-error';
+      break;
+    case 'bulk-trash-subscribers-success':
+      $notice = sprintf( __( 'Trashed %s subscribers.', 'fcncn' ), $message ?: '0' );
+      $class = 'notice-success';
+      break;
+    case 'bulk-trash-subscribers-failure':
+      $notice = __( 'Error. Could not trash subscribers.', 'fcncn' );
+      $class = 'notice-error';
+      break;
+    case 'bulk-restore-subscribers-success':
+      $notice = sprintf( __( 'Restored %s subscribers.', 'fcncn' ), $message ?: '0' );
+      $class = 'notice-success';
+      break;
+    case 'bulk-restore-subscribers-failure':
+      $notice = __( 'Error. Could not restore subscribers.', 'fcncn' );
+      $class = 'notice-error';
+      break;
+    case 'bulk-delete-subscribers-success':
+      $notice = sprintf( __( 'Permanently deleted %s subscribers.', 'fcncn' ), $message ?: '0' );
+      $class = 'notice-success';
+      break;
+    case 'bulk-delete-subscribers-failure':
+      $notice = __( 'Error. Could not delete subscribers.', 'fcncn' );
       $class = 'notice-error';
       break;
     case 'confirmation-email-resent':

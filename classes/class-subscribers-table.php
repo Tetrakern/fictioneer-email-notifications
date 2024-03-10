@@ -641,6 +641,45 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
         }
       }
 
+      // Trash all subscribers
+      if ( ! empty( $collection ) && $_POST['action'] === 'trash_all_subscribers' ) {
+        $query = "UPDATE $table_name SET trashed = 1 WHERE id IN ($collection)";
+        $result = $wpdb->query( $query );
+
+        if ( $result !== false ) {
+          $query_args['fcncn-notice'] = 'bulk-trash-subscribers-success';
+          $query_args['fcncn-message'] = $result;
+        } else {
+          $query_args['fcncn-notice'] = 'bulk-trash-subscribers-failure';
+        }
+      }
+
+      // Restore all subscribers
+      if ( ! empty( $collection ) && $_POST['action'] === 'restore_all_subscribers' ) {
+        $query = "UPDATE $table_name SET trashed = 0 WHERE id IN ($collection)";
+        $result = $wpdb->query( $query );
+
+        if ( $result !== false ) {
+          $query_args['fcncn-notice'] = 'bulk-restore-subscribers-success';
+          $query_args['fcncn-message'] = $result;
+        } else {
+          $query_args['fcncn-notice'] = 'bulk-restore-subscribers-failure';
+        }
+      }
+
+      // Delete all subscribers
+      if ( ! empty( $collection ) && $_POST['action'] === 'delete_all_subscribers' ) {
+        $query = "DELETE FROM $table_name WHERE id IN ($collection) AND trashed = 1";
+        $result = $wpdb->query( $query );
+
+        if ( $result !== false ) {
+          $query_args['fcncn-notice'] = 'bulk-delete-subscribers-success';
+          $query_args['fcncn-message'] = $result;
+        } else {
+          $query_args['fcncn-notice'] = 'bulk-delete-subscribers-failure';
+        }
+      }
+
       // Redirect with notice (prevents multi-submit)
       wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
       exit();
