@@ -47,6 +47,58 @@ function fcncn_replace_placeholders( $string, $extra = [] ) {
 }
 
 // =======================================================================================
+// EMAILS
+// =======================================================================================
+
+/**
+ * Get the activation link for the subscriber
+ *
+ * @since 0.1.0
+ *
+ * @param string $email  Email address of the subscriber.
+ * @param string $code   Code of the subscriber.
+ *
+ * @return string The activation link.
+ */
+
+function fcncn_get_activation_link( $email, $code ) {
+  // Setup
+  $query_args = array(
+    'fcncn' => 1,
+    'action' => 'activation',
+    'email' => urlencode( $email ),
+    'code' => urlencode( $code )
+  );
+
+  // Return link
+  return add_query_arg( $query_args, home_url() );
+}
+
+/**
+ * Get the unsubscribe link for the subscriber
+ *
+ * @since 0.1.0
+ *
+ * @param string $email  The email address of the subscriber.
+ * @param string $code   The code associated with the subscriber.
+ *
+ * @return string The unsubscribe link.
+ */
+
+function fcncn_get_unsubscribe_link( $email, $code ) {
+  // Setup
+  $query_args = array(
+    'fcnes' => 1,
+    'action' => 'unsubscribe',
+    'email' => urlencode( $email ),
+    'code' => urlencode( $code )
+  );
+
+  // Return link
+  return add_query_arg( $query_args, home_url() );
+}
+
+// =======================================================================================
 // SUBSCRIBERS
 // =======================================================================================
 

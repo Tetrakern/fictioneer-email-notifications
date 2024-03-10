@@ -387,8 +387,8 @@ function fcncn_send_transactional_email( $args, $subject, $body ) {
 
   // Prepare replacements
   $replacements = array(
-    '{{activation_link}}' => 'foobar',
-    '{{unsubscribe_link}}' => 'foobar',
+    '{{activation_link}}' => esc_url( fcncn_get_activation_link( $subscriber_email, $subscriber_code ) ),
+    '{{unsubscribe_link}}' => esc_url( fcncn_get_unsubscribe_link( $subscriber_email, $subscriber_code ) ),
     '{{email}}' => $subscriber_email,
     '{{code}}' => $subscriber_code
   );
