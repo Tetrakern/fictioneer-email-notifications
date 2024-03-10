@@ -334,6 +334,42 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
   }
 
   /**
+   * Retrieve the bulk actions available for the table
+   *
+   * @since 0.1.0
+   *
+   * @return array An associative array of bulk actions. The keys represent the actions,
+   *               and the values represent the labels.
+   */
+
+  function get_bulk_actions() {
+    // Add actions depending on view
+    switch ( $this->view ) {
+      case 'confirmed':
+        return array(
+          'unconfirm_all_subscribers' => __( 'Unconfirm', 'fcncn' ),
+          'trash_all_subscribers' => __( 'Move to Trash', 'fcncn' )
+        );
+      case 'pending':
+        return array(
+          'confirm_all_subscribers' => __( 'Confirm', 'fcncn' ),
+          'trash_all_subscribers' => __( 'Move to Trash', 'fcncn' )
+        );
+      case 'trash':
+        return array(
+          'restore_all_subscribers' => __( 'Restore', 'fcncn' ),
+          'delete_all_subscribers' => __( 'Delete Permanently', 'fcncn' )
+        );
+      default:
+        return array(
+          'confirm_all_subscribers' => __( 'Confirm', 'fcncn' ),
+          'unconfirm_all_subscribers' => __( 'Unconfirm', 'fcncn' ),
+          'trash_all_subscribers' => __( 'Move to Trash', 'fcncn' )
+        );
+    }
+  }
+
+  /**
    * Render extra content in the table navigation section
    *
    * @since 0.1.0
@@ -568,6 +604,16 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
 
         $query_args['fcncn-message'] = $id;
       }
+
+      // Redirect with notice (prevents multi-submit)
+      wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
+      exit();
+    }
+
+    // POST actions
+    if ( isset( $_POST['action'] ) && empty( $_POST['s'] ?? 0 ) ) {
+      $ids = array_map( 'absint', $_POST['subscribers'] ?? [] );
+      $collection = implode( ',', $ids );
 
       // Redirect with notice (prevents multi-submit)
       wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
