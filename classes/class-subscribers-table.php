@@ -615,6 +615,32 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
       $ids = array_map( 'absint', $_POST['subscribers'] ?? [] );
       $collection = implode( ',', $ids );
 
+      // Confirm all subscribers
+      if ( ! empty( $collection ) && $_POST['action'] === 'confirm_all_subscribers' ) {
+        $query = "UPDATE $table_name SET confirmed = 1 WHERE id IN ($collection) AND trashed = 0";
+        $result = $wpdb->query( $query );
+
+        if ( $result !== false ) {
+          $query_args['fcncn-notice'] = 'bulk-confirm-subscribers-success';
+          $query_args['fcncn-message'] = $result;
+        } else {
+          $query_args['fcncn-notice'] = 'bulk-confirm-subscribers-failure';
+        }
+      }
+
+      // Unconfirm all subscribers
+      if ( ! empty( $collection ) && $_POST['action'] === 'unconfirm_all_subscribers' ) {
+        $query = "UPDATE $table_name SET confirmed = 0 WHERE id IN ($collection) AND trashed = 0";
+        $result = $wpdb->query( $query );
+
+        if ( $result !== false ) {
+          $query_args['fcncn-notice'] = 'bulk-unconfirm-subscribers-success';
+          $query_args['fcncn-message'] = $result;
+        } else {
+          $query_args['fcncn-notice'] = 'bulk-unconfirm-subscribers-failure';
+        }
+      }
+
       // Redirect with notice (prevents multi-submit)
       wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
       exit();

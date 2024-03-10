@@ -176,6 +176,22 @@ function fcncn_admin_notices() {
       );
       $class = 'notice-error';
       break;
+    case 'bulk-confirm-subscribers-success':
+      $notice = sprintf( __( 'Confirmed %s subscribers.', 'fcncn' ), $message ?: '0' );
+      $class = 'notice-success';
+      break;
+    case 'bulk-confirm-subscribers-failure':
+      $notice = __( 'Error. Could not confirm subscribers.', 'fcncn' );
+      $class = 'notice-error';
+      break;
+    case 'bulk-unconfirm-subscribers-success':
+      $notice = sprintf( __( 'Unconfirmed %s subscribers.', 'fcncn' ), $message ?: '0' );
+      $class = 'notice-success';
+      break;
+    case 'bulk-unconfirm-subscribers-failure':
+      $notice = __( 'Error. Could not unconfirm subscribers.', 'fcncn' );
+      $class = 'notice-error';
+      break;
     case 'confirmation-email-resent':
       $notice = sprintf( __( 'Confirmation email resent to subscriber (#%s).', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
       $class = 'notice-success';
