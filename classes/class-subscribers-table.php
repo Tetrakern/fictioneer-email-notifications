@@ -367,6 +367,79 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
   }
 
   /**
+   * Display the views for filtering the table
+   *
+   * @since Fictioneer Email Subscriptions 1.0.0
+   */
+
+  function display_views() {
+    // Guard
+    if ( ! current_user_can( 'manage_options' ) ) {
+      echo '';
+      return;
+    }
+
+    // Setup
+    $views = [];
+    $current = 'all';
+
+    // Current
+    if ( ! empty( $this->view ) ) {
+      switch ( $this->view ) {
+        case 'confirmed':
+          $current = 'confirmed';
+          break;
+        case 'pending':
+          $current = 'pending';
+          break;
+        case 'trash':
+          $current = 'trash';
+          break;
+        default:
+          $current = 'all';
+      }
+    }
+
+    // Build views HTML
+    $views['all'] = sprintf(
+      '<li class="all"><a href="%s" class="%s">%s</a></li>',
+      add_query_arg( ['view' => 'all'], $this->uri ),
+      $current === 'all' ? 'current' : '',
+      sprintf( __( 'All <span class="count">(%s)</span>', 'fcncn' ), $this->all_count )
+    );
+
+    if ( $this->confirmed_count > 0 ) {
+      $views['confirmed'] = sprintf(
+        '<li class="confirmed"><a href="%s" class="%s">%s</a></li>',
+        add_query_arg( ['view' => 'confirmed'], $this->uri ),
+        $current === 'confirmed' ? 'current' : '',
+        sprintf( __( 'Confirmed <span class="count">(%s)</span>', 'fcncn' ), $this->confirmed_count )
+      );
+    }
+
+    if ( $this->pending_count > 0 ) {
+      $views['pending'] = sprintf(
+        '<li class="pending"><a href="%s" class="%s">%s</a></li>',
+        add_query_arg( ['view' => 'pending'], $this->uri ),
+        $current === 'pending' ? 'current' : '',
+        sprintf( __( 'Pending <span class="count">(%s)</span>', 'fcncn' ), $this->pending_count )
+      );
+    }
+
+    if ( $this->trashed_count > 0 ) {
+      $views['trash'] = sprintf(
+        '<li class="trash"><a href="%s" class="%s">%s</a></li>',
+        add_query_arg( ['view' => 'trash'], $this->uri ),
+        $current === 'trash' ? 'current' : '',
+        sprintf( __( 'Trash <span class="count">(%s)</span>', 'fcncn' ), $this->trashed_count )
+      );
+    }
+
+    // Output final HTML
+    echo '<ul class="subsubsub">' . implode( ' | ', $views ) . '</ul>';
+  }
+
+  /**
    * Reorder the table rows based on the specified column and order
    *
    * @since 0.1.0
