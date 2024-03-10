@@ -20,6 +20,9 @@ define( 'FCNCN_VERSION', '0.1.0' );
 // INCLUDES & REQUIRES
 // =======================================================================================
 
+require_once plugin_dir_path( __FILE__ ) . 'utility.php';
+require_once plugin_dir_path( __FILE__ ) . 'actions.php';
+
 if ( is_admin() ) {
   require_once plugin_dir_path( __FILE__ ) . 'admin.php';
 }
