@@ -394,6 +394,19 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
       );
     }
 
+    // CSV export
+    if ( $this->view !== 'trash' && $this->all_count > 0 ) {
+      $actions[] = sprintf(
+        '<a href="%s" class="button action">%s</a>',
+        wp_nonce_url(
+          admin_url( 'admin-post.php?action=fcncn_export_subscribers_csv' ),
+          'fcncn-export-csv',
+          'fcncn-nonce'
+        ),
+        __( 'Export CSV', 'fcncn' )
+      );
+    }
+
     // Output
     if ( ! empty( $actions ) ) {
       // Start HTML ---> ?>

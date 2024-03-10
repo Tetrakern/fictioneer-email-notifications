@@ -100,3 +100,71 @@ function fcncn_empty_trashed_subscribers() {
   exit();
 }
 add_action( 'admin_post_fcncn_empty_trashed_subscribers', 'fcncn_empty_trashed_subscribers' );
+
+/**
+ * Export subscribers' data as a CSV file
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ */
+
+function fcncn_export_subscribers_csv() {
+  global $wpdb;
+
+  // Verify request
+  if ( ! isset( $_GET['fcncn-nonce'] ) || ! check_admin_referer( 'fcncn-export-csv', 'fcncn-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed.', 'fcncn' ) );
+  }
+
+  // Guard
+  if ( ! current_user_can( 'administrator' ) || ! is_admin() ) {
+    wp_die( __( 'Insufficient permissions.', 'fcncn' ) );
+  }
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $subscribers = $wpdb->get_results( "SELECT * FROM $table_name", ARRAY_A );
+
+  if ( ! empty( $subscribers ) ) {
+    // Header row
+    $header_row = array(
+      'ID',
+      'Email',
+      'Confirmed',
+      'Code',
+      'Created At',
+      'Updated At'
+    );
+
+    // Item rows
+    $rows = [];
+
+    foreach ( $subscribers as $subscriber ) {
+      $rows[] = array(
+        $subscriber['id'],
+        $subscriber['email'],
+        $subscriber['confirmed'],
+        $subscriber['code'],
+        $subscriber['created_at'],
+        $subscriber['updated_at']
+      );
+    }
+
+    // Build CSV
+    $csv_content = implode( ',', $header_row ) . "\n";
+
+    foreach ( $rows as $row ) {
+      $csv_content .= implode( ',', $row ) . "\n";
+    }
+
+    // Prepare download
+    header( 'Content-Type: text/csv' );
+    header( 'Content-Disposition: attachment; filename="fcncn-subscribers_' . date( 'Y-m-d_H-i-s', time() ) . '.csv"' );
+
+    echo $csv_content;
+
+    // Terminate
+    exit();
+  }
+}
+add_action( 'admin_post_fcncn_export_subscribers_csv', 'fcncn_export_subscribers_csv' );
