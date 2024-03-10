@@ -204,6 +204,21 @@ function fcncn_enqueue_frontend_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'fcncn_enqueue_frontend_scripts' );
 
+/**
+ * Add removable query args (frontend only)
+ *
+ * @since 0.1.0
+ *
+ * @param array $args  Array of removable query arguments.
+ *
+ * @return array Extended list of query args.
+ */
+
+function fcncn_add_removable_frontend_query_args( $args ) {
+  return array_merge( $args, ['fcncn-notice', 'fcncn-message'] );
+}
+add_filter( 'fictioneer_filter_removable_query_args', 'fcncn_add_removable_frontend_query_args' );
+
 // =======================================================================================
 // SUBSCRIBERS
 // =======================================================================================
@@ -292,6 +307,77 @@ function fcncn_add_subscriber( $email, $args = [] ) {
   // Return ID of the subscriber or false
   return $subscriber_id;
 }
+
+/**
+ * Activate the subscriber based on the provided email and code
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param string $email  Email address of the subscriber.
+ * @param string $code   Code of the subscriber.
+ *
+ * @return boolean Whether the activation was successful or not.
+ */
+
+function fcncn_activate_subscriber( $email, $code ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $email = sanitize_email( $email );
+  $code = sanitize_text_field( $code );
+
+  // Update confirmation status (the WHERE clause doubles as validation)
+  $result = $wpdb->update(
+    $table_name,
+    array( 'confirmed' => 1 ),
+    array( 'email' => $email, 'code' => $code ),
+    array( '%d' ),
+    array( '%s', '%s' )
+  );
+
+  // Return success/failure
+  return (bool) $result;
+}
+
+/**
+ * Handle the activation link
+ *
+ * @since 0.1.0
+ */
+
+function fcncn_handle_activation_link() {
+  // Check URI
+  if ( ! isset( $_GET['fcncn'], $_GET['action'], $_GET['email'], $_GET['code'] ) || $_GET['action'] !== 'activation' ) {
+    return;
+  }
+
+  // Setup
+  $email = urldecode( $_GET['email'] ?? '' );
+  $code = urldecode( $_GET['code'] ?? '' );
+
+  // Secondary check
+  if ( empty( $email ) || empty( $code ) ) {
+    return;
+  }
+
+  // Try to activate subscriber
+  $result = fcncn_activate_subscriber( $email, $code );
+
+  // Check result and redirect...
+  if ( $result ) {
+    $notice = __( 'Subscription has been confirmed.', 'fcncn' );
+    wp_safe_redirect( add_query_arg( array( 'fictioneer-notice' => $notice, 'success' => 1 ), home_url() ) );
+  } else {
+    $notice = __( 'Subscription not found or already confirmed.', 'fcncn' );
+    wp_safe_redirect( add_query_arg( array( 'fictioneer-notice' => $notice, 'failure' => 1 ), home_url() ) );
+  }
+
+  // Terminate
+  exit;
+}
+add_action( 'template_redirect', 'fcncn_handle_activation_link' );
 
 // =======================================================================================
 // EMAILS
