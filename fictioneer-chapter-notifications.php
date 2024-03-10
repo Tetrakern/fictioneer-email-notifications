@@ -247,7 +247,7 @@ function fcncn_get_subscription_button( $post_id = null ) {
     $attributes = "data-story-id='{$post_id}'";
   }
 
-  return '<button type="button" data-click-action="fcncn-open-modal" class="_align-left" tabindex="0" ' . $attributes . '><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcncn' ) . '</span></button>';
+  return '<button type="button" data-click-target="#fcncn-subscription-modal" data-click-action="open-dialog-modal" class="_align-left" tabindex="0" ' . $attributes . '><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcncn' ) . '</span></button>';
 }
 
 /**
@@ -281,9 +281,40 @@ add_filter( 'fictioneer_filter_subscribe_buttons', 'fcncn_filter_extend_subscrib
 
 function fcncn_subscription_modal() {
   // Start HTML ---> ?>
-  <dialog id="fcncn-subscription-modal">
-    <button data-click-action="fcncn-close-modal" autofocus>Close</button>
-    <p>This is the subscription modal!</p>
+  <dialog id="fcncn-subscription-modal" class="dialog-modal fcncn-dialog-modal" data-nosnippet>
+
+    <button class="dialog-modal__close" aria-label="<?php esc_attr_e( 'Close modal', 'fictioneer' ); ?>" data-click-action="close-dialog-modal" autofocus><?php fictioneer_icon( 'fa-xmark' ); ?></button>
+
+    <h4 class="dialog-modal__header"><?php _e( 'Subscription', 'fcncn' ); ?></h4>
+
+    <form method="post" id="fcncn-subscription-form" class="dialog-modal__row">
+
+      <div class="fcncn-dialog-modal__auth-mode" data-target="auth-mode" hidden>
+        <p class="dialog-modal__description"><?php
+          _e( 'Enter your email address and code (found in all emails) to edit your subscription, or <button class="fcncn-inline-button" data-click-action="submit-mode">go back</button> to subscribe with a new email address.', 'fcncn' );
+        ?></p>
+        <input type="email" name="auth-email" id="fcncn-modal-auth-email" class="fcncn-auth-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcncn' ); ?>" value="" autocomplete="off" maxlength="191">
+        <div class="fcncn-dialog-modal__input-button-pair">
+          <input type="text" name="auth-code" id="fcncn-modal-auth-code" class="fcncn-auth-code" placeholder="<?php esc_attr_e( 'Code', 'fcncn' ); ?>" value="" autocomplete="off" maxlength="191">
+          <button type="button" id="fcnes-modal-auth-button" class="button fcncn-button"><?php _e( 'Edit', 'fcncn' ); ?></button>
+        </div>
+      </div>
+
+      <div class="fcncn-dialog-modal__submit-mode" data-target="submit-mode">
+
+        <p class="dialog-modal__description"><?php
+          _e( 'Receive email notifications about new chapters on the site. You can <button class="fcncn-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcncn' );
+        ?></p>
+
+        <div class="fcncn-dialog-modal__input-button-pair">
+          <input type="email" name="email" id="fcncn-modal-submit-email" class="fcncn-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcncn' ); ?>" value="" autocomplete="off" maxlength="191" required>
+          <button type="button" id="fcnes-modal-submit-button" class="button fcncn-button"><?php _e( 'Subscribe', 'fcncn' ); ?></button>
+        </div>
+
+      </div>
+
+    </form>
+
   </dialog>
   <?php // <--- End HTML
 }

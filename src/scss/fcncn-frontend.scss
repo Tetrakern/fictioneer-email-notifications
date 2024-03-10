@@ -1,0 +1,38 @@
+.fcncn-dialog-modal {
+  --modal-width: 600px;
+
+  p {
+    &:not(:last-child) {
+      margin-bottom: .75em;
+    }
+  }
+
+  &__input-button-pair {
+    display: flex;
+    gap: 3px;
+
+    input {
+      flex: 1 1 auto;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    button {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+.fcncn-inline-button {
+  color: var(--primary-500);
+  font-weight: var(--font-weight-medium);
+
+  &:hover {
+    color: var(--primary-400);
+  }
+}
+
+.fcncn-auth-email {
+  margin-bottom: 12px;
+}
