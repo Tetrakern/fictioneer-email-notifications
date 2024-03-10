@@ -234,10 +234,20 @@ add_filter( 'fictioneer_filter_removable_query_args', 'fcncn_add_removable_front
  * Returns HTML for the subscription button
  *
  * @since 0.1.0
+ *
+ * @param int|null $post_id  Optional. The post ID to subscribe to.
  */
 
-function fcncn_get_subscription_button() {
-  return '<button id="fcncn-modal-toggle" class="_align-left" tabindex="0"><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcncn' ) . '</span></button>';
+function fcncn_get_subscription_button( $post_id = null ) {
+  // Setup
+  $attributes = '';
+
+  // Story ID
+  if ( $post_id && get_post_type( $post_id ) === 'fcn_story' ) {
+    $attributes = "data-story-id='{$post_id}'";
+  }
+
+  return '<button id="fcncn-modal-toggle" class="_align-left" tabindex="0" ' . $attributes . '><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcncn' ) . '</span></button>';
 }
 
 /**
@@ -250,14 +260,14 @@ function fcncn_get_subscription_button() {
  * @return array Updated array of subscribe buttons.
  */
 
-function fcncn_filter_extend_subscribe_buttons( $buttons ) {
+function fcncn_filter_extend_subscribe_buttons( $buttons, $post_id ) {
   // Add to first place
-  array_splice( $buttons, 0, 0, fcncn_get_subscription_button() );
+  array_splice( $buttons, 0, 0, fcncn_get_subscription_button( $post_id ) );
 
   // Continue filter
   return $buttons;
 }
-add_filter( 'fictioneer_filter_subscribe_buttons', 'fcncn_filter_extend_subscribe_buttons', 20 );
+add_filter( 'fictioneer_filter_subscribe_buttons', 'fcncn_filter_extend_subscribe_buttons', 20, 2 );
 
 // =======================================================================================
 // SUBSCRIBERS
