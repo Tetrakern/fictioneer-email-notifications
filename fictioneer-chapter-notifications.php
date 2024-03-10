@@ -328,10 +328,104 @@ function fcncn_add_subscriber( $email, $args = [] ) {
     $subscriber_id = $wpdb->insert_id;
 
     if ( ! $args['confirmed'] ) {
-      // Send activation email
+      fcncn_send_confirmation_email(
+        array(
+          'email' => $email,
+          'code' => $args['code']
+        )
+      );
     }
   }
 
   // Return ID of the subscriber or false
   return $subscriber_id;
+}
+
+// =======================================================================================
+// EMAILS
+// =======================================================================================
+
+/**
+ * Sends a transactional email to a subscriber
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param array $args {
+ *   Array of arguments.
+ *
+ *   @type int    $id      ID of the subscriber.
+ *   @type string $email   Email address of the subscriber.
+ *   @type string $code    Code of the subscriber.
+ * }
+ * @param string $subject  Subject of the email.
+ * @param string $body     Body of the email.
+ */
+
+function fcncn_send_transactional_email( $args, $subject, $body ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $from = 'no-reply@foobar.de';
+  $name = get_bloginfo( 'name' );
+  $subscriber_email = $args['email'] ?? 0;
+  $subscriber_code = $args['code'] ?? 0;
+
+  // Query database
+  if ( ( $args['id'] ?? 0 ) && ( ! $subscriber_email || ! $subscriber_code )  ) {
+    $query = $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $args['id'] );
+    $subscriber = $wpdb->get_row( $query, ARRAY_A );
+    $subscriber_email = $subscriber['email'];
+    $subscriber_code = $subscriber['code'];
+  }
+
+  // Guard
+  if ( empty( $subscriber_email ) || empty( $subscriber_code ) ) {
+    return;
+  }
+
+  // Prepare replacements
+  $replacements = array(
+    '{{activation_link}}' => 'foobar',
+    '{{unsubscribe_link}}' => 'foobar',
+    '{{email}}' => $subscriber_email,
+    '{{code}}' => $subscriber_code
+  );
+
+  // Headers
+  $headers = array(
+    'Content-Type: text/html; charset=UTF-8',
+    'From: ' . trim( $name )  . ' <'  . trim( $from ) . '>'
+  );
+
+  // Send the email
+  wp_mail(
+    $subscriber_email,
+    fcncn_replace_placeholders( $subject ),
+    fcncn_replace_placeholders( $body, $replacements ),
+    $headers
+  );
+}
+
+/**
+ * Sends a confirmation email to a subscriber
+ *
+ * @since 0.1.0
+ *
+ * @param array $args {
+ *   Array of optional arguments. Passed on to next function.
+ *
+ *   @type string $email  Email address of the subscriber.
+ *   @type string $code   Code of the subscriber.
+ * }
+ */
+
+function fcncn_send_confirmation_email( $args ) {
+  // Setup
+  $subject = 'Please confirm your subscription';
+  $body = __( '<p>Thank you for subscribing to <a href="{{site_link}}" target="_blank">{{site_name}}</a>. Please click the following link within 24 hours to confirm your subscription: <a href="{{activation_link}}">Activate Subscription</a>.<br><br>Your edit code is <strong>{{code}}</strong>, which will also be included in any future emails.<br><br>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24-36 hours (depending on the worker schedule).</p>', 'fcncn' );
+
+  // Send
+  fcncn_send_transactional_email( $args, $subject, $body );
 }
