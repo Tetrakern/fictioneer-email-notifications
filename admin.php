@@ -23,8 +23,8 @@ require_once( plugin_dir_path( __FILE__ ) . 'classes/class-subscribers-table.php
  */
 
 function fcncn_enqueue_admin_scripts( $hook_suffix ) {
-  // Only on the theme's plugin settings tab
-  if ( $hook_suffix !== 'fictioneer_page_fictioneer_plugins' ) {
+  // Only on the plugin's admin pages
+  if ( strpos( $_GET['page'] ?? '', 'fcncn-' ) === false ) {
     return;
   }
 
@@ -32,14 +32,14 @@ function fcncn_enqueue_admin_scripts( $hook_suffix ) {
   wp_enqueue_style(
     'fcncn-admin-styles',
     plugin_dir_url( __FILE__ ) . '/css/fcncn-admin.css',
-    ['fictioneer-admin-panel'],
+    [],
     FCNCN_VERSION
   );
 
   // Scripts
   wp_enqueue_script(
     'fcncn-admin-scripts',
-    plugin_dir_url( __FILE__ ) . '/js/fcncn-admin.js',
+    plugin_dir_url( __FILE__ ) . '/js/fcncn-admin.min.js',
     ['fictioneer-utility-scripts'],
     FCNCN_VERSION,
     true
@@ -189,6 +189,40 @@ function fcncn_subscribers_page() {
     <hr class="wp-header-end">
 
     <div class="fcncn-settings__content">
+
+      <div class="fcncn-settings__columns">
+
+        <div class="fcncn-box">
+
+          <div class="fcncn-box__header">
+            <h2><?php _e( 'Add Subscriber', 'fcncn' ); ?></h2>
+          </div>
+
+          <div class="fcncn-box__body">
+            <div class="fcncn-box__row">
+              <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcncn_submit_subscriber' ); ?>">
+
+                <?php wp_nonce_field( 'submit_subscriber', 'fcncn-nonce' ); ?>
+
+                <div class="fcncn-input-wrap">
+                  <input type="email" name="email" id="fcncn-submit-subscriber-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcncn' ); ?>" required>
+                </div>
+
+                <div class="fcncn-checkbox-wrap">
+                  <input type="checkbox" name="confirmed" id="fcncn-submit-subscriber-confirm" value="1">
+                  <label for="fcncn-submit-subscriber-confirm"><?php _e( 'Confirmed', 'fcncn' ); ?></label>
+                </div>
+
+                <div class="fcncn-submit-wrap">
+                  <button type="submit" class="button button-primary"><?php _e( 'Submit Subscriber', 'fcncn' ); ?></button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
 
       <div class="fcncn-settings__table">
         <?php $subscribers_table->display_views(); ?>

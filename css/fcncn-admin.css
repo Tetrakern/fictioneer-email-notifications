@@ -1,1 +1,1 @@
-
+.fcncn-settings__content{display:grid;grid-gap:40px}.fcncn-settings__columns{display:grid;grid-gap:20px;grid-template-columns:repeat(auto-fit, minmax(300px, 600px))}.fcncn-box{border:1px solid #c3c4c7;box-shadow:0 1px 1px rgba(0,0,0,.04);background:#fff}.fcncn-box__header{border-bottom:1px solid #c3c4c7}.fcncn-box__header :is(h1,h2,h3,h4,h5,h6){font-size:14px;line-height:1.4;padding:8px 12px;margin:0}.fcncn-box__body{display:flex;flex-direction:column;gap:20px;padding:12px}
