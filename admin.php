@@ -143,6 +143,28 @@ function fcncn_admin_notices() {
       );
       $class = 'notice-error';
       break;
+    case 'trash-subscriber-success':
+      $notice = sprintf( __( 'Subscriber (#%s) trashed.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $class = 'notice-success';
+      break;
+    case 'trash-subscriber-failure':
+      $notice = sprintf(
+        __( 'Error. Subscriber (#%s) could not be trashed.', 'fcncn' ),
+        $message ?: __( 'n/a', 'fcncn' )
+      );
+      $class = 'notice-error';
+      break;
+    case 'restore-subscriber-success':
+      $notice = sprintf( __( 'Subscriber (#%s) restored.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $class = 'notice-success';
+      break;
+    case 'restore-subscriber-failure':
+      $notice = sprintf(
+        __( 'Error. Subscriber (#%s) could not be restored.', 'fcncn' ),
+        $message ?: __( 'n/a', 'fcncn' )
+      );
+      $class = 'notice-error';
+      break;
     case 'confirmation-email-resent':
       $notice = sprintf( __( 'Confirmation email resent to subscriber (#%s).', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
       $class = 'notice-success';
