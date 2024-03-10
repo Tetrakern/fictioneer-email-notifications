@@ -63,3 +63,40 @@ function fcncn_submit_subscriber() {
   exit();
 }
 add_action( 'admin_post_fcncn_submit_subscriber', 'fcncn_submit_subscriber' );
+
+/**
+ * Empty trashed subscribers
+ *
+ * @since 0.10
+ * @global wpdb $wpdb  The WordPress database object.
+ */
+
+function fcncn_empty_trashed_subscribers() {
+  global $wpdb;
+
+  // Verify request
+  if ( ! isset( $_GET['fcncn-nonce'] ) || ! check_admin_referer( 'fcncn-empty-trash', 'fcncn-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed.', 'fcncn' ) );
+  }
+
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) || ! is_admin() ) {
+    wp_die( __( 'Insufficient permissions.', 'fcncn' ) );
+  }
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $wpdb->query( "DELETE FROM $table_name WHERE trashed = 1" );
+
+  // Redirect
+  wp_safe_redirect(
+    add_query_arg(
+      array( 'fcncn-notice' => 'emptied-trashed-subscribers' ),
+      admin_url( 'admin.php?page=fcncn-subscribers' )
+    )
+  );
+
+  // Terminate
+  exit();
+}
+add_action( 'admin_post_fcncn_empty_trashed_subscribers', 'fcncn_empty_trashed_subscribers' );

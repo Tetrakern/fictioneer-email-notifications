@@ -220,6 +220,10 @@ function fcncn_admin_notices() {
       $notice = sprintf( __( 'Confirmation email resent to subscriber (#%s).', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
       $class = 'notice-success';
       break;
+    case 'emptied-trashed-subscribers':
+      $notice = __( 'Emptied trash.', 'fcncn' );
+      $class = 'notice-success';
+      break;
   }
 
   // Render notice
