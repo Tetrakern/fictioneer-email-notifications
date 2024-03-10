@@ -67,6 +67,21 @@ function fcncn_admin_footer_text( $default ) {
 }
 add_filter( 'admin_footer_text', 'fcncn_admin_footer_text' );
 
+/**
+ * Adds removable query arguments (admin only)
+ *
+ * @since 0.1.0
+ *
+ * @param array $args  Array of removable query arguments.
+ *
+ * @return array Extended list of query args.
+ */
+
+function fcncn_add_removable_admin_args( $args ) {
+  return array_merge( $args, ['fcncn-notice', 'fcncn-message'] );
+}
+add_filter( 'removable_query_args', 'fcncn_add_removable_admin_args' );
+
 // =======================================================================================
 // ADMIN NOTIFICATIONS PAGE
 // =======================================================================================
