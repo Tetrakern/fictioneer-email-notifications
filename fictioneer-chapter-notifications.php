@@ -349,13 +349,16 @@ function fcncn_activate_subscriber( $email, $code ) {
 
 function fcncn_handle_activation_link() {
   // Check URI
-  if ( ! isset( $_GET['fcncn'], $_GET['action'], $_GET['email'], $_GET['code'] ) || $_GET['action'] !== 'activation' ) {
+  if (
+    ! isset( $_GET['fcncn'], $_GET['fcnes-action'], $_GET['fcnes-email'], $_GET['fcnes-code'] ) ||
+    $_GET['fcnes-action'] !== 'activation'
+  ) {
     return;
   }
 
   // Setup
-  $email = urldecode( $_GET['email'] ?? '' );
-  $code = urldecode( $_GET['code'] ?? '' );
+  $email = urldecode( $_GET['fcnes-email'] ?? '' );
+  $code = urldecode( $_GET['fcnes-code'] ?? '' );
 
   // Secondary check
   if ( empty( $email ) || empty( $code ) ) {
