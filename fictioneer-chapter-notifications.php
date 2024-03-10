@@ -17,6 +17,14 @@ defined( 'ABSPATH' ) OR exit;
 define( 'FCNCN_VERSION', '0.1.0' );
 
 // =======================================================================================
+// INCLUDES & REQUIRES
+// =======================================================================================
+
+if ( is_admin() ) {
+  require_once plugin_dir_path( __FILE__ ) . 'admin.php';
+}
+
+// =======================================================================================
 // INSTALLATION
 // =======================================================================================
 
@@ -193,36 +201,3 @@ function fcncn_enqueue_frontend_scripts() {
   );
 }
 add_action( 'wp_enqueue_scripts', 'fcncn_enqueue_frontend_scripts' );
-
-/**
- * Enqueues styles and scripts in the admin
- *
- * @since 0.1.0
- *
- * @param string $hook_suffix  The current admin page.
- */
-
-function fcncn_enqueue_admin_scripts( $hook_suffix ) {
-  // Only on the theme's plugin settings tab
-  if ( $hook_suffix !== 'fictioneer_page_fictioneer_plugins' ) {
-    return;
-  }
-
-  // Styles
-  wp_enqueue_style(
-    'fcncn-admin-styles',
-    plugin_dir_url( __FILE__ ) . '/css/fcncn-admin.css',
-    ['fictioneer-admin-panel'],
-    FCNCN_VERSION
-  );
-
-  // Scripts
-  wp_enqueue_script(
-    'fcncn-admin-scripts',
-    plugin_dir_url( __FILE__ ) . '/js/fcncn-admin.js',
-    ['fictioneer-utility-scripts'],
-    FCNCN_VERSION,
-    true
-  );
-}
-add_action( 'admin_enqueue_scripts', 'fcncn_enqueue_admin_scripts' );
