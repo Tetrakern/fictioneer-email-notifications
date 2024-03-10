@@ -93,10 +93,10 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
   function get_columns() {
     return array(
       'cb' => '<input type="checkbox" />',
-      'id' => __( 'ID', 'fcnes' ),
-      'email' => __( 'Email', 'fcnes' ),
-      'status' => __( 'Status', 'fcnes' ),
-      'date' => __( 'Date', 'fcnes' )
+      'id' => __( 'ID', 'fcncn' ),
+      'email' => __( 'Email', 'fcncn' ),
+      'status' => __( 'Status', 'fcncn' ),
+      'date' => __( 'Date', 'fcncn' )
     );
   }
 
@@ -121,7 +121,7 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
     usort( $this->table_data, array( &$this, 'usort_reorder' ) );
 
     // Paginate (must be done after the SQL query due to appended post data)
-    $per_page = $this->get_items_per_page( 'fcnes_subscribers_per_page', 25 );
+    $per_page = $this->get_items_per_page( 'fcncn_subscribers_per_page', 25 );
     $current_page = $this->get_pagenum();
 
     $this->total_items = count( $this->table_data );
