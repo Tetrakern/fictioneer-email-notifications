@@ -40,6 +40,13 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
       'ajax' => false
     ]);
 
+    // Validate GET actions
+    if ( isset( $_GET['action'] ) ) {
+      if ( ! isset( $_GET['fcncn-nonce'] ) || ! check_admin_referer( 'fcncn-table-action', 'fcncn-nonce' ) ) {
+        wp_die( __( 'Nonce verification failed. Please try again.', 'fcncn' ) );
+      }
+    }
+
     // Initialize
     $table_name = $wpdb->prefix . 'fcncn_subscribers';
     $this->confirmed_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE confirmed = 1 AND trashed = 0" );
@@ -47,6 +54,32 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
     $this->trashed_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE trashed = 1" );
     $this->all_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name" ) - $this->trashed_count;
     $this->view = $_GET['view'] ?? '';
+    $this->uri = remove_query_arg( ['action', 'id', 'subscribers', 'fcncn-nonce'], $_SERVER['REQUEST_URI'] );
+
+    // Redirect from empty views
+    switch ( $this->view ) {
+      case 'confirmed':
+        if ( $this->confirmed_count < 1 ) {
+          wp_safe_redirect( remove_query_arg( 'view', $this->uri  ) );
+          exit();
+        }
+        break;
+      case 'pending':
+        if ( $this->pending_count < 1 ) {
+          wp_safe_redirect( remove_query_arg( 'view', $this->uri  ) );
+          exit();
+        }
+        break;
+      case 'trash':
+        if ( $this->trashed_count < 1 ) {
+          wp_safe_redirect( remove_query_arg( 'view', $this->uri  ) );
+          exit();
+        }
+        break;
+    }
+
+    // Finishing cleaning up URI
+    $this->uri = remove_query_arg( ['fcncn-notice', 'fcncn-message'], $this->uri );
   }
 
   /**
@@ -214,12 +247,123 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
     // Setup
     $actions = [];
 
+    // Confirm action
+    if ( empty( $item['confirmed'] ) && empty( $item['trashed'] ) ) {
+      $actions['confirm'] = sprintf(
+        '<a href="%s">%s</a>',
+        wp_nonce_url(
+          add_query_arg( array( 'action' => 'confirm_subscriber', 'id' => $item['id'] ), $this->uri ),
+          'fcncn-table-action',
+          'fcncn-nonce'
+        ),
+        __( 'Confirm', 'fcncn' )
+      );
+    }
+
+    // Unconfirm action
+    if ( ! empty( $item['confirmed'] ) && empty( $item['trashed'] ) ) {
+      $actions['unconfirm'] = sprintf(
+        '<a href="%s">%s</a>',
+        wp_nonce_url(
+          add_query_arg( array( 'action' => 'unconfirm_subscriber', 'id' => $item['id'] ), $this->uri ),
+          'fcncn-table-action',
+          'fcncn-nonce'
+        ),
+        __( 'Unconfirm', 'fcncn' )
+      );
+    }
+
+    // Resend confirmation email action
+    if ( empty( $item['confirmed'] ) && empty( $item['trashed'] ) ) {
+      $actions['resend'] = sprintf(
+        '<a href="%s">%s</a>',
+        wp_nonce_url(
+          add_query_arg( array( 'action' => 'resend_confirmation', 'id' => $item['id'] ), $this->uri ),
+          'fcncn-table-action',
+          'fcncn-nonce'
+        ),
+        __( 'Resend Confirmation Email', 'fcncn' )
+      );
+    }
+
+    // Trash action
+    if ( empty( $item['trashed'] ) ) {
+      $actions['trash'] = sprintf(
+        '<a href="%s">%s</a>',
+        wp_nonce_url(
+          add_query_arg( array( 'action' => 'trash_subscriber', 'id' => $item['id'] ), $this->uri ),
+          'fcncn-table-action',
+          'fcncn-nonce'
+        ),
+        __( 'Trash', 'fcncn' )
+      );
+    }
+
+    // Restore action
+    if ( ! empty( $item['trashed'] ) ) {
+      $actions['restore'] = sprintf(
+        '<a href="%s">%s</a>',
+        wp_nonce_url(
+          add_query_arg( array( 'action' => 'restore_subscriber', 'id' => $item['id'] ), $this->uri ),
+          'fcncn-table-action',
+          'fcncn-nonce'
+        ),
+        __( 'Restore', 'fcncn' )
+      );
+    }
+
+    // Delete action
+    if ( ! empty( $item['trashed'] ) ) {
+      $actions['delete'] = sprintf(
+        '<a href="%s">%s</a>',
+        wp_nonce_url(
+          add_query_arg( array( 'action' => 'delete_subscriber', 'id' => $item['id'] ), $this->uri ),
+          'fcncn-table-action',
+          'fcncn-nonce'
+        ),
+        __( 'Delete permanently', 'fcncn' )
+      );
+    }
+
     // Return the final output
     return sprintf(
       '<span>%s</span> %s',
       $item['email'],
       $this->row_actions( $actions )
     );
+  }
+
+  /**
+   * Render extra content in the table navigation section
+   *
+   * @since 0.1.0
+   *
+   * @param string $which  The position of the navigation, either 'top' or 'bottom'.
+   */
+
+  function extra_tablenav( $which ) {
+    // Setup
+    $actions = [];
+
+    // Empty trash
+    if ( $this->view === 'trash' ) {
+      $actions[] = sprintf(
+        '<a href="%s" class="button action">%s</a>',
+        wp_nonce_url(
+          admin_url( 'admin-post.php?action=fcncn_empty_trashed_subscribers' ),
+          'fcncn-empty-trash',
+          'fcncn-nonce'
+        ),
+        __( 'Empty Trash', 'fcncn' )
+      );
+    }
+
+    // Output
+    if ( ! empty( $actions ) ) {
+      // Start HTML ---> ?>
+      <div class="alignleft actions"><?php echo implode( ' ', $actions ); ?></div>
+      <?php // <--- End HTML
+    }
   }
 
   /**
@@ -265,5 +409,52 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
       'status' => ['confirmed', false],
       'date' => ['created_at', false]
     );
+  }
+
+  /**
+   * Perform actions based on the GET and POST requests
+   *
+   * @since 0.1.0
+   * @global wpdb $wpdb  The WordPress database object.
+   */
+
+  function perform_actions() {
+    global $wpdb;
+
+    // Guard
+    if ( ! current_user_can( 'manage_options' ) ) {
+      return;
+    }
+
+    // Setup
+    $table_name = $wpdb->prefix . 'fcncn_subscribers';
+    $query_args = [];
+
+    // GET actions
+    if ( isset( $_GET['action'] ) ) {
+      $id = absint( $_GET['id'] ?? 0 );
+
+      // Confirm subscriber
+      if ( ! empty( $id ) && $_GET['action'] === 'confirm_subscriber' ) {
+        if ( $wpdb->update( $table_name, array( 'confirmed' => 1 ), array( 'id' => $id ), ['%d'], ['%d'] ) ) {
+          $query_args['fcncn-notice'] = 'confirm-subscriber-success';
+        } else {
+          $query_args['fcncn-notice'] = 'confirm-subscriber-failure';
+        }
+      }
+
+      // Unconfirm subscriber
+      if ( ! empty( $id ) && $_GET['action'] === 'unconfirm_subscriber' ) {
+        if ( $wpdb->update( $table_name, array( 'confirmed' => 0 ), array( 'id' => $id ), ['%d'], ['%d'] ) ) {
+          $query_args['fcncn-notice'] = 'unconfirm-subscriber-success';
+        } else {
+          $query_args['fcncn-notice'] = 'unconfirm-subscriber-failure';
+        }
+      }
+
+      // Redirect with notice (prevents multi-submit)
+      wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
+      exit();
+    }
   }
 }

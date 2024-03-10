@@ -227,6 +227,9 @@ function fcncn_subscribers_table_screen_options() {
 
   // Setup table
   $subscribers_table = new FCNCN_Subscribers_Table();
+
+  // Perform table actions
+  $subscribers_table->perform_actions();
 }
 
 /**
