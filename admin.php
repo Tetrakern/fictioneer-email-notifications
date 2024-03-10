@@ -83,6 +83,54 @@ function fcncn_add_removable_admin_args( $args ) {
 add_filter( 'removable_query_args', 'fcncn_add_removable_admin_args' );
 
 // =======================================================================================
+// NOTICES
+// =======================================================================================
+
+/**
+ * Show plugin admin notices
+ *
+ * Displays an admin notice based on the query parameter 'fcncn-notice'
+ * and optionally 'fcncn-message' for additional information.
+ *
+ * @since 0.1.0
+ */
+
+function fcncn_admin_notices() {
+  // Setup
+  $notice = '';
+  $class = '';
+  $message = sanitize_text_field( $_GET['fcncn-message'] ?? '' );
+
+  // Default notices
+  if ( ( $_GET['settings-updated'] ?? 0 ) === 'true' ) {
+    $notice = __( 'Settings saved' );
+    $class = 'notice-success';
+  }
+
+  // FCNES notices
+  switch ( $_GET['fcncn-notice'] ?? 0 ) {
+    case 'subscriber-already-exists':
+      $notice = __( 'Error. Subscriber with that email address already exists.', 'fcncn' );
+      $class = 'notice-error';
+      break;
+    case 'subscriber-adding-success':
+      $notice = sprintf( __( '%s added.', 'fcncn' ), $message ?: __( 'Subscriber', 'fcncn' ) );
+      $class = 'notice-success';
+      break;
+    case 'subscriber-adding-failure':
+      $notice = sprintf( __( 'Error. %s could not be added.', 'fcnes' ), $message ?: __( 'Subscriber', 'fcncn' ) );
+      $class = 'notice-error';
+      break;
+  }
+
+  // Render notice
+  if ( ! empty( $notice ) ) {
+    echo "<div class='notice {$class} is-dismissible'><p>{$notice}</p></div>";
+  }
+}
+add_action( 'admin_notices', 'fcncn_admin_notices' );
+
+// =======================================================================================
 // ADMIN NOTIFICATIONS PAGE
 // =======================================================================================
 
