@@ -56,7 +56,6 @@ function fcncn_create_subscribers_table() {
     id INT NOT NULL AUTO_INCREMENT,
     email VARCHAR(191) NOT NULL,
     code VARCHAR(32) NOT NULL,
-    post_ids LONGTEXT NOT NULL,
     confirmed TINYINT(1) NOT NULL DEFAULT 0,
     trashed TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
