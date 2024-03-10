@@ -22,6 +22,15 @@
       border-bottom-left-radius: 0;
     }
   }
+
+  &__scopes {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.radio-label {
+  height: auto;
 }
 
 .fcncn-inline-button {
@@ -31,8 +40,4 @@
   &:hover {
     color: var(--primary-400);
   }
-}
-
-.fcncn-auth-email {
-  margin-bottom: 12px;
 }
