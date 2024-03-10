@@ -165,6 +165,17 @@ function fcncn_admin_notices() {
       );
       $class = 'notice-error';
       break;
+    case 'delete-subscriber-success':
+      $notice = sprintf( __( 'Subscriber (#%s) deleted.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $class = 'notice-success';
+      break;
+    case 'delete-subscriber-failure':
+      $notice = sprintf(
+        __( 'Error. Subscriber (#%s) could not be deleted.', 'fcncn' ),
+        $message ?: __( 'n/a', 'fcncn' )
+      );
+      $class = 'notice-error';
+      break;
     case 'confirmation-email-resent':
       $notice = sprintf( __( 'Confirmation email resent to subscriber (#%s).', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
       $class = 'notice-success';

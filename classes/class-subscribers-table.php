@@ -558,6 +558,17 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
         $query_args['fcncn-message'] = $id;
       }
 
+      // Delete subscriber
+      if ( ! empty( $id ) && $_GET['action'] === 'delete_subscriber' ) {
+        if ( $wpdb->delete( $table_name, array( 'id' => $id ), ['%d'] ) ) {
+          $query_args['fcncn-notice'] = 'delete-subscriber-success';
+        } else {
+          $query_args['fcncn-notice'] = 'delete-subscriber-failure';
+        }
+
+        $query_args['fcncn-message'] = $id;
+      }
+
       // Redirect with notice (prevents multi-submit)
       wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
       exit();
