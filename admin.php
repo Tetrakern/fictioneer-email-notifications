@@ -199,7 +199,7 @@ function fcncn_subscribers_page() {
   $subscribers_table->prepare_items();
 
   // Start HTML ---> ?>
-  <div id="fcncn-admin-page-subscribers" class="wrap fcncn-settings">
+  <div id="fcncn-admin-page-subscribers" class="wrap fcncn-settings _subscribers">
     <h1 class="fcncn-settings__header"><?php echo esc_html__( 'Subscribers', 'fcncn' ); ?></h1>
     <hr class="wp-header-end">
 
@@ -239,7 +239,7 @@ function fcncn_subscribers_page() {
         </div>
       </div>
 
-      <div class="fcncn-settings__table">
+      <div class="fcncn-settings__table fcncn-subscribers-table-wrapper">
         <?php $subscribers_table->display_views(); ?>
         <form method="post"><?php
           $subscribers_table->search_box( 'Search Emails', 'search_id' );

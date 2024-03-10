@@ -13,7 +13,23 @@
     grid-gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(300px, 600px));
   }
- }
+}
+
+/* =============================================================================
+ * TABLE
+ * ========================================================================== */
+
+.fcncn-subscribers-table-wrapper .column-id {
+  width: 64px;
+}
+
+.fcncn-subscribers-table-wrapper .column-status {
+  width: 128px;
+}
+
+.fcncn-subscribers-table-wrapper .column-date {
+  width: 188px;
+}
 
 /* =============================================================================
  * BOX
