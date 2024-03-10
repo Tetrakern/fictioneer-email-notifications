@@ -220,6 +220,39 @@ function fcncn_add_removable_frontend_query_args( $args ) {
 add_filter( 'fictioneer_filter_removable_query_args', 'fcncn_add_removable_frontend_query_args' );
 
 // =======================================================================================
+// FRONTEND
+// =======================================================================================
+
+/**
+ * Returns HTML for the subscription button
+ *
+ * @since 0.1.0
+ */
+
+function fcncn_get_subscription_button() {
+  return '<button id="fcncn-modal-toggle" class="_align-left" tabindex="0"><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcncn' ) . '</span></button>';
+}
+
+/**
+ * Adds button to subscribe popup
+ *
+ * @since 0.1.0
+ *
+ * @param array $buttons  Array of subscribe buttons.
+ *
+ * @return array Updated array of subscribe buttons.
+ */
+
+function fcncn_filter_extend_subscribe_buttons( $buttons ) {
+  // Add to first place
+  array_splice( $buttons, 0, 0, fcncn_get_subscription_button() );
+
+  // Continue filter
+  return $buttons;
+}
+add_filter( 'fictioneer_filter_subscribe_buttons', 'fcncn_filter_extend_subscribe_buttons', 20 );
+
+// =======================================================================================
 // SUBSCRIBERS
 // =======================================================================================
 
