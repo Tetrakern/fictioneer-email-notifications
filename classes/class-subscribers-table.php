@@ -511,8 +511,10 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
       if ( ! empty( $id ) && $_GET['action'] === 'confirm_subscriber' ) {
         if ( $wpdb->update( $table_name, array( 'confirmed' => 1 ), array( 'id' => $id ), ['%d'], ['%d'] ) ) {
           $query_args['fcncn-notice'] = 'confirm-subscriber-success';
+          $query_args['fcncn-message'] = $id;
         } else {
           $query_args['fcncn-notice'] = 'confirm-subscriber-failure';
+          $query_args['fcncn-message'] = $id;
         }
       }
 
@@ -520,15 +522,18 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
       if ( ! empty( $id ) && $_GET['action'] === 'unconfirm_subscriber' ) {
         if ( $wpdb->update( $table_name, array( 'confirmed' => 0 ), array( 'id' => $id ), ['%d'], ['%d'] ) ) {
           $query_args['fcncn-notice'] = 'unconfirm-subscriber-success';
+          $query_args['fcncn-message'] = $id;
         } else {
           $query_args['fcncn-notice'] = 'unconfirm-subscriber-failure';
+          $query_args['fcncn-message'] = $id;
         }
       }
 
       // Resend confirmation email
       if ( ! empty( $id ) && $_GET['action'] === 'resend_confirmation' ) {
         fcncn_send_confirmation_email( array( 'id' => $id ) );
-        $query_args['fcncn-notice'] = 'confirmation-email-sent';
+        $query_args['fcncn-notice'] = 'confirmation-email-resent';
+        $query_args['fcncn-message'] = $id;
       }
 
       // Redirect with notice (prevents multi-submit)

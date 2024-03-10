@@ -121,6 +121,32 @@ function fcncn_admin_notices() {
       $notice = sprintf( __( 'Error. %s could not be added.', 'fcnes' ), $message ?: __( 'Subscriber', 'fcncn' ) );
       $class = 'notice-error';
       break;
+    case 'confirm-subscriber-success':
+      $notice = sprintf( __( 'Subscriber (#%s) confirmed.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $class = 'notice-success';
+      break;
+    case 'confirm-subscriber-failure':
+      $notice = sprintf(
+        __( 'Error. Subscriber (#%s) could not be confirmed.', 'fcncn' ),
+        $message ?: __( 'n/a', 'fcncn' )
+      );
+      $class = 'notice-error';
+      break;
+    case 'unconfirm-subscriber-success':
+      $notice = sprintf( __( 'Subscriber (#%s) unconfirmed.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $class = 'notice-success';
+      break;
+    case 'unconfirm-subscriber-failure':
+      $notice = sprintf(
+        __( 'Error. Subscriber (#%s) could not be unconfirmed.', 'fcncn' ),
+        $message ?: __( 'n/a', 'fcncn' )
+      );
+      $class = 'notice-error';
+      break;
+    case 'confirmation-email-resent':
+      $notice = sprintf( __( 'Confirmation email resent to subscriber (#%s).', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $class = 'notice-success';
+      break;
   }
 
   // Render notice
