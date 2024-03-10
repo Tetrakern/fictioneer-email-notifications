@@ -525,6 +525,12 @@ class FCNCN_Subscribers_Table extends WP_List_Table {
         }
       }
 
+      // Resend confirmation email
+      if ( ! empty( $id ) && $_GET['action'] === 'resend_confirmation' ) {
+        fcncn_send_confirmation_email( array( 'id' => $id ) );
+        $query_args['fcncn-notice'] = 'confirmation-email-sent';
+      }
+
       // Redirect with notice (prevents multi-submit)
       wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
       exit();
