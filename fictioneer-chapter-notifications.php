@@ -682,7 +682,7 @@ function fcncn_send_transactional_email( $args, $subject, $body ) {
   }
 
   // Prepare replacements
-  $replacements = array(
+  $extra_replacements = array(
     '{{activation_link}}' => esc_url( fcncn_get_activation_link( $subscriber_email, $subscriber_code ) ),
     '{{unsubscribe_link}}' => esc_url( fcncn_get_unsubscribe_link( $subscriber_email, $subscriber_code ) ),
     '{{email}}' => $subscriber_email,
@@ -698,8 +698,8 @@ function fcncn_send_transactional_email( $args, $subject, $body ) {
   // Send the email
   wp_mail(
     $subscriber_email,
-    fcncn_replace_placeholders( $subject ),
-    fcncn_replace_placeholders( $body, $replacements ),
+    fcncn_replace_placeholders( $subject, $extra_replacements ),
+    fcncn_replace_placeholders( $body, $extra_replacements ),
     $headers
   );
 }
@@ -719,8 +719,12 @@ function fcncn_send_transactional_email( $args, $subject, $body ) {
 
 function fcncn_send_confirmation_email( $args ) {
   // Setup
-  $subject = 'Please confirm your subscription';
-  $body = __( '<p>Thank you for subscribing to <a href="{{site_link}}" target="_blank">{{site_name}}</a>. Please click the following link within 24 hours to confirm your subscription: <a href="{{activation_link}}">Activate Subscription</a>.<br><br>Your edit code is <strong>{{code}}</strong>, which will also be included in any future emails.<br><br>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24-36 hours (depending on the worker schedule).</p>', 'fcncn' );
+  $subject = __( 'Please confirm your subscription', 'fcncn' );
+  $body = __( '<p>Thank you for subscribing to <a href="{{site_link}}" target="_blank">{{site_name}}</a>.<br><br>Please click the following link within 24 hours to confirm your subscription: <a href="{{activation_link}}">Activate Subscription</a>.<br><br>Your edit code is <strong>{{code}}</strong>, which will also be included in any future emails. In case your code ever gets compromised, just delete your subscription and submit a new one.<br><br>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24 hours. You can also immediately <a href="{{unsubscribe_link}}">delete it with this link</a>.</p>', 'fcncn' );
+
+  // Customized?
+  $subject = get_option( 'fcncn_confirmation_email_subject' ) ?: $subject;
+  $body = get_option( 'fcncn_confirmation_email_body' ) ?: $body;
 
   // Send
   fcncn_send_transactional_email( $args, $subject, $body );
