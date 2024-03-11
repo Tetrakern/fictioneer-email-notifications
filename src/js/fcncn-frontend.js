@@ -58,6 +58,43 @@ function fcncn_toggleInProgress(force = true) {
 }
 
 /**
+ * Returns form data by extracting field values and joining arrays.
+ *
+ * @since 0.1.0
+ *
+ * @param {HTMLFormElement} form - The form element.
+ *
+ * @return {Object} Prepared form data with field values extracted and arrays joined.
+ */
+
+function fcncn_getPreparedFormData(form) {
+  // Setup
+  let formData = new FormData(form);
+  let formFields = {};
+
+  // Process form data
+  for (let [key, value] of formData.entries()) {
+    let modifiedKey = key.replace(/\[\]/g, '');
+
+    if (formFields.modifiedKey) {
+      formFields[modifiedKey].push(value);
+    } else {
+      formFields[modifiedKey] = [value];
+    }
+  }
+
+  // Join array values
+  for (let prop in formFields) {
+    if (Array.isArray(formFields[prop])) {
+      formFields[prop] = formFields[prop].join(',');
+    }
+  }
+
+  // Return
+  return formFields;
+}
+
+/**
  * AJAX: Get the modal form.
  *
  * @since 0.1.0
@@ -88,8 +125,8 @@ function fcncn_getModalForm(context = 'new') {
   // Prepare payload
   const payload = {
     'action': 'fcncn_ajax_get_form_content',
-    'email': email,
-    'code': code
+    'auth-email': email,
+    'auth-code': code
   };
 
   // Request
@@ -117,8 +154,7 @@ function fcncn_subscribe_or_update(button) {
   // Setup
   const form = button.closest('form');
   const email = document.getElementById('fcncn-modal-submit-email')?.value;
-  const scope = document.querySelector('input[name="fcncn-scope"]:checked')?.value ?? 'everything';
-  const code = document.getElementById('fcncn-modal-submit-code')?.value ?? 0;
+  const formData = fcncn_getPreparedFormData(form);
 
   // Validate
   if (!email) {
@@ -130,20 +166,18 @@ function fcncn_subscribe_or_update(button) {
   fcncn_toggleInProgress();
 
   // Prepare payload
-  const payload = {
+  let payload = {
     'action': 'fcncn_ajax_subscribe_or_update',
-    'email': email,
-    'code': code,
-    'scope': scope,
+    'email': email, // Manually added since disabled fields are not in formData
     'nonce': fcncn_modal.querySelector('input[name="nonce"]')?.value ?? ''
   };
+
+  payload = {...payload, ...formData};
 
   // Request
   fcn_ajaxPost(payload)
   .then(response => {
     fcncn_targetContainer.innerHTML = `<div class="fcncn-dialog-modal__notice"><p>${response.data.notice}</p></div>`;
-  })
-  .then(() => {
     fcncn_toggleInProgress(false);
   });
 }
@@ -155,18 +189,14 @@ function fcncn_subscribe_or_update(button) {
  */
 
 function fcncn_unsubscribe() {
-  // Setup
-  const email = document.getElementById('fcncn-modal-submit-email')?.value;
-  const code = document.getElementById('fcncn-modal-submit-code')?.value ?? 0;
-
   // Indicate progress
   fcncn_toggleInProgress();
 
   // Prepare payload
   const payload = {
     'action': 'fcncn_ajax_subscribe',
-    'email': email,
-    'code': code,
+    'email': document.getElementById('fcncn-modal-submit-email')?.value ?? '',
+    'code': document.getElementById('fcncn-modal-submit-code')?.value ?? 0,
     'nonce': fcncn_modal.querySelector('input[name="nonce"]')?.value ?? ''
   };
 
@@ -174,8 +204,6 @@ function fcncn_unsubscribe() {
   fcn_ajaxPost(payload)
   .then(response => {
     fcncn_targetContainer.innerHTML = `<div class="fcncn-dialog-modal__notice"><span>${response.data.notice}</span></div>`;
-  })
-  .then(() => {
     fcncn_toggleInProgress(false);
   });
 }
