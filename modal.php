@@ -37,7 +37,7 @@ function fcncn_get_modal_content() {
         <div class="dialog-modal__row _no-top">
           <div class="fcncn-dialog-modal__input-button-pair">
             <input type="text" name="auth-code" id="fcncn-modal-auth-code" class="fcncn-auth-code" placeholder="<?php esc_attr_e( 'Code', 'fcncn' ); ?>" value="" autocomplete="off" maxlength="191">
-            <button type="button" id="fcnes-modal-auth-button" class="button fcncn-button"><?php _e( 'Edit', 'fcncn' ); ?></button>
+            <button type="button" id="fcncn-modal-auth-button" class="button fcncn-button"><?php _e( 'Edit', 'fcncn' ); ?></button>
           </div>
         </div>
 
@@ -64,7 +64,7 @@ function fcncn_get_modal_content() {
       <div class="dialog-modal__row _no-top fcncn-dialog-modal__input-button-pair">
         <input type="email" name="email" id="fcncn-modal-submit-email" class="fcncn-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcncn' ); ?>" value="<?php echo $subscriber ? $auth_email : ''; ?>" autocomplete="off" maxlength="191" required <?php echo $subscriber ? 'disabled' : ''; ?>>
         <?php if ( ! $subscriber || $advanced_mode ) : ?>
-          <button type="button" id="fcnes-modal-submit-button" class="button fcncn-button"><?php echo $button_label; ?></button>
+          <button type="button" id="fcncn-modal-submit-button" class="button fcncn-button"><?php echo $button_label; ?></button>
         <?php endif; ?>
       </div>
 

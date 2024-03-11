@@ -30,12 +30,12 @@ function fcncn_addEventListeners() {
   });
 
   // Submit button
-  document.getElementById('fcnes-modal-submit-button')?.addEventListener('click', event => {
+  document.getElementById('fcncn-modal-submit-button')?.addEventListener('click', event => {
     fcncn_subscribe_or_update(event.currentTarget);
   });
 
   // Edit button
-  document.getElementById('fcnes-modal-auth-button')?.addEventListener('click', () => {
+  document.getElementById('fcncn-modal-auth-button')?.addEventListener('click', () => {
     fcncn_getModalForm('edit');
   });
 
