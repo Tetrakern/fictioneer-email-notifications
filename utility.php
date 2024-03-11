@@ -73,9 +73,9 @@ function fcncn_get_activation_link( $email, $code ) {
   // Setup
   $query_args = array(
     'fcncn' => 1,
-    'fcnes-action' => 'activation',
-    'fcnes-email' => urlencode( $email ),
-    'fcnes-code' => urlencode( $code )
+    'fcncn-action' => 'activation',
+    'fcncn-email' => urlencode( $email ),
+    'fcncn-code' => urlencode( $code )
   );
 
   // Return link
@@ -96,10 +96,10 @@ function fcncn_get_activation_link( $email, $code ) {
 function fcncn_get_unsubscribe_link( $email, $code ) {
   // Setup
   $query_args = array(
-    'fcnes' => 1,
-    'fcnes-action' => 'unsubscribe',
-    'fcnes-email' => urlencode( $email ),
-    'fcnes-code' => urlencode( $code )
+    'fcncn' => 1,
+    'fcncn-action' => 'unsubscribe',
+    'fcncn-email' => urlencode( $email ),
+    'fcncn-code' => urlencode( $code )
   );
 
   // Return link

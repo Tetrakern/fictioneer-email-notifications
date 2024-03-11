@@ -521,15 +521,15 @@ function fcncn_activate_subscriber( $email, $code ) {
 function fcncn_handle_activation_link() {
   // Check URI
   if (
-    ! isset( $_GET['fcncn'], $_GET['fcnes-action'], $_GET['fcnes-email'], $_GET['fcnes-code'] ) ||
-    $_GET['fcnes-action'] !== 'activation'
+    ! isset( $_GET['fcncn'], $_GET['fcncn-action'], $_GET['fcncn-email'], $_GET['fcncn-code'] ) ||
+    $_GET['fcncn-action'] !== 'activation'
   ) {
     return;
   }
 
   // Setup
-  $email = urldecode( $_GET['fcnes-email'] ?? '' );
-  $code = urldecode( $_GET['fcnes-code'] ?? '' );
+  $email = urldecode( $_GET['fcncn-email'] ?? '' );
+  $code = urldecode( $_GET['fcncn-code'] ?? '' );
 
   // Secondary check
   if ( empty( $email ) || empty( $code ) ) {
@@ -559,15 +559,15 @@ add_action( 'template_redirect', 'fcncn_handle_activation_link' );
 function fcncn_handle_unsubscribe_link() {
   // Check URI
   if (
-    ! isset( $_GET['fcncn'], $_GET['fcnes-action'], $_GET['fcnes-email'], $_GET['fcnes-code'] ) ||
-    $_GET['fcnes-action'] !== 'unsubscribe'
+    ! isset( $_GET['fcncn'], $_GET['fcncn-action'], $_GET['fcncn-email'], $_GET['fcncn-code'] ) ||
+    $_GET['fcncn-action'] !== 'unsubscribe'
   ) {
     return;
   }
 
   // Setup
-  $email = urldecode( $_GET['fcnes-email'] ?? '' );
-  $code = urldecode( $_GET['fcnes-code'] ?? '' );
+  $email = urldecode( $_GET['fcncn-email'] ?? '' );
+  $code = urldecode( $_GET['fcncn-code'] ?? '' );
 
   // Secondary check
   if ( empty( $email ) || empty( $code ) ) {
