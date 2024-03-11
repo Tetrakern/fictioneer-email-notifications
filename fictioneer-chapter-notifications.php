@@ -558,6 +558,26 @@ add_action( 'template_redirect', 'fcncn_handle_activation_link' );
 // =======================================================================================
 
 /**
+ * Get the from email name
+ *
+ * @since 0.1.0
+ *
+ * @return string The from email name.
+ */
+
+function fcncn_get_from_email_name() {
+  // From email address set?
+  $from = get_option( 'fcncn_from_email_name' );
+
+  if ( $from ) {
+    return $from;
+  }
+
+  // Return the blog name
+  return get_bloginfo( 'name' );
+}
+
+/**
  * Get the from email address
  *
  * @since 0.1.0
@@ -609,7 +629,7 @@ function fcncn_send_transactional_email( $args, $subject, $body ) {
   // Setup
   $table_name = $wpdb->prefix . 'fcncn_subscribers';
   $from = fcncn_get_from_email_address();
-  $name = get_bloginfo( 'name' );
+  $name = fcncn_get_from_email_name();
   $subscriber_email = $args['email'] ?? 0;
   $subscriber_code = $args['code'] ?? 0;
 
