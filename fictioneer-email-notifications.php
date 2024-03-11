@@ -27,7 +27,7 @@ define( 'fcnen_VERSION', '0.1.0' );
  */
 
 function fcnen_load_stubs() {
-	if ( ! function_exists( 'fictioneer_minify_html' ) ) {
+  if ( ! function_exists( 'fictioneer_minify_html' ) ) {
     function fictioneer_minify_html( $html ) {}
   }
 
@@ -100,6 +100,56 @@ function fcnen_create_subscribers_table() {
   dbDelta( $sql );
 }
 register_activation_hook( __FILE__, 'fcnen_create_subscribers_table' );
+
+// =======================================================================================
+// CRON JOBS
+// =======================================================================================
+
+/**
+ * Schedules event to delete unconfirmed subscribers when the plugin is activated
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_schedule_delete_expired_subscribers() {
+  if ( ! wp_next_scheduled( 'fcnen_delete_expired_subscribers_event' ) ) {
+    wp_schedule_event( time(), 'twicedaily', 'fcnen_delete_expired_subscribers_event' );
+  }
+}
+register_activation_hook( __FILE__, 'fcnen_schedule_delete_expired_subscribers' );
+
+/**
+ * Clears event to delete unconfirmed subscribers when the plugin is deactivated
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_remove_delete_expired_subscribers() {
+  wp_clear_scheduled_hook( 'fcnen_delete_expired_subscribers_event' );
+}
+register_deactivation_hook( __FILE__, 'fcnen_remove_delete_expired_subscribers' );
+
+/**
+ * Deletes unconfirmed subscribers that are older than 24 hours
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_delete_expired_subscribers() {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
+
+  // Delete unconfirmed subscribers older than 24 hours
+  $wpdb->query(
+    $wpdb->prepare(
+      "DELETE FROM $table_name WHERE confirmed = %d AND created_at < DATE_SUB(NOW(), INTERVAL 24 HOUR)",
+      0
+    )
+  );
+}
+add_action( 'fcnen_delete_expired_subscribers_event', 'fcnen_delete_expired_subscribers' );
 
 // =======================================================================================
 // REGISTER WITH THEME
