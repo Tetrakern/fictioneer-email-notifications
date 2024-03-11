@@ -151,3 +151,53 @@ function fcncn_get_subscriber_by_email( $email ) {
   // Result
   return $subscriber ?: false;
 }
+
+/**
+ * Get a subscriber by email and code
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param string $email  Email address of the subscriber.
+ * @param string $code   Code of the subscriber.
+ *
+ * @return object|false The subscriber object if found, false otherwise.
+ */
+
+function fcncn_get_subscriber_by_email_and_code( $email, $code ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $email = sanitize_email( $email );
+  $code = sanitize_text_field( $code );
+
+  // Validate
+  if ( empty( $email ) || empty( $code ) ) {
+    return false;
+  }
+
+  // Query
+  $query = $wpdb->prepare(
+    "SELECT * FROM $table_name WHERE trashed = 0 AND email = %s AND code = %s AND trashed = 0",
+    $email,
+    $code
+  );
+
+  $subscriber = $wpdb->get_row( $query );
+
+  // Failure?
+  if ( empty( $subscriber ) ) {
+    return false;
+  }
+
+  // Unserialize
+  $subscriber->post_ids = maybe_unserialize( $subscriber->post_ids );
+  $subscriber->post_types = maybe_unserialize( $subscriber->post_types );
+  $subscriber->categories = maybe_unserialize( $subscriber->categories );
+  $subscriber->tags = maybe_unserialize( $subscriber->tags );
+  $subscriber->taxonomies = maybe_unserialize( $subscriber->taxonomies );
+
+  // Return subscriber object
+  return $subscriber;
+}
