@@ -310,6 +310,7 @@ function fcncn_subscription_modal() {
         <div class="shape" style="margin: 12px; height: 18px; max-width: 200px;"></div>
       </div>
     </div>
+    <input name="nonce" type="hidden" autocomplete="off" value="<?php echo wp_create_nonce( 'fcncn-subscribe' ); ?>">
   </dialog>
   <?php // <--- End HTML
 }
@@ -320,18 +321,24 @@ add_action( 'fictioneer_modals', 'fcncn_subscription_modal', 10 );
 // =======================================================================================
 
 /**
- * Add a subscriber and send activation email
+ * Add a subscriber and maybe send activation email
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
  *
  * @param string $email  The email address of the subscriber.
  * @param array  $args {
- *   Optional. An array of arguments. Default is an empty array.
+ *   Optional array of arguments. Default empty.
  *
- *   @type array $created_at  Date of creation. Defaults to current 'mysql' time.
- *   @type array $updated_at  Date of last update. Defaults to current 'mysql' time.
- *   @type bool  $confirmed   Whether the subscriber is confirmed. Default false.
+ *   @type string $scope       Either 'everything' or 'stories'. Default 'everything'.
+ *   @type array  $post_ids    Array of post IDs to subscribe to. Default empty.
+ *   @type array  $post_types  Array of post types to subscribe to. Default empty.
+ *   @type array  $categories  Array of category IDs to subscribe to. Default empty.
+ *   @type array  $tags        Array of tag IDs to subscribe to. Default empty.
+ *   @type array  $taxonomies  Array of taxonomy IDs to subscribe to. Default empty.
+ *   @type array  $created_at  Date of creation. Defaults to current 'mysql' time.
+ *   @type array  $updated_at  Date of last update. Defaults to current 'mysql' time.
+ *   @type bool   $confirmed   Whether the subscriber is confirmed. Default false.
  * }
  *
  * @return int|false The ID of the inserted subscriber, false on failure.
@@ -353,8 +360,14 @@ function fcncn_add_subscriber( $email, $args = [] ) {
   // Defaults
   $defaults = array(
     'code' => wp_generate_password( 32, false ),
-    'confirmed' => false,
-    'trashed' => false,
+    'everything' => 1,  // Not yet used
+    'post_ids' => [],   // Not yet used
+    'post_types' => [], // Not yet used
+    'categories' => [], // Not yet used
+    'tags' => [],       // Not yet used
+    'taxonomies' => [], // Not yet used
+    'confirmed' => 0,
+    'trashed' => 0,
     'created_at' => current_time( 'mysql' ),
     'updated_at' => current_time( 'mysql' )
   );
@@ -380,14 +393,21 @@ function fcncn_add_subscriber( $email, $args = [] ) {
   $data = array(
     'email' => $email,
     'code' => $args['code'],
+    'everything' => $args['everything'],
+    'post_ids' => serialize( $args['post_ids'] ),
+    'post_types' => serialize( $args['post_types'] ),
+    'categories' => serialize( $args['categories'] ),
+    'tags' => serialize( $args['tags'] ),
+    'taxonomies' => serialize( $args['taxonomies'] ),
+    'pending_changes' => serialize( [] ),
     'created_at' => $args['created_at'],
     'updated_at' => $args['updated_at'],
     'confirmed' => $args['confirmed'],
     'trashed' => $args['trashed']
   );
 
-  // Insert into table and send activation mail if successful
-  if ( $wpdb->insert( $table_name, $data, ['%s', '%s', '%s', '%s', '%d', '%d'] ) ) {
+  // Insert into table and send activation mail if successful (and required)
+  if ( $wpdb->insert( $table_name, $data, ['%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d'] ) ) {
     $subscriber_id = $wpdb->insert_id;
 
     if ( ! $args['confirmed'] ) {
@@ -402,6 +422,31 @@ function fcncn_add_subscriber( $email, $args = [] ) {
 
   // Return ID of the subscriber or false
   return $subscriber_id;
+}
+
+/**
+ * Update an existing subscriber
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param int    $email  The email of the subscriber to update.
+ * @param array  $args {
+ *   Optional array of arguments. Default empty.
+ *
+ *   @type string $scope       Either 'everything' or 'stories'.
+ *   @type array  $post_ids    Array of post IDs to subscribe to. Default empty.
+ *   @type array  $post_types  Array of post types to subscribe to. Default empty.
+ *   @type array  $categories  Array of category IDs to subscribe to. Default empty.
+ *   @type array  $tags        Array of tag IDs to subscribe to. Default empty.
+ *   @type array  $taxonomies  Array of taxonomy IDs to subscribe to. Default empty.
+ * }
+ *
+ * @return bool Whether the subscriber was successfully updated.
+ */
+
+function fcncn_update_subscriber( $email, $args = [] ) {
+  return true;
 }
 
 /**

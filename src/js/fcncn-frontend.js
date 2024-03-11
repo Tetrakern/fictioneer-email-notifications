@@ -2,9 +2,11 @@ const fcncn_modal = document.getElementById('fcncn-subscription-modal');
 const fcncn_url_params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
 
 if (fcncn_modal) {
-  document.querySelector('[data-click-action*="fcncn-load-modal-form"]').addEventListener('click', () => {
-    fcncn_getModalForm();
-  }, { once: true });
+  document.querySelectorAll('[data-click-action*="fcncn-load-modal-form"]').forEach(button => {
+    button.addEventListener('click', () => {
+      fcncn_getModalForm();
+    }, { once: true });
+  });
 }
 
 /**
@@ -39,6 +41,11 @@ function fcncn_addEventListeners() {
  */
 
 function fcncn_getModalForm() {
+  // Already loaded?
+  if (document.getElementById('fcncn-subscription-form')) {
+    return;
+  }
+
   // Setup
   const email = fcncn_url_params['fcncn-email'] ?? document.getElementById('fcncn-modal-auth-email')?.value ?? 0;
   const code = fcncn_url_params['fcncn-code'] ?? document.getElementById('fcncn-modal-auth-code')?.value ?? 0;
@@ -83,10 +90,11 @@ function fcncn_subscribe(button) {
 
   // Prepare payload
   const payload = {
-    'action': 'fcncn_ajax_subscribe',
+    'action': 'fcncn_ajax_subscribe_or_update',
     'email': email,
     'code': code,
-    'scope': scope
+    'scope': scope,
+    'nonce': button.closest('.fcncn-dialog-modal').querySelector('input[name="nonce"]')?.value ?? ''
   };
 
   // Request

@@ -27,47 +27,71 @@ add_action( 'wp_ajax_nopriv_fcncn_ajax_get_form_content', 'fcncn_ajax_get_form_c
  * @since 0.1.0
  */
 
-function fcncn_ajax_subscribe() {
+function fcncn_ajax_subscribe_or_update() {
   // Verify
   if ( ! wp_doing_ajax() ) {
     wp_send_json_error( __( 'Invalid request.', 'fcncn' ) );
   }
 
-  // if ( ! check_ajax_referer( 'fcncn-subscribe', 'nonce', false ) ) {
-  //   wp_send_json_error(
-  //     array( 'error' => __( 'Nonce verification failed. Please reload and try again.', 'fcncn' ) )
-  //   );
-  // }
+  if ( ! check_ajax_referer( 'fcncn-subscribe', 'nonce', false ) ) {
+    wp_send_json_error(
+      array( 'notice' => __( 'Nonce verification failed. Please reload and try again.', 'fcncn' ) )
+    );
+  }
 
   // Setup
   $email = sanitize_email( $_POST['email'] ?? '' );
   $code = sanitize_text_field( $_POST['code'] ?? '' );
   $scope = sanitize_key( $_POST['scope'] ?? 'everything' );
+  $default_notice = __( 'Submission successful. If everything was in order, you will get an email.', 'fcncn' );
   $result = false;
 
   // Validate email
   if ( empty( $email ) || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) )  {
-    wp_send_json_error( array( 'error' => __( 'Invalid email address.', 'fcncn' ) ) );
+    wp_send_json_error( array( 'notice' => __( 'Invalid email address.', 'fcncn' ) ) );
   }
 
-  // New subscriber?
-  $new_subscriber = ! fcncn_subscriber_exists( $email );
+  // Arguments
+  $args = array(
+    'scope' => $scope
+  );
 
   // New or update?
-  if ( $new_subscriber ) {
-    // New subscriber
-    $result = fcncn_add_subscriber( $email, array( 'scope' => $scope ) );
-  } else {
-    // Update subscriber
-    // Check code
+  $is_new_subscriber = ! fcncn_subscriber_exists( $email );
+
+  // New subscriber!
+  if ( $is_new_subscriber ) {
+    $result = fcncn_add_subscriber( $email, $args );
+  }
+
+  // Update subscriber!
+  if ( ! $is_new_subscriber ) {
+    // Code?
+    if ( ! $code ) {
+      $notice = WP_DEBUG ? __( 'Code missing.', 'fcncn' ) : $default_notice;
+      wp_send_json_error( array( 'notice' => $notice ) );
+    }
+
+    // Query subscriber
+    $subscriber = fcncn_get_subscriber_by_email_and_code( $email, $code );
+
+    // Code did not match email
+    if ( empty( $subscriber ) ) {
+      $notice = WP_DEBUG ? __( 'Code did not match email.', 'fcncn' ) : $default_notice;
+      wp_send_json_error( array( 'notice' => $notice ) );
+    }
+
+    // Update
+    $result = fcncn_update_subscriber( $email, $args );
   }
 
   // Response
   if ( $result ) {
-    wp_send_json_success( array( 'notice' => 'Successfully subscribed!' ) );
+    wp_send_json_success( array( 'notice' => $default_notice ) );
   } else {
-    wp_send_json_error( array( 'error' => __( 'Could not subscribe.', 'fcncn' ) ) );
+    $notice = WP_DEBUG ? __( 'Could not create or update subscription.', 'fcncn' ) : $default_notice;
+    wp_send_json_error( array( 'notice' => $notice ) );
   }
 }
-add_action( 'wp_ajax_fcncn_ajax_subscribe', 'fcncn_ajax_subscribe' );
-add_action( 'wp_ajax_nopriv_fcncn_ajax_subscribe', 'fcncn_ajax_subscribe' );
+add_action( 'wp_ajax_fcncn_ajax_subscribe_or_update', 'fcncn_ajax_subscribe_or_update' );
+add_action( 'wp_ajax_nopriv_fcncn_ajax_subscribe_or_update', 'fcncn_ajax_subscribe_or_update' );
