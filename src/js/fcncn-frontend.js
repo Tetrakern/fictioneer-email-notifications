@@ -141,7 +141,7 @@ function fcncn_subscribe_or_update(button) {
   // Request
   fcn_ajaxPost(payload)
   .then(response => {
-    console.log(response);
+    fcncn_targetContainer.innerHTML = `<div class="fcncn-dialog-modal__notice"><p>${response.data.notice}</p></div>`;
   })
   .then(() => {
     fcncn_toggleInProgress(false);
@@ -173,7 +173,7 @@ function fcncn_unsubscribe() {
   // Request
   fcn_ajaxPost(payload)
   .then(response => {
-    console.log(response);
+    fcncn_targetContainer.innerHTML = `<div class="fcncn-dialog-modal__notice"><span>${response.data.notice}</span></div>`;
   })
   .then(() => {
     fcncn_toggleInProgress(false);

@@ -36,6 +36,15 @@
     display: flex;
     gap: 1rem;
   }
+
+  &__notice {
+    display: grid;
+    place-content: center;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: center;
+    padding: 12px 12px 24px;
+  }
 }
 
 .radio-label {
