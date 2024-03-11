@@ -14,6 +14,8 @@ function fcncn_get_modal_content() {
   $auth_email = $_POST['auth-email'] ?? 0;
   $auth_code = $_POST['auth-code'] ?? 0;
   $subscriber = fcncn_get_subscriber_by_email_and_code( $auth_email, $auth_code );
+  $edit_mode = $advanced_mode && $subscriber;
+  $button_label = $edit_mode ? __( 'Update', 'fcncn' ) : __( 'Subscribe', 'fcncn' );
 
   ob_start();
   // Start HTML ---> ?>
@@ -61,7 +63,9 @@ function fcncn_get_modal_content() {
 
       <div class="dialog-modal__row _no-top fcncn-dialog-modal__input-button-pair">
         <input type="email" name="email" id="fcncn-modal-submit-email" class="fcncn-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcncn' ); ?>" value="<?php echo $subscriber ? $auth_email : ''; ?>" autocomplete="off" maxlength="191" required <?php echo $subscriber ? 'disabled' : ''; ?>>
-        <button type="button" id="fcnes-modal-submit-button" class="button fcncn-button"><?php _e( 'Subscribe', 'fcncn' ); ?></button>
+        <?php if ( ! $subscriber || $advanced_mode ) : ?>
+          <button type="button" id="fcnes-modal-submit-button" class="button fcncn-button"><?php echo $button_label; ?></button>
+        <?php endif; ?>
       </div>
 
       <?php if ( $advanced_mode ) : ?>
