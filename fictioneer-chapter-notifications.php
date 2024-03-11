@@ -303,7 +303,7 @@ function fcncn_subscription_modal() {
   <dialog id="fcncn-subscription-modal" class="dialog-modal fcncn-dialog-modal" data-nosnippet>
     <button class="dialog-modal__close" aria-label="<?php esc_attr_e( 'Close modal', 'fictioneer' ); ?>" data-click-action="close-dialog-modal" autofocus><?php fictioneer_icon( 'fa-xmark' ); ?></button>
     <h4 class="dialog-modal__header"><?php _e( 'Subscription', 'fcncn' ); ?></h4>
-    <div data-target="fcncn-modal-loader">
+    <div class="fcncn-dialog-modal__ajax-target" data-target="fcncn-modal-loader">
       <div class="fcncn-modal-skeleton">
         <div class="shape" style="margin: 12px; height: 18px; max-width: 400px;"></div>
         <div class="shape" style="margin: 12px; height: 32px;"></div>

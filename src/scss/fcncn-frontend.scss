@@ -7,6 +7,15 @@
     }
   }
 
+  &__ajax-target {
+    transition: filter 0.3s;
+
+    &.ajax-in-progress {
+      pointer-events: none;
+      filter: blur(1px);
+    }
+  }
+
   &__input-button-pair {
     display: flex;
     gap: 3px;

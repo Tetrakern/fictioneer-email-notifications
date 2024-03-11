@@ -30,7 +30,7 @@ function fcncn_addEventListeners() {
 
   // Submit button
   document.getElementById('fcnes-modal-submit-button')?.addEventListener('click', event => {
-    fcncn_subscribe(event.currentTarget);
+    fcncn_subscribe_or_update(event.currentTarget);
   });
 
   // Edit button
@@ -54,12 +54,18 @@ function fcncn_getModalForm(context = 'new') {
   }
 
   // Setup
+  const targetContainer = fcncn_modal.querySelector('[data-target="fcncn-modal-loader"]');
   const email = fcncn_url_params['fcncn-email'] ?? document.getElementById('fcncn-modal-auth-email')?.value ?? 0;
   const code = fcncn_url_params['fcncn-code'] ?? document.getElementById('fcncn-modal-auth-code')?.value ?? 0;
 
   // Edit?
   if (context == 'edit' && !(email || code)) {
     return;
+  }
+
+  // Indicate progress
+  if (context == 'edit') {
+    targetContainer.classList.add('ajax-in-progress');
   }
 
   // Prepare payload
@@ -73,24 +79,26 @@ function fcncn_getModalForm(context = 'new') {
   fcn_ajaxPost(payload)
   .then(response => {
     if (response.success) {
-      fcncn_modal.querySelector('[data-target="fcncn-modal-loader"]').innerHTML = response.data.html;
+      targetContainer.innerHTML = response.data.html;
     }
   })
   .then(() => {
+    targetContainer.classList.remove('ajax-in-progress');
     fcncn_addEventListeners();
   });
 }
 
 /**
- * AJAX: Subscribe.
+ * AJAX: Create new or update subscription.
  *
  * @since 0.1.0
  *
  * @param {HTMLButtonElement} button - The submit button element.
  */
 
-function fcncn_subscribe(button) {
+function fcncn_subscribe_or_update(button) {
   // Setup
+  const targetContainer = fcncn_modal.querySelector('[data-target="fcncn-modal-loader"]');
   const form = button.closest('form');
   const email = document.getElementById('fcncn-modal-submit-email')?.value;
   const scope = document.querySelector('input[name="fcncn-scope"]:checked')?.value ?? 'everything';
@@ -101,6 +109,9 @@ function fcncn_subscribe(button) {
     form.reportValidity();
     return;
   }
+
+  // Indicate progress
+  targetContainer.classList.add('ajax-in-progress');
 
   // Prepare payload
   const payload = {
@@ -115,5 +126,8 @@ function fcncn_subscribe(button) {
   fcn_ajaxPost(payload)
   .then(response => {
     console.log(response);
+  })
+  .then(() => {
+    targetContainer.classList.remove('ajax-in-progress');
   });
 }
