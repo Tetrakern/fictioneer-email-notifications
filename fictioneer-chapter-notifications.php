@@ -17,6 +17,27 @@ defined( 'ABSPATH' ) OR exit;
 define( 'FCNCN_VERSION', '0.1.0' );
 
 // =======================================================================================
+// STUBS
+// =======================================================================================
+
+/**
+ * Stubs for theme functions to make editor shut up
+ *
+ * @since 0.1.0
+ */
+
+function fcncn_load_stubs() {
+	if ( ! function_exists( 'fictioneer_minify_html' ) ) {
+    function fictioneer_minify_html( $html ) {}
+  }
+
+  if ( ! function_exists( 'fictioneer_icon' ) ) {
+    function fictioneer_icon( $icon ) {}
+  }
+}
+add_action( 'wp_loaded', 'fcncn_load_stubs' );
+
+// =======================================================================================
 // INCLUDES & REQUIRES
 // =======================================================================================
 
@@ -273,6 +294,14 @@ add_filter( 'fictioneer_filter_subscribe_buttons', 'fcncn_filter_extend_subscrib
 // MODAL
 // =======================================================================================
 
+/**
+ * Returns modal content
+ *
+ * @since 0.1.0
+ *
+ * @return string The HTML of the modal content.
+ */
+
 function fcncn_get_modal_content() {
   ob_start();
   // Start HTML ---> ?>
@@ -331,7 +360,7 @@ function fcncn_get_modal_content() {
 }
 
 /**
- * Adds subscription modal
+ * Adds subscription modal to site
  *
  * @since 0.1.0
  */
