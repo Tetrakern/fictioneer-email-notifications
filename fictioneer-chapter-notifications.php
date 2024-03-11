@@ -636,6 +636,7 @@ function fcnen_send_transactional_email( $args, $subject, $body ) {
   $extra_replacements = array(
     '{{activation_link}}' => esc_url( fcnen_get_activation_link( $subscriber_email, $subscriber_code ) ),
     '{{unsubscribe_link}}' => esc_url( fcnen_get_unsubscribe_link( $subscriber_email, $subscriber_code ) ),
+    '{{edit_link}}' => esc_url( fcnen_get_edit_link( $subscriber_email, $subscriber_code ) ),
     '{{email}}' => $subscriber_email,
     '{{code}}' => $subscriber_code
   );

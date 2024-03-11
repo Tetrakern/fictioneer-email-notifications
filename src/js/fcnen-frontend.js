@@ -3,12 +3,33 @@ const fcnen_targetContainer = fcnen_modal?.querySelector('[data-target="fcnen-mo
 const fcnen_url_params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
 
 if (fcnen_modal) {
+  // Initial loading of modal content
   document.querySelectorAll('[data-click-action*="fcnen-load-modal-form"]').forEach(button => {
     button.addEventListener('click', () => {
       fcnen_getModalForm();
     }, { once: true });
   });
+
+  // Auto-open modal in edit mode
+  if (fcnen_url_params['fcnen-email'] && fcnen_url_params['fcnen-code']) {
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        fcnen_modal.showModal();
+        fcnen_getModalForm();
+      }, 100); // Delay to make sure utilities are loaded
+    });
+  }
 }
+
+/**
+ * Remove query args from URL.
+ *
+ * @since 0.1.0
+ */
+
+(() => {
+  history.replaceState && history.replaceState(null, '', location.pathname + location.search.replace(/[?&](fcnen-email|fcnen-code|fcnen-action|fcnen|)=[^&]+/g, '').replace(/^[?&]/, '?') + location.hash);
+})();
 
 /**
  * Add EventListeners.

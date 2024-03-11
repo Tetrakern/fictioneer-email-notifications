@@ -155,6 +155,30 @@ function fcnen_get_unsubscribe_link( $email, $code ) {
   return add_query_arg( $query_args, home_url() );
 }
 
+/**
+ * Get the edit link for the subscriber
+ *
+ * @since 0.1.0
+ *
+ * @param string $email  The email address of the subscriber.
+ * @param string $code   The code associated with the subscriber.
+ *
+ * @return string The edit link.
+ */
+
+function fcnen_get_edit_link( $email, $code ) {
+  // Setup
+  $query_args = array(
+    'fcnen' => 1,
+    'fcnen-action' => 'edit',
+    'fcnen-email' => urlencode( $email ),
+    'fcnen-code' => urlencode( $code )
+  );
+
+  // Return link
+  return add_query_arg( $query_args, home_url() );
+}
+
 // =======================================================================================
 // SUBSCRIBERS
 // =======================================================================================
