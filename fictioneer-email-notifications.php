@@ -115,12 +115,12 @@ function fcnen_settings_card() {
   // Start HTML ---> ?>
   <div class="fictioneer-card fictioneer-card--plugin">
     <div class="fictioneer-card__wrapper">
-      <h3 class="fictioneer-card__header"><?php _e( 'Fictioneer Chapter Notifications', 'fcnen' ); ?></h3>
+      <h3 class="fictioneer-card__header"><?php _e( 'Fictioneer Email Notifications', 'fcnen' ); ?></h3>
       <div class="fictioneer-card__content">
 
         <div class="fictioneer-card__row">
           <p><?php
-            _e( 'Subscribe to stories for chapter updates via email.', 'fcnen' );
+            _e( 'Subscribe to updates via email.', 'fcnen' );
           ?></p>
         </div>
 
@@ -177,7 +177,7 @@ function fcnen_admin_notice_wrong_theme() {
   // Start HTML ---> ?>
   <div class="notice notice-error is-dismissible">
     <p><?php
-      _e( 'Fictioneer Chapter Notifications requires the Fictioneer theme or a child theme. The plugin has been deactivated.', 'fcnen' );
+      _e( 'Fictioneer Email Notifications requires the Fictioneer theme or a child theme. The plugin has been deactivated.', 'fcnen' );
     ?></p>
   </div>
   <?php // <--- End HTML

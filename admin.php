@@ -58,7 +58,7 @@ add_action( 'admin_enqueue_scripts', 'fcnen_enqueue_admin_scripts' );
 function fcnen_admin_footer_text( $default ) {
   if ( strpos( $_GET['page'] ?? '', 'fcnen-' ) !== false ) {
     return sprintf(
-      _x( 'Fictioneer Chapter Notifications %s', 'Admin page footer text.', 'fcnes' ),
+      _x( 'Fictioneer Email Notifications %s', 'Admin page footer text.', 'fcnes' ),
       fcnen_VERSION
     );
   }
@@ -255,7 +255,7 @@ function fcnen_add_notifications_menu_page() {
 
   // Add admin page
   $notifications = add_menu_page(
-    'Chapter Notifications',
+    'Email Notifications',
     'Notifications',
     'manage_options',
     'fcnen-notifications',
