@@ -593,55 +593,6 @@ add_action( 'template_redirect', 'fcncn_handle_unsubscribe_link' );
 // =======================================================================================
 
 /**
- * Get the from email name
- *
- * @since 0.1.0
- *
- * @return string The from email name.
- */
-
-function fcncn_get_from_email_name() {
-  // From email address set?
-  $from = get_option( 'fcncn_from_email_name' );
-
-  if ( $from ) {
-    return $from;
-  }
-
-  // Return the blog name
-  return get_bloginfo( 'name' );
-}
-
-/**
- * Get the from email address
- *
- * @since 0.1.0
- *
- * @return string The from email address.
- */
-
-function fcncn_get_from_email_address() {
-  // From email address set?
-  $from = get_option( 'fcncn_from_email_address' );
-
-  if ( $from ) {
-    return $from;
-  }
-
-  // Setup
-  $parsed_url = wp_parse_url( get_home_url() );
-  $domain = isset( $parsed_url['host'] ) ? preg_replace( '/^www\./i', '', $parsed_url['host'] ) : '';
-
-  // Fallback
-  if ( empty( $domain ) ) {
-    return get_option( 'admin_email' );
-  }
-
-  // Return the noreply email address
-  return 'noreply@' . $domain;
-}
-
-/**
  * Sends a transactional email to a subscriber
  *
  * @since 0.1.0
