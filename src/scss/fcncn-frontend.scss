@@ -41,3 +41,11 @@
     color: var(--primary-400);
   }
 }
+
+.fcncn-modal-skeleton {
+  animation: skeleton-animation 2s linear infinite;
+
+  .shape {
+    background: var(--skeleton-shape-color);
+  }
+}
