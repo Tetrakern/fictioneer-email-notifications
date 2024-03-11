@@ -17,20 +17,25 @@ if (fcncn_modal) {
 
 function fcncn_addEventListeners() {
   // Toggle auth mode
-  document.querySelector('[data-click-action="auth-mode"]').addEventListener('click', () => {
+  document.querySelector('[data-click-action="auth-mode"]')?.addEventListener('click', () => {
     fcncn_modal.querySelector('[data-target="auth-mode"]').hidden = false;
     fcncn_modal.querySelector('[data-target="submit-mode"]').hidden = true;
   });
 
   // Toggle submit mode
-  document.querySelector('[data-click-action="submit-mode"]').addEventListener('click', () => {
+  document.querySelector('[data-click-action="submit-mode"]')?.addEventListener('click', () => {
     fcncn_modal.querySelector('[data-target="auth-mode"]').hidden = true;
     fcncn_modal.querySelector('[data-target="submit-mode"]').hidden = false;
   });
 
   // Submit button
-  document.getElementById('fcnes-modal-submit-button').addEventListener('click', event => {
+  document.getElementById('fcnes-modal-submit-button')?.addEventListener('click', event => {
     fcncn_subscribe(event.currentTarget);
+  });
+
+  // Edit button
+  document.getElementById('fcnes-modal-auth-button')?.addEventListener('click', () => {
+    fcncn_getModalForm('edit');
   });
 }
 
@@ -38,17 +43,24 @@ function fcncn_addEventListeners() {
  * AJAX: Get the modal form.
  *
  * @since 0.1.0
+ *
+ * @param {string} [context=] - The context in which the modal form is loaded. Default 'new'.
  */
 
-function fcncn_getModalForm() {
+function fcncn_getModalForm(context = 'new') {
   // Already loaded?
-  if (document.getElementById('fcncn-subscription-form')) {
+  if (context == 'new' && document.getElementById('fcncn-subscription-form')) {
     return;
   }
 
   // Setup
   const email = fcncn_url_params['fcncn-email'] ?? document.getElementById('fcncn-modal-auth-email')?.value ?? 0;
   const code = fcncn_url_params['fcncn-code'] ?? document.getElementById('fcncn-modal-auth-code')?.value ?? 0;
+
+  // Edit?
+  if (context == 'edit' && !(email || code)) {
+    return;
+  }
 
   // Prepare payload
   const payload = {
@@ -73,6 +85,8 @@ function fcncn_getModalForm() {
  * AJAX: Subscribe.
  *
  * @since 0.1.0
+ *
+ * @param {HTMLButtonElement} button - The submit button element.
  */
 
 function fcncn_subscribe(button) {
