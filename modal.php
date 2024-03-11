@@ -56,7 +56,7 @@ function fcnen_get_modal_content() {
       <?php else : ?>
         <div class="dialog-modal__row">
           <p class="dialog-modal__description"><?php
-            _e( 'Receive email notifications about new chapters on the site. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' );
+            _e( 'Receive email notifications about new content. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' );
           ?></p>
         </div>
       <?php endif; ?>
