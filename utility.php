@@ -7,6 +7,14 @@ defined( 'ABSPATH' ) OR exit;
 // GENERAL
 // =======================================================================================
 
+define(
+  'FCNCN_REPLACEMENTS',
+  array(
+    '{{site_name}}' => get_bloginfo( 'name' ),
+    '{{site_link}}' => esc_url( home_url() ),
+  )
+);
+
 /**
  * Replace (conditional) placeholders in a string with corresponding values
  *
@@ -20,7 +28,7 @@ defined( 'ABSPATH' ) OR exit;
 
 function fcncn_replace_placeholders( $string, $extra = [] ) {
   // Setup
-  $replacements = array_merge( [], $extra );
+  $replacements = array_merge( FCNCN_REPLACEMENTS, $extra );
 
   // Replace conditional placeholders {{#placeholder}}content{{/placeholder}}
   $string = preg_replace_callback( '/{{\#([\w\d_-]+)}}((?:(?!{{\/\1}}).)*){{\/\1}}/s', function( $matches ) use ( $replacements ) {
