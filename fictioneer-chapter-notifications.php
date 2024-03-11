@@ -547,11 +547,46 @@ function fcncn_handle_activation_link() {
     $notice = __( 'Subscription not found or already confirmed.', 'fcncn' );
     wp_safe_redirect( add_query_arg( array( 'fictioneer-notice' => $notice, 'failure' => 1 ), home_url() ) );
   }
-
-  // Terminate
-  exit;
 }
 add_action( 'template_redirect', 'fcncn_handle_activation_link' );
+
+/**
+ * Handle the unsubscribe link
+ *
+ * @since 0.1.0
+ */
+
+function fcncn_handle_unsubscribe_link() {
+  // Check URI
+  if (
+    ! isset( $_GET['fcncn'], $_GET['fcnes-action'], $_GET['fcnes-email'], $_GET['fcnes-code'] ) ||
+    $_GET['fcnes-action'] !== 'unsubscribe'
+  ) {
+    return;
+  }
+
+  // Setup
+  $email = urldecode( $_GET['fcnes-email'] ?? '' );
+  $code = urldecode( $_GET['fcnes-code'] ?? '' );
+
+  // Secondary check
+  if ( empty( $email ) || empty( $code ) ) {
+    return;
+  }
+
+  // Try to delete subscriber
+  $result = fcncn_delete_subscriber( $email, $code );
+
+  // Check result and redirect...
+  if ( $result ) {
+    $notice = __( 'Subscription has been deleted.', 'fcncn' );
+    wp_safe_redirect( add_query_arg( array( 'fictioneer-notice' => $notice, 'success' => 1 ), home_url() ) );
+  } else {
+    $notice = __( 'Subscription not found.', 'fcncn' );
+    wp_safe_redirect( add_query_arg( array( 'fictioneer-notice' => $notice, 'failure' => 1 ), home_url() ) );
+  }
+}
+add_action( 'template_redirect', 'fcncn_handle_unsubscribe_link' );
 
 // =======================================================================================
 // EMAILS
