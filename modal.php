@@ -1,6 +1,35 @@
 <?php
 
 /**
+ * Adds subscription modal to site
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_subscription_modal() {
+  // Setup
+  $advanced_mode = get_option( 'fcnen_advanced_mode' );
+
+  // Start HTML ---> ?>
+  <dialog id="fcnen-subscription-modal" class="dialog-modal fcnen-dialog-modal" data-nosnippet>
+    <button class="dialog-modal__close" aria-label="<?php esc_attr_e( 'Close modal', 'fictioneer' ); ?>" data-click-action="close-dialog-modal" autofocus><?php fictioneer_icon( 'fa-xmark' ); ?></button>
+    <h4 class="dialog-modal__header"><?php _e( 'Email Subscription', 'fcnen' ); ?></h4>
+    <div class="fcnen-dialog-modal__ajax-target" data-target="fcnen-modal-loader">
+      <div class="fcnen-modal-skeleton">
+        <div class="shape" style="margin: 12px; height: 18px; max-width: 400px;"></div>
+        <div class="shape" style="margin: 12px; height: 32px;"></div>
+        <?php if ( $advanced_mode ) : ?>
+          <div class="shape" style="margin: 12px; height: 18px; max-width: 200px;"></div>
+        <?php endif; ?>
+      </div>
+    </div>
+    <input name="nonce" type="hidden" autocomplete="off" value="<?php echo wp_create_nonce( 'fcnen-subscribe' ); ?>">
+  </dialog>
+  <?php // <--- End HTML
+}
+add_action( 'fictioneer_modals', 'fcnen_subscription_modal', 10 );
+
+/**
  * Returns modal content
  *
  * @since 0.1.0
