@@ -1,4 +1,4 @@
-.fcncn-dialog-modal {
+.fcnen-dialog-modal {
   --modal-width: 600px;
 
   p {
@@ -51,7 +51,7 @@
   height: auto;
 }
 
-.fcncn-inline-button {
+.fcnen-inline-button {
   color: var(--primary-500);
   font-weight: var(--font-weight-medium);
 
@@ -60,7 +60,7 @@
   }
 }
 
-.fcncn-modal-skeleton {
+.fcnen-modal-skeleton {
   animation: skeleton-animation 2s linear infinite;
 
   .shape {

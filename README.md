@@ -1,2 +1,3 @@
-# fictioneer-chapter-notifications
- Fictioneer plugin for email notifications about new chapters
+# Fictioneer Email Notifications
+
+Fictioneer plugin for email notifications about new content.

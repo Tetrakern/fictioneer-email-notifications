@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) OR exit;
 // =======================================================================================
 
 define(
-  'FCNCN_REPLACEMENTS',
+  'fcnen_REPLACEMENTS',
   array(
     '{{site_name}}' => get_bloginfo( 'name' ),
     '{{site_link}}' => esc_url( home_url() ),
@@ -26,9 +26,9 @@ define(
  * @return string The string with replaced placeholders.
  */
 
-function fcncn_replace_placeholders( $string, $extra = [] ) {
+function fcnen_replace_placeholders( $string, $extra = [] ) {
   // Setup
-  $replacements = array_merge( FCNCN_REPLACEMENTS, $extra );
+  $replacements = array_merge( fcnen_REPLACEMENTS, $extra );
 
   // Replace conditional placeholders {{#placeholder}}content{{/placeholder}}
   $string = preg_replace_callback( '/{{\#([\w\d_-]+)}}((?:(?!{{\/\1}}).)*){{\/\1}}/s', function( $matches ) use ( $replacements ) {
@@ -66,9 +66,9 @@ function fcncn_replace_placeholders( $string, $extra = [] ) {
  * @return string The from email name.
  */
 
-function fcncn_get_from_email_name() {
+function fcnen_get_from_email_name() {
   // From email address set?
-  $from = get_option( 'fcncn_from_email_name' );
+  $from = get_option( 'fcnen_from_email_name' );
 
   if ( $from ) {
     return $from;
@@ -86,9 +86,9 @@ function fcncn_get_from_email_name() {
  * @return string The from email address.
  */
 
-function fcncn_get_from_email_address() {
+function fcnen_get_from_email_address() {
   // From email address set?
-  $from = get_option( 'fcncn_from_email_address' );
+  $from = get_option( 'fcnen_from_email_address' );
 
   if ( $from ) {
     return $from;
@@ -118,13 +118,13 @@ function fcncn_get_from_email_address() {
  * @return string The activation link.
  */
 
-function fcncn_get_activation_link( $email, $code ) {
+function fcnen_get_activation_link( $email, $code ) {
   // Setup
   $query_args = array(
-    'fcncn' => 1,
-    'fcncn-action' => 'activation',
-    'fcncn-email' => urlencode( $email ),
-    'fcncn-code' => urlencode( $code )
+    'fcnen' => 1,
+    'fcnen-action' => 'activation',
+    'fcnen-email' => urlencode( $email ),
+    'fcnen-code' => urlencode( $code )
   );
 
   // Return link
@@ -142,13 +142,13 @@ function fcncn_get_activation_link( $email, $code ) {
  * @return string The unsubscribe link.
  */
 
-function fcncn_get_unsubscribe_link( $email, $code ) {
+function fcnen_get_unsubscribe_link( $email, $code ) {
   // Setup
   $query_args = array(
-    'fcncn' => 1,
-    'fcncn-action' => 'unsubscribe',
-    'fcncn-email' => urlencode( $email ),
-    'fcncn-code' => urlencode( $code )
+    'fcnen' => 1,
+    'fcnen-action' => 'unsubscribe',
+    'fcnen-email' => urlencode( $email ),
+    'fcnen-code' => urlencode( $code )
   );
 
   // Return link
@@ -170,11 +170,11 @@ function fcncn_get_unsubscribe_link( $email, $code ) {
  * @return bool Subscriber exists (true) or not (false).
  */
 
-function fcncn_subscriber_exists( $email ) {
+function fcnen_subscriber_exists( $email ) {
   global $wpdb;
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
 
   // Query
   $query = $wpdb->prepare( "SELECT COUNT(*) FROM $table_name WHERE email = %s", $email );
@@ -195,11 +195,11 @@ function fcncn_subscriber_exists( $email ) {
  * @return object|false The subscriber object if found, false if not.
  */
 
-function fcncn_get_subscriber_by_email( $email ) {
+function fcnen_get_subscriber_by_email( $email ) {
   global $wpdb;
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
 
   // Query
   $query = $wpdb->prepare( "SELECT * FROM $table_name WHERE email = %s", $email );
@@ -221,11 +221,11 @@ function fcncn_get_subscriber_by_email( $email ) {
  * @return object|false The subscriber object if found, false otherwise.
  */
 
-function fcncn_get_subscriber_by_email_and_code( $email, $code ) {
+function fcnen_get_subscriber_by_email_and_code( $email, $code ) {
   global $wpdb;
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
   $email = sanitize_email( $email );
   $code = sanitize_text_field( $code );
 

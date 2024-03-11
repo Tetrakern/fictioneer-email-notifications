@@ -22,30 +22,30 @@ require_once( plugin_dir_path( __FILE__ ) . 'classes/class-subscribers-table.php
  * @param string $hook_suffix  The current admin page.
  */
 
-function fcncn_enqueue_admin_scripts( $hook_suffix ) {
+function fcnen_enqueue_admin_scripts( $hook_suffix ) {
   // Only on the plugin's admin pages
-  if ( strpos( $_GET['page'] ?? '', 'fcncn-' ) === false ) {
+  if ( strpos( $_GET['page'] ?? '', 'fcnen-' ) === false ) {
     return;
   }
 
   // Styles
   wp_enqueue_style(
-    'fcncn-admin-styles',
-    plugin_dir_url( __FILE__ ) . '/css/fcncn-admin.css',
+    'fcnen-admin-styles',
+    plugin_dir_url( __FILE__ ) . '/css/fcnen-admin.css',
     [],
-    FCNCN_VERSION
+    fcnen_VERSION
   );
 
   // Scripts
   wp_enqueue_script(
-    'fcncn-admin-scripts',
-    plugin_dir_url( __FILE__ ) . '/js/fcncn-admin.min.js',
+    'fcnen-admin-scripts',
+    plugin_dir_url( __FILE__ ) . '/js/fcnen-admin.min.js',
     ['fictioneer-utility-scripts'],
-    FCNCN_VERSION,
+    fcnen_VERSION,
     true
   );
 }
-add_action( 'admin_enqueue_scripts', 'fcncn_enqueue_admin_scripts' );
+add_action( 'admin_enqueue_scripts', 'fcnen_enqueue_admin_scripts' );
 
 /**
  * Change text in bottom-left corner of the admin panel
@@ -55,17 +55,17 @@ add_action( 'admin_enqueue_scripts', 'fcncn_enqueue_admin_scripts' );
  * @param string $default  Default footer text.
  */
 
-function fcncn_admin_footer_text( $default ) {
-  if ( strpos( $_GET['page'] ?? '', 'fcncn-' ) !== false ) {
+function fcnen_admin_footer_text( $default ) {
+  if ( strpos( $_GET['page'] ?? '', 'fcnen-' ) !== false ) {
     return sprintf(
       _x( 'Fictioneer Chapter Notifications %s', 'Admin page footer text.', 'fcnes' ),
-      FCNCN_VERSION
+      fcnen_VERSION
     );
   }
 
   return $default;
 }
-add_filter( 'admin_footer_text', 'fcncn_admin_footer_text' );
+add_filter( 'admin_footer_text', 'fcnen_admin_footer_text' );
 
 /**
  * Adds removable query arguments (admin only)
@@ -77,10 +77,10 @@ add_filter( 'admin_footer_text', 'fcncn_admin_footer_text' );
  * @return array Extended list of query args.
  */
 
-function fcncn_add_removable_admin_args( $args ) {
-  return array_merge( $args, ['fcncn-notice', 'fcncn-message'] );
+function fcnen_add_removable_admin_args( $args ) {
+  return array_merge( $args, ['fcnen-notice', 'fcnen-message'] );
 }
-add_filter( 'removable_query_args', 'fcncn_add_removable_admin_args' );
+add_filter( 'removable_query_args', 'fcnen_add_removable_admin_args' );
 
 // =======================================================================================
 // NOTICES
@@ -89,17 +89,17 @@ add_filter( 'removable_query_args', 'fcncn_add_removable_admin_args' );
 /**
  * Show plugin admin notices
  *
- * Displays an admin notice based on the query parameter 'fcncn-notice'
- * and optionally 'fcncn-message' for additional information.
+ * Displays an admin notice based on the query parameter 'fcnen-notice'
+ * and optionally 'fcnen-message' for additional information.
  *
  * @since 0.1.0
  */
 
-function fcncn_admin_notices() {
+function fcnen_admin_notices() {
   // Setup
   $notice = '';
   $class = '';
-  $message = sanitize_text_field( $_GET['fcncn-message'] ?? '' );
+  $message = sanitize_text_field( $_GET['fcnen-message'] ?? '' );
 
   // Default notices
   if ( ( $_GET['settings-updated'] ?? 0 ) === 'true' ) {
@@ -108,120 +108,120 @@ function fcncn_admin_notices() {
   }
 
   // FCNES notices
-  switch ( $_GET['fcncn-notice'] ?? 0 ) {
+  switch ( $_GET['fcnen-notice'] ?? 0 ) {
     case 'subscriber-already-exists':
-      $notice = __( 'Error. Subscriber with that email address already exists.', 'fcncn' );
+      $notice = __( 'Error. Subscriber with that email address already exists.', 'fcnen' );
       $class = 'notice-error';
       break;
     case 'subscriber-adding-success':
-      $notice = sprintf( __( '%s added.', 'fcncn' ), $message ?: __( 'Subscriber', 'fcncn' ) );
+      $notice = sprintf( __( '%s added.', 'fcnen' ), $message ?: __( 'Subscriber', 'fcnen' ) );
       $class = 'notice-success';
       break;
     case 'subscriber-adding-failure':
-      $notice = sprintf( __( 'Error. %s could not be added.', 'fcnes' ), $message ?: __( 'Subscriber', 'fcncn' ) );
+      $notice = sprintf( __( 'Error. %s could not be added.', 'fcnes' ), $message ?: __( 'Subscriber', 'fcnen' ) );
       $class = 'notice-error';
       break;
     case 'confirm-subscriber-success':
-      $notice = sprintf( __( 'Subscriber (#%s) confirmed.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $notice = sprintf( __( 'Subscriber (#%s) confirmed.', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
       $class = 'notice-success';
       break;
     case 'confirm-subscriber-failure':
       $notice = sprintf(
-        __( 'Error. Subscriber (#%s) could not be confirmed.', 'fcncn' ),
-        $message ?: __( 'n/a', 'fcncn' )
+        __( 'Error. Subscriber (#%s) could not be confirmed.', 'fcnen' ),
+        $message ?: __( 'n/a', 'fcnen' )
       );
       $class = 'notice-error';
       break;
     case 'unconfirm-subscriber-success':
-      $notice = sprintf( __( 'Subscriber (#%s) unconfirmed.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $notice = sprintf( __( 'Subscriber (#%s) unconfirmed.', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
       $class = 'notice-success';
       break;
     case 'unconfirm-subscriber-failure':
       $notice = sprintf(
-        __( 'Error. Subscriber (#%s) could not be unconfirmed.', 'fcncn' ),
-        $message ?: __( 'n/a', 'fcncn' )
+        __( 'Error. Subscriber (#%s) could not be unconfirmed.', 'fcnen' ),
+        $message ?: __( 'n/a', 'fcnen' )
       );
       $class = 'notice-error';
       break;
     case 'trash-subscriber-success':
-      $notice = sprintf( __( 'Subscriber (#%s) trashed.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $notice = sprintf( __( 'Subscriber (#%s) trashed.', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
       $class = 'notice-success';
       break;
     case 'trash-subscriber-failure':
       $notice = sprintf(
-        __( 'Error. Subscriber (#%s) could not be trashed.', 'fcncn' ),
-        $message ?: __( 'n/a', 'fcncn' )
+        __( 'Error. Subscriber (#%s) could not be trashed.', 'fcnen' ),
+        $message ?: __( 'n/a', 'fcnen' )
       );
       $class = 'notice-error';
       break;
     case 'restore-subscriber-success':
-      $notice = sprintf( __( 'Subscriber (#%s) restored.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $notice = sprintf( __( 'Subscriber (#%s) restored.', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
       $class = 'notice-success';
       break;
     case 'restore-subscriber-failure':
       $notice = sprintf(
-        __( 'Error. Subscriber (#%s) could not be restored.', 'fcncn' ),
-        $message ?: __( 'n/a', 'fcncn' )
+        __( 'Error. Subscriber (#%s) could not be restored.', 'fcnen' ),
+        $message ?: __( 'n/a', 'fcnen' )
       );
       $class = 'notice-error';
       break;
     case 'delete-subscriber-success':
-      $notice = sprintf( __( 'Subscriber (#%s) permanently deleted.', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $notice = sprintf( __( 'Subscriber (#%s) permanently deleted.', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
       $class = 'notice-success';
       break;
     case 'delete-subscriber-failure':
       $notice = sprintf(
-        __( 'Error. Subscriber (#%s) could not be deleted.', 'fcncn' ),
-        $message ?: __( 'n/a', 'fcncn' )
+        __( 'Error. Subscriber (#%s) could not be deleted.', 'fcnen' ),
+        $message ?: __( 'n/a', 'fcnen' )
       );
       $class = 'notice-error';
       break;
     case 'bulk-confirm-subscribers-success':
-      $notice = sprintf( __( 'Confirmed %s subscribers.', 'fcncn' ), $message ?: '0' );
+      $notice = sprintf( __( 'Confirmed %s subscribers.', 'fcnen' ), $message ?: '0' );
       $class = 'notice-success';
       break;
     case 'bulk-confirm-subscribers-failure':
-      $notice = __( 'Error. Could not confirm subscribers.', 'fcncn' );
+      $notice = __( 'Error. Could not confirm subscribers.', 'fcnen' );
       $class = 'notice-error';
       break;
     case 'bulk-unconfirm-subscribers-success':
-      $notice = sprintf( __( 'Unconfirmed %s subscribers.', 'fcncn' ), $message ?: '0' );
+      $notice = sprintf( __( 'Unconfirmed %s subscribers.', 'fcnen' ), $message ?: '0' );
       $class = 'notice-success';
       break;
     case 'bulk-unconfirm-subscribers-failure':
-      $notice = __( 'Error. Could not unconfirm subscribers.', 'fcncn' );
+      $notice = __( 'Error. Could not unconfirm subscribers.', 'fcnen' );
       $class = 'notice-error';
       break;
     case 'bulk-trash-subscribers-success':
-      $notice = sprintf( __( 'Trashed %s subscribers.', 'fcncn' ), $message ?: '0' );
+      $notice = sprintf( __( 'Trashed %s subscribers.', 'fcnen' ), $message ?: '0' );
       $class = 'notice-success';
       break;
     case 'bulk-trash-subscribers-failure':
-      $notice = __( 'Error. Could not trash subscribers.', 'fcncn' );
+      $notice = __( 'Error. Could not trash subscribers.', 'fcnen' );
       $class = 'notice-error';
       break;
     case 'bulk-restore-subscribers-success':
-      $notice = sprintf( __( 'Restored %s subscribers.', 'fcncn' ), $message ?: '0' );
+      $notice = sprintf( __( 'Restored %s subscribers.', 'fcnen' ), $message ?: '0' );
       $class = 'notice-success';
       break;
     case 'bulk-restore-subscribers-failure':
-      $notice = __( 'Error. Could not restore subscribers.', 'fcncn' );
+      $notice = __( 'Error. Could not restore subscribers.', 'fcnen' );
       $class = 'notice-error';
       break;
     case 'bulk-delete-subscribers-success':
-      $notice = sprintf( __( 'Permanently deleted %s subscribers.', 'fcncn' ), $message ?: '0' );
+      $notice = sprintf( __( 'Permanently deleted %s subscribers.', 'fcnen' ), $message ?: '0' );
       $class = 'notice-success';
       break;
     case 'bulk-delete-subscribers-failure':
-      $notice = __( 'Error. Could not delete subscribers.', 'fcncn' );
+      $notice = __( 'Error. Could not delete subscribers.', 'fcnen' );
       $class = 'notice-error';
       break;
     case 'confirmation-email-resent':
-      $notice = sprintf( __( 'Confirmation email resent to subscriber (#%s).', 'fcncn' ), $message ?: __( 'n/a', 'fcncn' ) );
+      $notice = sprintf( __( 'Confirmation email resent to subscriber (#%s).', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
       $class = 'notice-success';
       break;
     case 'emptied-trashed-subscribers':
-      $notice = __( 'Emptied trash.', 'fcncn' );
+      $notice = __( 'Emptied trash.', 'fcnen' );
       $class = 'notice-success';
       break;
   }
@@ -231,7 +231,7 @@ function fcncn_admin_notices() {
     echo "<div class='notice {$class} is-dismissible'><p>{$notice}</p></div>";
   }
 }
-add_action( 'admin_notices', 'fcncn_admin_notices' );
+add_action( 'admin_notices', 'fcnen_admin_notices' );
 
 // =======================================================================================
 // ADMIN NOTIFICATIONS PAGE
@@ -243,7 +243,7 @@ add_action( 'admin_notices', 'fcncn_admin_notices' );
  * @since 0.1.0
  */
 
-function fcncn_add_notifications_menu_page() {
+function fcnen_add_notifications_menu_page() {
   // Guard
   if ( ! current_user_can( 'manage_options' ) ) {
     return;
@@ -254,12 +254,12 @@ function fcncn_add_notifications_menu_page() {
     'Chapter Notifications',
     'Notifications',
     'manage_options',
-    'fcncn-notifications',
-    'fcncn_notifications_page',
+    'fcnen-notifications',
+    'fcnen_notifications_page',
     'dashicons-email-alt'
   );
 }
-add_action( 'admin_menu', 'fcncn_add_notifications_menu_page' );
+add_action( 'admin_menu', 'fcnen_add_notifications_menu_page' );
 
 /**
  * Callback for the notifications menu page
@@ -267,7 +267,7 @@ add_action( 'admin_menu', 'fcncn_add_notifications_menu_page' );
  * @since 0.1.0
  */
 
-function fcncn_notifications_page() {
+function fcnen_notifications_page() {
   // Guard
   if ( ! current_user_can( 'administrator' ) ) {
     wp_die( __( 'You do not have permission to access this page.', 'fcnes' ) );
@@ -287,28 +287,28 @@ function fcncn_notifications_page() {
  * @since 0.1.0
  */
 
-function fcncn_add_subscribers_menu_page() {
+function fcnen_add_subscribers_menu_page() {
   // Guard
   if ( ! current_user_can( 'manage_options' ) ) {
     return;
   }
 
   // Add admin page
-  $fcncn_admin_page_subscribers = add_submenu_page(
-    'fcncn-notifications',
+  $fcnen_admin_page_subscribers = add_submenu_page(
+    'fcnen-notifications',
     'Subscribers',
     'Subscribers',
     'manage_options',
-    'fcncn-subscribers',
-    'fcncn_subscribers_page'
+    'fcnen-subscribers',
+    'fcnen_subscribers_page'
   );
 
   // Add screen options
-  if ( $fcncn_admin_page_subscribers ) {
-    add_action( "load-{$fcncn_admin_page_subscribers}", 'fcncn_subscribers_table_screen_options' );
+  if ( $fcnen_admin_page_subscribers ) {
+    add_action( "load-{$fcnen_admin_page_subscribers}", 'fcnen_subscribers_table_screen_options' );
   }
 }
-add_action( 'admin_menu', 'fcncn_add_subscribers_menu_page' );
+add_action( 'admin_menu', 'fcnen_add_subscribers_menu_page' );
 
 /**
  * Configure the screen options for the subscribers page
@@ -317,19 +317,19 @@ add_action( 'admin_menu', 'fcncn_add_subscribers_menu_page' );
  * @global WP_List_Table $subscribers_table  The subscribers table instance.
  */
 
-function fcncn_subscribers_table_screen_options() {
+function fcnen_subscribers_table_screen_options() {
   global $subscribers_table;
 
   // Add pagination option
 	$args = array(
-		'label' => __( 'Subscribers per page', 'fcncn' ),
+		'label' => __( 'Subscribers per page', 'fcnen' ),
 		'default' => 25,
-		'option' => 'fcncn_subscribers_per_page'
+		'option' => 'fcnen_subscribers_per_page'
 	);
 	add_screen_option( 'per_page', $args );
 
   // Setup table
-  $subscribers_table = new FCNCN_Subscribers_Table();
+  $subscribers_table = new FCNEN_Subscribers_Table();
 
   // Perform table actions
   $subscribers_table->perform_actions();
@@ -341,7 +341,7 @@ function fcncn_subscribers_table_screen_options() {
  * @since 0.1.0
  */
 
-function fcncn_subscribers_page() {
+function fcnen_subscribers_page() {
   global $subscribers_table;
 
   // Guard
@@ -353,37 +353,37 @@ function fcncn_subscribers_page() {
   $subscribers_table->prepare_items();
 
   // Start HTML ---> ?>
-  <div id="fcncn-admin-page-subscribers" class="wrap fcncn-settings _subscribers">
-    <h1 class="fcncn-settings__header"><?php echo esc_html__( 'Subscribers', 'fcncn' ); ?></h1>
+  <div id="fcnen-admin-page-subscribers" class="wrap fcnen-settings _subscribers">
+    <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Subscribers', 'fcnen' ); ?></h1>
     <hr class="wp-header-end">
 
-    <div class="fcncn-settings__content">
+    <div class="fcnen-settings__content">
 
-      <div class="fcncn-settings__columns">
+      <div class="fcnen-settings__columns">
 
-        <div class="fcncn-box">
+        <div class="fcnen-box">
 
-          <div class="fcncn-box__header">
-            <h2><?php _e( 'Add Subscriber', 'fcncn' ); ?></h2>
+          <div class="fcnen-box__header">
+            <h2><?php _e( 'Add Subscriber', 'fcnen' ); ?></h2>
           </div>
 
-          <div class="fcncn-box__body">
-            <div class="fcncn-box__row">
-              <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcncn_submit_subscriber' ); ?>">
+          <div class="fcnen-box__body">
+            <div class="fcnen-box__row">
+              <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_submit_subscriber' ); ?>">
 
-                <?php wp_nonce_field( 'submit_subscriber', 'fcncn-nonce' ); ?>
+                <?php wp_nonce_field( 'submit_subscriber', 'fcnen-nonce' ); ?>
 
-                <div class="fcncn-input-wrap">
-                  <input type="email" name="email" id="fcncn-submit-subscriber-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcncn' ); ?>" required>
+                <div class="fcnen-input-wrap">
+                  <input type="email" name="email" id="fcnen-submit-subscriber-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcnen' ); ?>" required>
                 </div>
 
-                <div class="fcncn-checkbox-wrap">
-                  <input type="checkbox" name="confirmed" id="fcncn-submit-subscriber-confirm" value="1">
-                  <label for="fcncn-submit-subscriber-confirm"><?php _e( 'Confirmed', 'fcncn' ); ?></label>
+                <div class="fcnen-checkbox-wrap">
+                  <input type="checkbox" name="confirmed" id="fcnen-submit-subscriber-confirm" value="1">
+                  <label for="fcnen-submit-subscriber-confirm"><?php _e( 'Confirmed', 'fcnen' ); ?></label>
                 </div>
 
-                <div class="fcncn-submit-wrap">
-                  <button type="submit" class="button button-primary"><?php _e( 'Submit Subscriber', 'fcncn' ); ?></button>
+                <div class="fcnen-submit-wrap">
+                  <button type="submit" class="button button-primary"><?php _e( 'Submit Subscriber', 'fcnen' ); ?></button>
                 </div>
 
               </form>
@@ -393,7 +393,7 @@ function fcncn_subscribers_page() {
         </div>
       </div>
 
-      <div class="fcncn-settings__table fcncn-subscribers-table-wrapper">
+      <div class="fcnen-settings__table fcnen-subscribers-table-wrapper">
         <?php $subscribers_table->display_views(); ?>
         <form method="post"><?php
           $subscribers_table->search_box( 'Search Emails', 'search_id' );

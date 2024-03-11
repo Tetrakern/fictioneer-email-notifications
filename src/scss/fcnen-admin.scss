@@ -2,7 +2,7 @@
  * LAYOUT
  * ========================================================================== */
 
- .fcncn-settings {
+ .fcnen-settings {
   &__content {
     display: grid;
     grid-gap: 40px;
@@ -19,15 +19,15 @@
  * TABLE
  * ========================================================================== */
 
-.fcncn-subscribers-table-wrapper .column-id {
+.fcnen-subscribers-table-wrapper .column-id {
   width: 64px;
 }
 
-.fcncn-subscribers-table-wrapper .column-status {
+.fcnen-subscribers-table-wrapper .column-status {
   width: 128px;
 }
 
-.fcncn-subscribers-table-wrapper .column-date {
+.fcnen-subscribers-table-wrapper .column-date {
   width: 188px;
 }
 
@@ -35,7 +35,7 @@
  * BOX
  * ========================================================================== */
 
-.fcncn-box {
+.fcnen-box {
   border: 1px solid #c3c4c7;
   box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
   background: #fff;

@@ -1,20 +1,20 @@
 <?php
 /**
- * Plugin Name: Fictioneer Chapter Notifications
- * Description: Subscribe to chapter updates via email.
+ * Plugin Name: Fictioneer Email Notifications
+ * Description: Subscribe to updates via email.
  * Version: 0.1.0
  * Requires at least: 6.1
  * Requires PHP: 7.4
  * Author: Tetrakern
  * Author URI: https://github.com/Tetrakern
- * Text Domain: fcncn
+ * Text Domain: fcnen
  */
 
 // No direct access!
 defined( 'ABSPATH' ) OR exit;
 
 // Version
-define( 'FCNCN_VERSION', '0.1.0' );
+define( 'fcnen_VERSION', '0.1.0' );
 
 // =======================================================================================
 // STUBS
@@ -26,7 +26,7 @@ define( 'FCNCN_VERSION', '0.1.0' );
  * @since 0.1.0
  */
 
-function fcncn_load_stubs() {
+function fcnen_load_stubs() {
 	if ( ! function_exists( 'fictioneer_minify_html' ) ) {
     function fictioneer_minify_html( $html ) {}
   }
@@ -35,7 +35,7 @@ function fcncn_load_stubs() {
     function fictioneer_icon( $icon ) {}
   }
 }
-add_action( 'wp_loaded', 'fcncn_load_stubs' );
+add_action( 'wp_loaded', 'fcnen_load_stubs' );
 
 // =======================================================================================
 // INCLUDES & REQUIRES
@@ -61,7 +61,7 @@ if ( is_admin() ) {
  * @global wpdb $wpdb  The WordPress database object.
  */
 
-function fcncn_create_subscribers_table() {
+function fcnen_create_subscribers_table() {
   global $wpdb;
 
   if ( ! function_exists( 'dbDelta' ) ) {
@@ -69,7 +69,7 @@ function fcncn_create_subscribers_table() {
   }
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
   $charset_collate = $wpdb->get_charset_collate();
 
   // Skip if the table already exists
@@ -99,7 +99,7 @@ function fcncn_create_subscribers_table() {
 
   dbDelta( $sql );
 }
-register_activation_hook( __FILE__, 'fcncn_create_subscribers_table' );
+register_activation_hook( __FILE__, 'fcnen_create_subscribers_table' );
 
 // =======================================================================================
 // REGISTER WITH THEME
@@ -111,23 +111,23 @@ register_activation_hook( __FILE__, 'fcncn_create_subscribers_table' );
  * @since 0.1.0
  */
 
-function fcncn_settings_card() {
+function fcnen_settings_card() {
   // Start HTML ---> ?>
   <div class="fictioneer-card fictioneer-card--plugin">
     <div class="fictioneer-card__wrapper">
-      <h3 class="fictioneer-card__header"><?php _e( 'Fictioneer Chapter Notifications', 'fcncn' ); ?></h3>
+      <h3 class="fictioneer-card__header"><?php _e( 'Fictioneer Chapter Notifications', 'fcnen' ); ?></h3>
       <div class="fictioneer-card__content">
 
         <div class="fictioneer-card__row">
           <p><?php
-            _e( 'Subscribe to stories for chapter updates via email.', 'fcncn' );
+            _e( 'Subscribe to stories for chapter updates via email.', 'fcnen' );
           ?></p>
         </div>
 
         <div class="fictioneer-card__row fictioneer-card__row--meta">
-          <?php printf( __( 'Version %s', 'fcncn' ), FCNCN_VERSION ); ?>
+          <?php printf( __( 'Version %s', 'fcnen' ), fcnen_VERSION ); ?>
           |
-          <?php printf( __( 'By <a href="%s">Tetrakern</a>', 'fcncn' ), 'https://github.com/Tetrakern' ); ?>
+          <?php printf( __( 'By <a href="%s">Tetrakern</a>', 'fcnen' ), 'https://github.com/Tetrakern' ); ?>
         </div>
 
       </div>
@@ -135,7 +135,7 @@ function fcncn_settings_card() {
   </div>
   <?php // <--- End HTML
 }
-add_action( 'fictioneer_admin_settings_plugins', 'fcncn_settings_card' );
+add_action( 'fictioneer_admin_settings_plugins', 'fcnen_settings_card' );
 
 /**
  * Checks for the Fictioneer (parent) theme, deactivates plugin if not found
@@ -143,7 +143,7 @@ add_action( 'fictioneer_admin_settings_plugins', 'fcncn_settings_card' );
  * @since 0.1.0
  */
 
-function fcncn_check_theme() {
+function fcnen_check_theme() {
   // Setup
   $current_theme = wp_get_theme();
 
@@ -162,10 +162,10 @@ function fcncn_check_theme() {
     deactivate_plugins( plugin_basename( __FILE__ ) );
 
     // Display an admin notice
-    add_action( 'admin_notices', 'fcncn_admin_notice_wrong_theme' );
+    add_action( 'admin_notices', 'fcnen_admin_notice_wrong_theme' );
   }
 }
-add_action( 'after_setup_theme', 'fcncn_check_theme' );
+add_action( 'after_setup_theme', 'fcnen_check_theme' );
 
 /**
  * Show admin notice if plugin has been deactivated due to wrong theme
@@ -173,11 +173,11 @@ add_action( 'after_setup_theme', 'fcncn_check_theme' );
  * @since 0.1.0
  */
 
-function fcncn_admin_notice_wrong_theme() {
+function fcnen_admin_notice_wrong_theme() {
   // Start HTML ---> ?>
   <div class="notice notice-error is-dismissible">
     <p><?php
-      _e( 'Fictioneer Chapter Notifications requires the Fictioneer theme or a child theme. The plugin has been deactivated.', 'fcncn' );
+      _e( 'Fictioneer Chapter Notifications requires the Fictioneer theme or a child theme. The plugin has been deactivated.', 'fcnen' );
     ?></p>
   </div>
   <?php // <--- End HTML
@@ -199,7 +199,7 @@ function fcncn_admin_notice_wrong_theme() {
  * @return boolean True or false.
  */
 
-function fcncn_compare_wp_version( $version, $operator = '>=' ) {
+function fcnen_compare_wp_version( $version, $operator = '>=' ) {
   global $wp_version;
 
   return version_compare( $wp_version, $version, $operator );
@@ -211,28 +211,28 @@ function fcncn_compare_wp_version( $version, $operator = '>=' ) {
  * @since 0.1.0
  */
 
-function fcncn_enqueue_frontend_scripts() {
+function fcnen_enqueue_frontend_scripts() {
   // Setup
-  $strategy = fcncn_compare_wp_version( '6.3' ) ? array( 'strategy'  => 'defer' ) : true; // Defer or load in footer
+  $strategy = fcnen_compare_wp_version( '6.3' ) ? array( 'strategy'  => 'defer' ) : true; // Defer or load in footer
 
   // Styles
   wp_enqueue_style(
-    'fcncn-frontend-styles',
-    plugin_dir_url( __FILE__ ) . '/css/fcncn-frontend.css',
+    'fcnen-frontend-styles',
+    plugin_dir_url( __FILE__ ) . '/css/fcnen-frontend.css',
     ['fictioneer-application'],
-    FCNCN_VERSION
+    fcnen_VERSION
   );
 
   // Scripts
   wp_enqueue_script(
-    'fcncn-frontend-scripts',
-    plugin_dir_url( __FILE__ ) . 'js/fcncn-frontend.min.js',
+    'fcnen-frontend-scripts',
+    plugin_dir_url( __FILE__ ) . 'js/fcnen-frontend.min.js',
     [],
-    FCNCN_VERSION,
+    fcnen_VERSION,
     $strategy
   );
 }
-add_action( 'wp_enqueue_scripts', 'fcncn_enqueue_frontend_scripts' );
+add_action( 'wp_enqueue_scripts', 'fcnen_enqueue_frontend_scripts' );
 
 /**
  * Add removable query args (frontend only)
@@ -244,10 +244,10 @@ add_action( 'wp_enqueue_scripts', 'fcncn_enqueue_frontend_scripts' );
  * @return array Extended list of query args.
  */
 
-function fcncn_add_removable_frontend_query_args( $args ) {
-  return array_merge( $args, ['fcncn-notice', 'fcncn-message'] );
+function fcnen_add_removable_frontend_query_args( $args ) {
+  return array_merge( $args, ['fcnen-notice', 'fcnen-message'] );
 }
-add_filter( 'fictioneer_filter_removable_query_args', 'fcncn_add_removable_frontend_query_args' );
+add_filter( 'fictioneer_filter_removable_query_args', 'fcnen_add_removable_frontend_query_args' );
 
 // =======================================================================================
 // FRONTEND
@@ -261,7 +261,7 @@ add_filter( 'fictioneer_filter_removable_query_args', 'fcncn_add_removable_front
  * @param int|null $post_id  Optional. The post ID to subscribe to.
  */
 
-function fcncn_get_subscription_button( $post_id = null ) {
+function fcnen_get_subscription_button( $post_id = null ) {
   // Setup
   $attributes = '';
 
@@ -270,7 +270,7 @@ function fcncn_get_subscription_button( $post_id = null ) {
     $attributes = "data-story-id='{$post_id}'";
   }
 
-  return '<button type="button" data-click-target="#fcncn-subscription-modal" data-click-action="open-dialog-modal fcncn-load-modal-form" class="_align-left" tabindex="0" ' . $attributes . '><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcncn' ) . '</span></button>';
+  return '<button type="button" data-click-target="#fcnen-subscription-modal" data-click-action="open-dialog-modal fcnen-load-modal-form" class="_align-left" tabindex="0" ' . $attributes . '><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcnen' ) . '</span></button>';
 }
 
 /**
@@ -283,14 +283,14 @@ function fcncn_get_subscription_button( $post_id = null ) {
  * @return array Updated array of subscribe buttons.
  */
 
-function fcncn_filter_extend_subscribe_buttons( $buttons, $post_id ) {
+function fcnen_filter_extend_subscribe_buttons( $buttons, $post_id ) {
   // Add to first place
-  array_splice( $buttons, 0, 0, fcncn_get_subscription_button( $post_id ) );
+  array_splice( $buttons, 0, 0, fcnen_get_subscription_button( $post_id ) );
 
   // Continue filter
   return $buttons;
 }
-add_filter( 'fictioneer_filter_subscribe_buttons', 'fcncn_filter_extend_subscribe_buttons', 20, 2 );
+add_filter( 'fictioneer_filter_subscribe_buttons', 'fcnen_filter_extend_subscribe_buttons', 20, 2 );
 
 /**
  * Adds subscription modal to site
@@ -298,16 +298,16 @@ add_filter( 'fictioneer_filter_subscribe_buttons', 'fcncn_filter_extend_subscrib
  * @since 0.1.0
  */
 
-function fcncn_subscription_modal() {
+function fcnen_subscription_modal() {
   // Setup
-  $advanced_mode = get_option( 'fcncn_advanced_mode' );
+  $advanced_mode = get_option( 'fcnen_advanced_mode' );
 
   // Start HTML ---> ?>
-  <dialog id="fcncn-subscription-modal" class="dialog-modal fcncn-dialog-modal" data-nosnippet>
+  <dialog id="fcnen-subscription-modal" class="dialog-modal fcnen-dialog-modal" data-nosnippet>
     <button class="dialog-modal__close" aria-label="<?php esc_attr_e( 'Close modal', 'fictioneer' ); ?>" data-click-action="close-dialog-modal" autofocus><?php fictioneer_icon( 'fa-xmark' ); ?></button>
-    <h4 class="dialog-modal__header"><?php _e( 'Subscription', 'fcncn' ); ?></h4>
-    <div class="fcncn-dialog-modal__ajax-target" data-target="fcncn-modal-loader">
-      <div class="fcncn-modal-skeleton">
+    <h4 class="dialog-modal__header"><?php _e( 'Subscription', 'fcnen' ); ?></h4>
+    <div class="fcnen-dialog-modal__ajax-target" data-target="fcnen-modal-loader">
+      <div class="fcnen-modal-skeleton">
         <div class="shape" style="margin: 12px; height: 18px; max-width: 400px;"></div>
         <div class="shape" style="margin: 12px; height: 32px;"></div>
         <?php if ( $advanced_mode ) : ?>
@@ -315,11 +315,11 @@ function fcncn_subscription_modal() {
         <?php endif; ?>
       </div>
     </div>
-    <input name="nonce" type="hidden" autocomplete="off" value="<?php echo wp_create_nonce( 'fcncn-subscribe' ); ?>">
+    <input name="nonce" type="hidden" autocomplete="off" value="<?php echo wp_create_nonce( 'fcnen-subscribe' ); ?>">
   </dialog>
   <?php // <--- End HTML
 }
-add_action( 'fictioneer_modals', 'fcncn_subscription_modal', 10 );
+add_action( 'fictioneer_modals', 'fcnen_subscription_modal', 10 );
 
 // =======================================================================================
 // SUBSCRIBERS
@@ -349,16 +349,16 @@ add_action( 'fictioneer_modals', 'fcncn_subscription_modal', 10 );
  * @return int|false The ID of the inserted subscriber, false on failure.
  */
 
-function fcncn_add_subscriber( $email, $args = [] ) {
+function fcnen_add_subscriber( $email, $args = [] ) {
   global $wpdb;
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
   $subscriber_id = false;
   $email = sanitize_email( $email );
 
   // Valid and new email?
-  if ( empty( $email ) || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) || fcncn_subscriber_exists( $email ) )  {
+  if ( empty( $email ) || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) || fcnen_subscriber_exists( $email ) )  {
     return false;
   }
 
@@ -416,7 +416,7 @@ function fcncn_add_subscriber( $email, $args = [] ) {
     $subscriber_id = $wpdb->insert_id;
 
     if ( ! $args['confirmed'] ) {
-      fcncn_send_confirmation_email(
+      fcnen_send_confirmation_email(
         array(
           'email' => $email,
           'code' => $args['code']
@@ -450,7 +450,7 @@ function fcncn_add_subscriber( $email, $args = [] ) {
  * @return bool Whether the subscriber was successfully updated.
  */
 
-function fcncn_update_subscriber( $email, $args = [] ) {
+function fcnen_update_subscriber( $email, $args = [] ) {
   return true;
 }
 
@@ -465,11 +465,11 @@ function fcncn_update_subscriber( $email, $args = [] ) {
  * @return bool Whether the subscriber was successfully deleted.
  */
 
-function fcncn_delete_subscriber( $email ) {
+function fcnen_delete_subscriber( $email ) {
   global $wpdb;
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
   $email = sanitize_email( $email );
 
   // Delete subscriber
@@ -491,11 +491,11 @@ function fcncn_delete_subscriber( $email ) {
  * @return boolean Whether the activation was successful or not.
  */
 
-function fcncn_activate_subscriber( $email, $code ) {
+function fcnen_activate_subscriber( $email, $code ) {
   global $wpdb;
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
   $email = sanitize_email( $email );
   $code = sanitize_text_field( $code );
 
@@ -518,18 +518,18 @@ function fcncn_activate_subscriber( $email, $code ) {
  * @since 0.1.0
  */
 
-function fcncn_handle_activation_link() {
+function fcnen_handle_activation_link() {
   // Check URI
   if (
-    ! isset( $_GET['fcncn'], $_GET['fcncn-action'], $_GET['fcncn-email'], $_GET['fcncn-code'] ) ||
-    $_GET['fcncn-action'] !== 'activation'
+    ! isset( $_GET['fcnen'], $_GET['fcnen-action'], $_GET['fcnen-email'], $_GET['fcnen-code'] ) ||
+    $_GET['fcnen-action'] !== 'activation'
   ) {
     return;
   }
 
   // Setup
-  $email = urldecode( $_GET['fcncn-email'] ?? '' );
-  $code = urldecode( $_GET['fcncn-code'] ?? '' );
+  $email = urldecode( $_GET['fcnen-email'] ?? '' );
+  $code = urldecode( $_GET['fcnen-code'] ?? '' );
 
   // Secondary check
   if ( empty( $email ) || empty( $code ) ) {
@@ -537,18 +537,18 @@ function fcncn_handle_activation_link() {
   }
 
   // Try to activate subscriber
-  $result = fcncn_activate_subscriber( $email, $code );
+  $result = fcnen_activate_subscriber( $email, $code );
 
   // Check result and redirect...
   if ( $result ) {
-    $notice = __( 'Subscription has been confirmed.', 'fcncn' );
+    $notice = __( 'Subscription has been confirmed.', 'fcnen' );
     wp_safe_redirect( add_query_arg( array( 'fictioneer-notice' => $notice, 'success' => 1 ), home_url() ) );
   } else {
-    $notice = __( 'Subscription not found or already confirmed.', 'fcncn' );
+    $notice = __( 'Subscription not found or already confirmed.', 'fcnen' );
     wp_safe_redirect( add_query_arg( array( 'fictioneer-notice' => $notice, 'failure' => 1 ), home_url() ) );
   }
 }
-add_action( 'template_redirect', 'fcncn_handle_activation_link' );
+add_action( 'template_redirect', 'fcnen_handle_activation_link' );
 
 /**
  * Handle the unsubscribe link
@@ -556,18 +556,18 @@ add_action( 'template_redirect', 'fcncn_handle_activation_link' );
  * @since 0.1.0
  */
 
-function fcncn_handle_unsubscribe_link() {
+function fcnen_handle_unsubscribe_link() {
   // Check URI
   if (
-    ! isset( $_GET['fcncn'], $_GET['fcncn-action'], $_GET['fcncn-email'], $_GET['fcncn-code'] ) ||
-    $_GET['fcncn-action'] !== 'unsubscribe'
+    ! isset( $_GET['fcnen'], $_GET['fcnen-action'], $_GET['fcnen-email'], $_GET['fcnen-code'] ) ||
+    $_GET['fcnen-action'] !== 'unsubscribe'
   ) {
     return;
   }
 
   // Setup
-  $email = urldecode( $_GET['fcncn-email'] ?? '' );
-  $code = urldecode( $_GET['fcncn-code'] ?? '' );
+  $email = urldecode( $_GET['fcnen-email'] ?? '' );
+  $code = urldecode( $_GET['fcnen-code'] ?? '' );
 
   // Secondary check
   if ( empty( $email ) || empty( $code ) ) {
@@ -575,18 +575,18 @@ function fcncn_handle_unsubscribe_link() {
   }
 
   // Try to delete subscriber
-  $result = fcncn_delete_subscriber( $email, $code );
+  $result = fcnen_delete_subscriber( $email, $code );
 
   // Check result and redirect...
   if ( $result ) {
-    $notice = __( 'Subscription has been deleted.', 'fcncn' );
+    $notice = __( 'Subscription has been deleted.', 'fcnen' );
     wp_safe_redirect( add_query_arg( array( 'fictioneer-notice' => $notice, 'success' => 1 ), home_url() ) );
   } else {
-    $notice = __( 'Subscription not found.', 'fcncn' );
+    $notice = __( 'Subscription not found.', 'fcnen' );
     wp_safe_redirect( add_query_arg( array( 'fictioneer-notice' => $notice, 'failure' => 1 ), home_url() ) );
   }
 }
-add_action( 'template_redirect', 'fcncn_handle_unsubscribe_link' );
+add_action( 'template_redirect', 'fcnen_handle_unsubscribe_link' );
 
 // =======================================================================================
 // EMAILS
@@ -609,13 +609,13 @@ add_action( 'template_redirect', 'fcncn_handle_unsubscribe_link' );
  * @param string $body     Body of the email.
  */
 
-function fcncn_send_transactional_email( $args, $subject, $body ) {
+function fcnen_send_transactional_email( $args, $subject, $body ) {
   global $wpdb;
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcncn_subscribers';
-  $from = fcncn_get_from_email_address();
-  $name = fcncn_get_from_email_name();
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
+  $from = fcnen_get_from_email_address();
+  $name = fcnen_get_from_email_name();
   $subscriber_email = $args['email'] ?? 0;
   $subscriber_code = $args['code'] ?? 0;
 
@@ -634,8 +634,8 @@ function fcncn_send_transactional_email( $args, $subject, $body ) {
 
   // Prepare replacements
   $extra_replacements = array(
-    '{{activation_link}}' => esc_url( fcncn_get_activation_link( $subscriber_email, $subscriber_code ) ),
-    '{{unsubscribe_link}}' => esc_url( fcncn_get_unsubscribe_link( $subscriber_email, $subscriber_code ) ),
+    '{{activation_link}}' => esc_url( fcnen_get_activation_link( $subscriber_email, $subscriber_code ) ),
+    '{{unsubscribe_link}}' => esc_url( fcnen_get_unsubscribe_link( $subscriber_email, $subscriber_code ) ),
     '{{email}}' => $subscriber_email,
     '{{code}}' => $subscriber_code
   );
@@ -649,8 +649,8 @@ function fcncn_send_transactional_email( $args, $subject, $body ) {
   // Send the email
   wp_mail(
     $subscriber_email,
-    fcncn_replace_placeholders( $subject, $extra_replacements ),
-    fcncn_replace_placeholders( $body, $extra_replacements ),
+    fcnen_replace_placeholders( $subject, $extra_replacements ),
+    fcnen_replace_placeholders( $body, $extra_replacements ),
     $headers
   );
 }
@@ -668,15 +668,15 @@ function fcncn_send_transactional_email( $args, $subject, $body ) {
  * }
  */
 
-function fcncn_send_confirmation_email( $args ) {
+function fcnen_send_confirmation_email( $args ) {
   // Setup
-  $subject = __( 'Please confirm your subscription', 'fcncn' );
-  $body = __( '<p>Thank you for subscribing to <a href="{{site_link}}" target="_blank">{{site_name}}</a>.<br><br>Please click the following link within 24 hours to confirm your subscription: <a href="{{activation_link}}">Activate Subscription</a>.<br><br>Your edit code is <strong>{{code}}</strong>, which will also be included in any future emails. In case your code ever gets compromised, just delete your subscription and submit a new one.<br><br>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24 hours. You can also immediately <a href="{{unsubscribe_link}}">delete it with this link</a>.</p>', 'fcncn' );
+  $subject = __( 'Please confirm your subscription', 'fcnen' );
+  $body = __( '<p>Thank you for subscribing to <a href="{{site_link}}" target="_blank">{{site_name}}</a>.<br><br>Please click the following link within 24 hours to confirm your subscription: <a href="{{activation_link}}">Activate Subscription</a>.<br><br>Your edit code is <strong>{{code}}</strong>, which will also be included in any future emails. In case your code ever gets compromised, just delete your subscription and submit a new one.<br><br>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24 hours. You can also immediately <a href="{{unsubscribe_link}}">delete it with this link</a>.</p>', 'fcnen' );
 
   // Customized?
-  $subject = get_option( 'fcncn_confirmation_email_subject' ) ?: $subject;
-  $body = get_option( 'fcncn_confirmation_email_body' ) ?: $body;
+  $subject = get_option( 'fcnen_confirmation_email_subject' ) ?: $subject;
+  $body = get_option( 'fcnen_confirmation_email_body' ) ?: $body;
 
   // Send
-  fcncn_send_transactional_email( $args, $subject, $body );
+  fcnen_send_transactional_email( $args, $subject, $body );
 }

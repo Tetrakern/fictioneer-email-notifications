@@ -13,15 +13,15 @@ defined( 'ABSPATH' ) OR exit;
  * @since 0.1.0
  */
 
-function fcncn_submit_subscriber() {
+function fcnen_submit_subscriber() {
   // Verify request
-  if ( ! isset( $_POST['fcncn-nonce'] ) || ! check_admin_referer( 'submit_subscriber', 'fcncn-nonce' ) ) {
-    wp_die( __( 'Nonce verification failed.', 'fcncn' ) );
+  if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'submit_subscriber', 'fcnen-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
   }
 
   // Guard
   if ( ! current_user_can( 'manage_options' ) || ! is_admin() ) {
-    wp_die( __( 'Insufficient permissions.', 'fcncn' ) );
+    wp_die( __( 'Insufficient permissions.', 'fcnen' ) );
   }
 
   // Setup
@@ -30,22 +30,22 @@ function fcncn_submit_subscriber() {
 
   // Check email
   if ( empty( $email ) ) {
-    wp_die( __( 'Missing or invalid email address.', 'fcncn' ) );
+    wp_die( __( 'Missing or invalid email address.', 'fcnen' ) );
   }
 
-  if ( fcncn_subscriber_exists( $email ) ) {
-    wp_safe_redirect( add_query_arg( ['fcncn-notice' => 'subscriber-already-exists'], $_POST['_wp_http_referer'] ) );
+  if ( fcnen_subscriber_exists( $email ) ) {
+    wp_safe_redirect( add_query_arg( ['fcnen-notice' => 'subscriber-already-exists'], $_POST['_wp_http_referer'] ) );
     exit();
   }
 
   // Add subscriber
-  $result = fcncn_add_subscriber( $email, array( 'confirmed' => $confirmed ) );
+  $result = fcnen_add_subscriber( $email, array( 'confirmed' => $confirmed ) );
 
   // Failure?
   if ( empty( $result ) ) {
     wp_safe_redirect(
     add_query_arg(
-      array( 'fcncn-notice' => 'subscriber-adding-failure', 'fcncn-message' => $email ),
+      array( 'fcnen-notice' => 'subscriber-adding-failure', 'fcnen-message' => $email ),
       $_POST['_wp_http_referer']
     )
   );
@@ -54,7 +54,7 @@ function fcncn_submit_subscriber() {
   // Success!
   wp_safe_redirect(
     add_query_arg(
-      array( 'fcncn-notice' => 'subscriber-adding-success', 'fcncn-message' => $email ),
+      array( 'fcnen-notice' => 'subscriber-adding-success', 'fcnen-message' => $email ),
       $_POST['_wp_http_referer']
     )
   );
@@ -62,7 +62,7 @@ function fcncn_submit_subscriber() {
   // Terminate
   exit();
 }
-add_action( 'admin_post_fcncn_submit_subscriber', 'fcncn_submit_subscriber' );
+add_action( 'admin_post_fcnen_submit_subscriber', 'fcnen_submit_subscriber' );
 
 /**
  * Empty trashed subscribers
@@ -71,35 +71,35 @@ add_action( 'admin_post_fcncn_submit_subscriber', 'fcncn_submit_subscriber' );
  * @global wpdb $wpdb  The WordPress database object.
  */
 
-function fcncn_empty_trashed_subscribers() {
+function fcnen_empty_trashed_subscribers() {
   global $wpdb;
 
   // Verify request
-  if ( ! isset( $_GET['fcncn-nonce'] ) || ! check_admin_referer( 'fcncn-empty-trash', 'fcncn-nonce' ) ) {
-    wp_die( __( 'Nonce verification failed.', 'fcncn' ) );
+  if ( ! isset( $_GET['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-empty-trash', 'fcnen-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
   }
 
   // Guard
   if ( ! current_user_can( 'manage_options' ) || ! is_admin() ) {
-    wp_die( __( 'Insufficient permissions.', 'fcncn' ) );
+    wp_die( __( 'Insufficient permissions.', 'fcnen' ) );
   }
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
   $wpdb->query( "DELETE FROM $table_name WHERE trashed = 1" );
 
   // Redirect
   wp_safe_redirect(
     add_query_arg(
-      array( 'fcncn-notice' => 'emptied-trashed-subscribers' ),
-      admin_url( 'admin.php?page=fcncn-subscribers' )
+      array( 'fcnen-notice' => 'emptied-trashed-subscribers' ),
+      admin_url( 'admin.php?page=fcnen-subscribers' )
     )
   );
 
   // Terminate
   exit();
 }
-add_action( 'admin_post_fcncn_empty_trashed_subscribers', 'fcncn_empty_trashed_subscribers' );
+add_action( 'admin_post_fcnen_empty_trashed_subscribers', 'fcnen_empty_trashed_subscribers' );
 
 /**
  * Export subscribers' data as a CSV file
@@ -108,21 +108,21 @@ add_action( 'admin_post_fcncn_empty_trashed_subscribers', 'fcncn_empty_trashed_s
  * @global wpdb $wpdb  The WordPress database object.
  */
 
-function fcncn_export_subscribers_csv() {
+function fcnen_export_subscribers_csv() {
   global $wpdb;
 
   // Verify request
-  if ( ! isset( $_GET['fcncn-nonce'] ) || ! check_admin_referer( 'fcncn-export-csv', 'fcncn-nonce' ) ) {
-    wp_die( __( 'Nonce verification failed.', 'fcncn' ) );
+  if ( ! isset( $_GET['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-export-csv', 'fcnen-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
   }
 
   // Guard
   if ( ! current_user_can( 'administrator' ) || ! is_admin() ) {
-    wp_die( __( 'Insufficient permissions.', 'fcncn' ) );
+    wp_die( __( 'Insufficient permissions.', 'fcnen' ) );
   }
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
   $subscribers = $wpdb->get_results( "SELECT * FROM $table_name", ARRAY_A );
 
   if ( ! empty( $subscribers ) ) {
@@ -159,7 +159,7 @@ function fcncn_export_subscribers_csv() {
 
     // Prepare download
     header( 'Content-Type: text/csv' );
-    header( 'Content-Disposition: attachment; filename="fcncn-subscribers_' . date( 'Y-m-d_H-i-s', time() ) . '.csv"' );
+    header( 'Content-Disposition: attachment; filename="fcnen-subscribers_' . date( 'Y-m-d_H-i-s', time() ) . '.csv"' );
 
     echo $csv_content;
 
@@ -167,4 +167,4 @@ function fcncn_export_subscribers_csv() {
     exit();
   }
 }
-add_action( 'admin_post_fcncn_export_subscribers_csv', 'fcncn_export_subscribers_csv' );
+add_action( 'admin_post_fcnen_export_subscribers_csv', 'fcnen_export_subscribers_csv' );
