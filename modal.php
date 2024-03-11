@@ -10,6 +10,7 @@
 
 function fcncn_get_modal_content() {
   // Setup
+  $advanced_mode = get_option( 'fcncn_advanced_mode' );
   $auth_email = $_POST['email'] ?? 0;
   $auth_code = $_POST['code'] ?? 0;
   $subscriber = fcncn_get_subscriber_by_email_and_code( $auth_email, $auth_code );
@@ -63,16 +64,18 @@ function fcncn_get_modal_content() {
         <button type="button" id="fcnes-modal-submit-button" class="button fcncn-button"><?php _e( 'Subscribe', 'fcncn' ); ?></button>
       </div>
 
-      <div class="dialog-modal__row _no-top fcncn-dialog-modal__scopes">
-        <div class="radio-label">
-          <input type="radio" id="fcncn-modal-radio-scope-everything" name="fcncn-scope" value="everything" checked>
-          <label for="fcncn-modal-radio-scope-everything"><?php _e( 'Everything', 'fcncn' ); ?></label>
+      <?php if ( $advanced_mode ) : ?>
+        <div class="dialog-modal__row _no-top fcncn-dialog-modal__scopes">
+          <div class="radio-label">
+            <input type="radio" id="fcncn-modal-radio-scope-everything" name="fcncn-scope" value="everything" checked>
+            <label for="fcncn-modal-radio-scope-everything"><?php _e( 'Everything', 'fcncn' ); ?></label>
+          </div>
+          <div class="radio-label">
+            <input type="radio" id="fcncn-modal-radio-scope-stories" name="fcncn-scope" value="stories">
+            <label for="fcncn-modal-radio-scope-stories"><?php _e( 'Stories', 'fcncn' ); ?></label>
+          </div>
         </div>
-        <div class="radio-label">
-          <input type="radio" id="fcncn-modal-radio-scope-stories" name="fcncn-scope" value="stories">
-          <label for="fcncn-modal-radio-scope-stories"><?php _e( 'Stories', 'fcncn' ); ?></label>
-        </div>
-      </div>
+      <?php endif; ?>
 
     </div>
 

@@ -299,6 +299,9 @@ add_filter( 'fictioneer_filter_subscribe_buttons', 'fcncn_filter_extend_subscrib
  */
 
 function fcncn_subscription_modal() {
+  // Setup
+  $advanced_mode = get_option( 'fcncn_advanced_mode' );
+
   // Start HTML ---> ?>
   <dialog id="fcncn-subscription-modal" class="dialog-modal fcncn-dialog-modal" data-nosnippet>
     <button class="dialog-modal__close" aria-label="<?php esc_attr_e( 'Close modal', 'fictioneer' ); ?>" data-click-action="close-dialog-modal" autofocus><?php fictioneer_icon( 'fa-xmark' ); ?></button>
@@ -307,7 +310,9 @@ function fcncn_subscription_modal() {
       <div class="fcncn-modal-skeleton">
         <div class="shape" style="margin: 12px; height: 18px; max-width: 400px;"></div>
         <div class="shape" style="margin: 12px; height: 32px;"></div>
-        <div class="shape" style="margin: 12px; height: 18px; max-width: 200px;"></div>
+        <?php if ( $advanced_mode ) : ?>
+          <div class="shape" style="margin: 12px; height: 18px; max-width: 200px;"></div>
+        <?php endif; ?>
       </div>
     </div>
     <input name="nonce" type="hidden" autocomplete="off" value="<?php echo wp_create_nonce( 'fcncn-subscribe' ); ?>">
