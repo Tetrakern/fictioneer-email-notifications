@@ -1,4 +1,5 @@
 const fcncn_modal = document.getElementById('fcncn-subscription-modal');
+const fcncn_targetContainer = fcncn_modal?.querySelector('[data-target="fcncn-modal-loader"]');
 const fcncn_url_params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
 
 if (fcncn_modal) {
@@ -45,6 +46,18 @@ function fcncn_addEventListeners() {
 }
 
 /**
+ * Toggles ajax-in-progress class.
+ *
+ * @since 0.1.0
+ *
+ * @param {string} [force=] - Whether to add or remove. Default true.
+ */
+
+function fcncn_toggleInProgress(force = true) {
+  fcncn_targetContainer.classList.toggle('ajax-in-progress', force);
+}
+
+/**
  * AJAX: Get the modal form.
  *
  * @since 0.1.0
@@ -59,7 +72,6 @@ function fcncn_getModalForm(context = 'new') {
   }
 
   // Setup
-  const targetContainer = fcncn_modal.querySelector('[data-target="fcncn-modal-loader"]');
   const email = fcncn_url_params['fcncn-email'] ?? document.getElementById('fcncn-modal-auth-email')?.value ?? 0;
   const code = fcncn_url_params['fcncn-code'] ?? document.getElementById('fcncn-modal-auth-code')?.value ?? 0;
 
@@ -70,7 +82,7 @@ function fcncn_getModalForm(context = 'new') {
 
   // Indicate progress
   if (context == 'edit') {
-    targetContainer.classList.add('ajax-in-progress');
+    fcncn_toggleInProgress();
   }
 
   // Prepare payload
@@ -84,11 +96,11 @@ function fcncn_getModalForm(context = 'new') {
   fcn_ajaxPost(payload)
   .then(response => {
     if (response.success) {
-      targetContainer.innerHTML = response.data.html;
+      fcncn_targetContainer.innerHTML = response.data.html;
     }
   })
   .then(() => {
-    targetContainer.classList.remove('ajax-in-progress');
+    fcncn_toggleInProgress(false);
     fcncn_addEventListeners();
   });
 }
@@ -103,7 +115,6 @@ function fcncn_getModalForm(context = 'new') {
 
 function fcncn_subscribe_or_update(button) {
   // Setup
-  const targetContainer = fcncn_modal.querySelector('[data-target="fcncn-modal-loader"]');
   const form = button.closest('form');
   const email = document.getElementById('fcncn-modal-submit-email')?.value;
   const scope = document.querySelector('input[name="fcncn-scope"]:checked')?.value ?? 'everything';
@@ -116,7 +127,7 @@ function fcncn_subscribe_or_update(button) {
   }
 
   // Indicate progress
-  targetContainer.classList.add('ajax-in-progress');
+  fcncn_toggleInProgress();
 
   // Prepare payload
   const payload = {
@@ -124,7 +135,7 @@ function fcncn_subscribe_or_update(button) {
     'email': email,
     'code': code,
     'scope': scope,
-    'nonce': button.closest('.fcncn-dialog-modal').querySelector('input[name="nonce"]')?.value ?? ''
+    'nonce': fcncn_modal.querySelector('input[name="nonce"]')?.value ?? ''
   };
 
   // Request
@@ -133,7 +144,7 @@ function fcncn_subscribe_or_update(button) {
     console.log(response);
   })
   .then(() => {
-    targetContainer.classList.remove('ajax-in-progress');
+    fcncn_toggleInProgress(false);
   });
 }
 
@@ -145,19 +156,18 @@ function fcncn_subscribe_or_update(button) {
 
 function fcncn_unsubscribe() {
   // Setup
-  const targetContainer = fcncn_modal.querySelector('[data-target="fcncn-modal-loader"]');
   const email = document.getElementById('fcncn-modal-submit-email')?.value;
   const code = document.getElementById('fcncn-modal-submit-code')?.value ?? 0;
 
   // Indicate progress
-  targetContainer.classList.add('ajax-in-progress');
+  fcncn_toggleInProgress();
 
   // Prepare payload
   const payload = {
     'action': 'fcncn_ajax_subscribe',
     'email': email,
     'code': code,
-    'nonce': targetContainer.closest('.fcncn-dialog-modal').querySelector('input[name="nonce"]')?.value ?? ''
+    'nonce': fcncn_modal.querySelector('input[name="nonce"]')?.value ?? ''
   };
 
   // Request
@@ -166,6 +176,6 @@ function fcncn_unsubscribe() {
     console.log(response);
   })
   .then(() => {
-    targetContainer.classList.remove('ajax-in-progress');
+    fcncn_toggleInProgress(false);
   });
 }
