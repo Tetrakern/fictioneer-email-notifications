@@ -326,12 +326,12 @@ add_action( 'fictioneer_modals', 'fcncn_subscription_modal', 10 );
 // =======================================================================================
 
 /**
- * Add a subscriber and maybe send activation email
+ * Adds a subscriber and maybe send activation email
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
  *
- * @param string $email  The email address of the subscriber.
+ * @param string $email  Email address of the subscriber.
  * @param array  $args {
  *   Optional array of arguments. Default empty.
  *
@@ -430,12 +430,12 @@ function fcncn_add_subscriber( $email, $args = [] ) {
 }
 
 /**
- * Update an existing subscriber
+ * Updates an existing subscriber
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
  *
- * @param int    $email  The email of the subscriber to update.
+ * @param string $email  Email address of the subscriber.
  * @param array  $args {
  *   Optional array of arguments. Default empty.
  *
@@ -455,7 +455,32 @@ function fcncn_update_subscriber( $email, $args = [] ) {
 }
 
 /**
- * Activate the subscriber based on the provided email and code
+ * Deletes a subscriber
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param string $email  Email address of the subscriber.
+ *
+ * @return bool Whether the subscriber was successfully deleted.
+ */
+
+function fcncn_delete_subscriber( $email ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcncn_subscribers';
+  $email = sanitize_email( $email );
+
+  // Delete subscriber
+  $result = $wpdb->delete( $table_name, array( 'email' => $email ), ['%s'] );
+
+  // Return success/failure
+  return (bool) $result;
+}
+
+/**
+ * Activates the subscriber based on the provided email and code
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.

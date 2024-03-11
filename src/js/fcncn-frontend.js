@@ -37,6 +37,11 @@ function fcncn_addEventListeners() {
   document.getElementById('fcnes-modal-auth-button')?.addEventListener('click', () => {
     fcncn_getModalForm('edit');
   });
+
+  // Delete button
+  document.querySelector('[data-click-action="fcncn-delete-subscription"]')?.addEventListener('click', () => {
+    fcncn_unsubscribe();
+  });
 }
 
 /**
@@ -120,6 +125,39 @@ function fcncn_subscribe_or_update(button) {
     'code': code,
     'scope': scope,
     'nonce': button.closest('.fcncn-dialog-modal').querySelector('input[name="nonce"]')?.value ?? ''
+  };
+
+  // Request
+  fcn_ajaxPost(payload)
+  .then(response => {
+    console.log(response);
+  })
+  .then(() => {
+    targetContainer.classList.remove('ajax-in-progress');
+  });
+}
+
+/**
+ * AJAX: Unsubscribe.
+ *
+ * @since 0.1.0
+ */
+
+function fcncn_unsubscribe() {
+  // Setup
+  const targetContainer = fcncn_modal.querySelector('[data-target="fcncn-modal-loader"]');
+  const email = document.getElementById('fcncn-modal-submit-email')?.value;
+  const code = document.getElementById('fcncn-modal-submit-code')?.value ?? 0;
+
+  // Indicate progress
+  targetContainer.classList.add('ajax-in-progress');
+
+  // Prepare payload
+  const payload = {
+    'action': 'fcncn_ajax_subscribe',
+    'email': email,
+    'code': code,
+    'nonce': targetContainer.closest('.fcncn-dialog-modal').querySelector('input[name="nonce"]')?.value ?? ''
   };
 
   // Request
