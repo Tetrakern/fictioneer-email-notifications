@@ -558,6 +558,35 @@ add_action( 'template_redirect', 'fcncn_handle_activation_link' );
 // =======================================================================================
 
 /**
+ * Get the from email address
+ *
+ * @since 0.1.0
+ *
+ * @return string The from email address.
+ */
+
+function fcncn_get_from_email_address() {
+  // From email address set?
+  $from = get_option( 'fcncn_from_email_address' );
+
+  if ( $from ) {
+    return $from;
+  }
+
+  // Setup
+  $parsed_url = wp_parse_url( get_home_url() );
+  $domain = isset( $parsed_url['host'] ) ? preg_replace( '/^www\./i', '', $parsed_url['host'] ) : '';
+
+  // Fallback
+  if ( empty( $domain ) ) {
+    return get_option( 'admin_email' );
+  }
+
+  // Return the noreply email address
+  return 'noreply@' . $domain;
+}
+
+/**
  * Sends a transactional email to a subscriber
  *
  * @since 0.1.0
@@ -579,7 +608,7 @@ function fcncn_send_transactional_email( $args, $subject, $body ) {
 
   // Setup
   $table_name = $wpdb->prefix . 'fcncn_subscribers';
-  $from = 'no-reply@foobar.de';
+  $from = fcncn_get_from_email_address();
   $name = get_bloginfo( 'name' );
   $subscriber_email = $args['email'] ?? 0;
   $subscriber_code = $args['code'] ?? 0;
