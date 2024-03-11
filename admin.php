@@ -220,6 +220,10 @@ function fcnen_admin_notices() {
       $notice = sprintf( __( 'Confirmation email resent to subscriber (#%s).', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
       $class = 'notice-success';
       break;
+    case 'code-email-sent':
+      $notice = sprintf( __( 'Email with edit code sent to subscriber (#%s).', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
+      $class = 'notice-success';
+      break;
     case 'emptied-trashed-subscribers':
       $notice = __( 'Emptied trash.', 'fcnen' );
       $class = 'notice-success';

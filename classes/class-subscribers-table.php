@@ -286,6 +286,19 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       );
     }
 
+    // Send code action
+    if ( ! empty( $item['confirmed'] ) && empty( $item['trashed'] ) ) {
+      $actions['send_code'] = sprintf(
+        '<a href="%s">%s</a>',
+        wp_nonce_url(
+          add_query_arg( array( 'action' => 'send_code', 'id' => $item['id'] ), $this->uri ),
+          'fcnen-table-action',
+          'fcnen-nonce'
+        ),
+        __( 'Send Code', 'fcnen' )
+      );
+    }
+
     // Trash action
     if ( empty( $item['trashed'] ) ) {
       $actions['trash'] = sprintf(
@@ -582,6 +595,13 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       if ( ! empty( $id ) && $_GET['action'] === 'resend_confirmation' ) {
         fcnen_send_confirmation_email( array( 'id' => $id ) );
         $query_args['fcnen-notice'] = 'confirmation-email-resent';
+        $query_args['fcnen-message'] = $id;
+      }
+
+      // Send code
+      if ( ! empty( $id ) && $_GET['action'] === 'send_code' ) {
+        fcnen_send_code_email( array( 'id' => $id ) );
+        $query_args['fcnen-notice'] = 'code-email-sent';
         $query_args['fcnen-message'] = $id;
       }
 

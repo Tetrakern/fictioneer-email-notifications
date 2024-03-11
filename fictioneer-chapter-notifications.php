@@ -663,8 +663,9 @@ function fcnen_send_transactional_email( $args, $subject, $body ) {
  * @param array $args {
  *   Array of optional arguments. Passed on to next function.
  *
- *   @type string $email  Email address of the subscriber.
- *   @type string $code   Code of the subscriber.
+ *   @type int|null    $id     ID of the subscriber.
+ *   @type string|null $email  Email address of the subscriber.
+ *   @type string|null $code   Code of the subscriber.
  * }
  */
 
@@ -676,6 +677,36 @@ function fcnen_send_confirmation_email( $args ) {
   // Customized?
   $subject = get_option( 'fcnen_confirmation_email_subject' ) ?: $subject;
   $body = get_option( 'fcnen_confirmation_email_body' ) ?: $body;
+
+  // Send
+  fcnen_send_transactional_email( $args, $subject, $body );
+}
+
+/**
+ * Send the edit code to a subscriber
+ *
+ * @since 0.1.0
+ *
+ * @param array  $args    {
+ *   Array of arguments. Passed on to next function.
+ *
+ *   @type int $id  ID of the subscriber.
+ * }
+ */
+
+function fcnen_send_code_email( $args ) {
+  // Setup
+  $subject = __( 'Your subscription code', 'fcnen' );
+  $body = __( '<p>Following is the edit code for your email subscription on <a href="{{site_link}}" target="_blank">{{site_name}}</a>. Do not share it. If compromised, just delete your subscription and submit a new one.<br><br><strong>{{code}}</strong><br><br>You can also directly edit your subscription with this <a href="{{edit_link}}" target="_blank">link</a>.</p>', 'fcnen' );
+
+  // Customized?
+  $subject = get_option( 'fcnen_code_email_subject' ) ?: $subject;
+  $custom_body = get_option( 'fcnen_code_email_body' ) ?: $body;
+
+  // Check for {{code}} presence
+  if ( strpos( $custom_body, '{{code}}' ) !== false ) {
+    $body = $custom_body;
+  }
 
   // Send
   fcnen_send_transactional_email( $args, $subject, $body );
