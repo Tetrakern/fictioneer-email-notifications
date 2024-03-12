@@ -477,6 +477,85 @@ function fcnen_subscribers_page() {
       </div>
 
     </div>
+  </div>
+  <?php // <--- End HTML
+}
+
+// =======================================================================================
+// ADMIN SETTINGS PAGE
+// =======================================================================================
+
+/**
+ * Add settings admin submenu page
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_add_settings_menu_page() {
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) ) {
+    return;
+  }
+
+  // Add admin page
+  $fcnen_admin_page_settings = add_submenu_page(
+    'fcnen-notifications',
+    'Settings',
+    'Settings',
+    'manage_options',
+    'fcnen-settings',
+    'fcnen_settings_page'
+  );
+}
+add_action( 'admin_menu', 'fcnen_add_settings_menu_page' );
+
+/**
+ * Callback for the settings submenu page
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_settings_page() {
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) ) {
+    wp_die( __( 'You do not have permission to access this page.', 'fcnes' ) );
+  }
+
+  // Start HTML ---> ?>
+  <div id="fcnen-admin-page-subscribers" class="wrap fcnen-settings _settings">
+    <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Settings', 'fcnen' ); ?></h1>
+    <hr class="wp-header-end">
+
+    <div class="fcnen-settings__content">
+
+      <div class="fcnen-settings__columns _stretch">
+
+        <div class="fcnen-box">
+          <div class="fcnen-box__header">
+            <h2><?php _e( 'General', 'fcnen' ); ?></h2>
+          </div>
+          <div class="fcnen-box__body">
+            <div class="fcnen-box__row"></div>
+          </div>
+        </div>
+
+        <div class="fcnen-box">
+          <div class="fcnen-box__header">
+            <h2><?php _e( 'MailerSend API', 'fcnen' ); ?></h2>
+          </div>
+          <div class="fcnen-box__body">
+            <div class="fcnen-box__row"><p class="fcnen-box__description"><?php
+              printf(
+                __( 'Please enter your API Key and customize the endpoints (if necessary) to communicate with the <a href="%s" target="_blank">MailerSend API</a>. You can also change the batch limit for bulk requests.', 'fcnen' ),
+                'https://developers.mailersend.com/'
+              )
+            ?></p></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
 </div>
   <?php // <--- End HTML
 }
