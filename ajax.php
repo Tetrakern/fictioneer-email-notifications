@@ -42,7 +42,9 @@ function fcnen_ajax_subscribe_or_update() {
   // Setup
   $email = sanitize_email( $_POST['email'] ?? '' );
   $code = sanitize_text_field( $_POST['code'] ?? '' );
-  $scope = sanitize_key( $_POST['scope'] ?? 'everything' );
+  $scope_everything = ! empty( absint( $_POST['scope-everything'] ?? 1 ) );
+  $scope_posts = ! empty( absint( $_POST['scope-posts'] ?? 0 ) );
+  $scope_content = ! empty( absint( $_POST['scope-content'] ?? 0 ) );
   $default_notice = __( 'Submission successful. If everything was in order, you will get an email.', 'fcnen' );
   $result = false;
 
@@ -53,7 +55,9 @@ function fcnen_ajax_subscribe_or_update() {
 
   // Arguments
   $args = array(
-    'scope' => $scope
+    'scope-everything' => $scope_everything,
+    'scope-posts' => $scope_posts,
+    'scope-content' => $scope_content
   );
 
   // New or update?

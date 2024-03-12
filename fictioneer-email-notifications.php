@@ -356,15 +356,17 @@ add_filter( 'fictioneer_filter_subscribe_buttons', 'fcnen_filter_extend_subscrib
  * @param array  $args {
  *   Optional array of arguments. Default empty.
  *
- *   @type string $scope       Either 'everything' or 'stories'. Default 'everything'.
- *   @type array  $post_ids    Array of post IDs to subscribe to. Default empty.
- *   @type array  $post_types  Array of post types to subscribe to. Default empty.
- *   @type array  $categories  Array of category IDs to subscribe to. Default empty.
- *   @type array  $tags        Array of tag IDs to subscribe to. Default empty.
- *   @type array  $taxonomies  Array of taxonomy IDs to subscribe to. Default empty.
- *   @type array  $created_at  Date of creation. Defaults to current 'mysql' time.
- *   @type array  $updated_at  Date of last update. Defaults to current 'mysql' time.
- *   @type bool   $confirmed   Whether the subscriber is confirmed. Default false.
+ *   @type bool   $scope-everything  True or false. Default true.
+ *   @type bool   $scope-posts       True or false. Default true.
+ *   @type bool   $scope-content     True or false. Default true.
+ *   @type array  $post_ids          Array of post IDs to subscribe to. Default empty.
+ *   @type array  $post_types        Array of post types to subscribe to. Default empty.
+ *   @type array  $categories        Array of category IDs to subscribe to. Default empty.
+ *   @type array  $tags              Array of tag IDs to subscribe to. Default empty.
+ *   @type array  $taxonomies        Array of taxonomy IDs to subscribe to. Default empty.
+ *   @type array  $created_at        Date of creation. Defaults to current 'mysql' time.
+ *   @type array  $updated_at        Date of last update. Defaults to current 'mysql' time.
+ *   @type bool   $confirmed         Whether the subscriber is confirmed. Default false.
  * }
  *
  * @return int|false The ID of the inserted subscriber, false on failure.
@@ -386,9 +388,11 @@ function fcnen_add_subscriber( $email, $args = [] ) {
   // Defaults
   $defaults = array(
     'code' => wp_generate_password( 32, false ),
-    'everything' => 1,  // Not yet used
+    'scope-everything' => 1,
+    'scope-posts' => 0,
+    'scope-content' => 0,
     'post_ids' => [],   // Not yet used
-    'post_types' => [], // Not yet used
+    'post_types' => [],
     'categories' => [], // Not yet used
     'tags' => [],       // Not yet used
     'taxonomies' => [], // Not yet used
@@ -415,11 +419,21 @@ function fcnen_add_subscriber( $email, $args = [] ) {
     $args['updated_at'] = current_time( 'mysql' );
   }
 
+  // Post types
+  if ( $args['scope-posts'] ) {
+    $args['post_types'][] = 'post';
+  }
+
+  if ( $args['scope-content'] ) {
+    $args['post_types'][] = 'fcn_story';
+    $args['post_types'][] = 'fcn_chapter';
+  }
+
   // Prepare data
   $data = array(
     'email' => $email,
     'code' => $args['code'],
-    'everything' => $args['everything'],
+    'everything' => $args['scope-everything'],
     'post_ids' => serialize( $args['post_ids'] ),
     'post_types' => serialize( $args['post_types'] ),
     'categories' => serialize( $args['categories'] ),
