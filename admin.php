@@ -20,6 +20,11 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_general_group', 'fcnen_flag_subscribe_to_stories', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_subscribe_to_taxonomies', 'absint' );
 
+  // Provider
+  register_setting( 'fcnen_provider_group', 'fcnen_service_provider', 'sanitize_text_field' );
+  register_setting( 'fcnen_provider_group', 'fcnen_api_key', 'sanitize_text_field' );
+  register_setting( 'fcnen_provider_group', 'fcnen_api_bulk_limit', 'absint' );
+
   // Templates
   register_setting( 'fcnen_template_group', 'fcnen_template_layout_confirmation', 'wp_kses_post' );
   register_setting( 'fcnen_template_group', 'fcnen_template_layout_code', 'wp_kses_post' );
@@ -566,6 +571,11 @@ function fcnen_settings_page() {
   // Setup
   $from = fcnen_get_from_email_address();
   $name = fcnen_get_from_email_name();
+
+  // $provider = get_option( 'fcnen_service_provider' );
+  $api_key = get_option( 'fcnen_api_key' );
+  $api_bulk_limit = get_option( 'fcnen_api_bulk_limit', 400 );
+
   $layout_confirmation = get_option( 'fcnen_template_layout_confirmation', FCNEN_DEFAULTS['layout_confirmation'] ?? '' );
   $layout_code = get_option( 'fcnen_template_layout_code', FCNEN_DEFAULTS['layout_code'] ?? '' );
   $layout_edit = get_option( 'fcnen_template_layout_edit', FCNEN_DEFAULTS['layout_edit'] ?? '' );
@@ -654,14 +664,14 @@ function fcnen_settings_page() {
                 <div class="fcnen-left-right-wrap">
                   <label for="fcnen-api-key" class="offset-top"><?php _e( 'API Key', 'fcnen' ); ?></label>
                   <div class="fcnen-input-wrap">
-                    <input type="text" name="fcnen_api_key" id="fcnen-api-key" value="<?php echo esc_attr( '' ); ?>" required>
+                    <input type="text" name="fcnen_api_key" id="fcnen-api-key" value="<?php echo esc_attr( $api_key ); ?>" required>
                     <p class="fcnen-input-wrap__sub-label"><?php _e( 'You can get that from your provider account.', 'fcnen' ); ?></p>
                   </div>
                 </div>
                 <div class="fcnen-left-right-wrap">
                   <label for="fcnen-api-bulk-limit" class="offset-top"><?php _e( 'Limit', 'fcnen' ); ?></label>
                   <div class="fcnen-input-wrap">
-                    <input type="text" name="fcnen_api_bulk_limit" id="fcnen-api-bulk-limit" value="<?php echo esc_attr( '' ); ?>" style="max-width: 100px;" required>
+                    <input type="text" name="fcnen_api_bulk_limit" id="fcnen-api-bulk-limit" value="<?php echo esc_attr( $api_bulk_limit ); ?>" style="max-width: 100px;" required>
                     <p class="fcnen-input-wrap__sub-label"><?php _e( 'Emails per request.', 'fcnen' ); ?></p>
                   </div>
                 </div>
