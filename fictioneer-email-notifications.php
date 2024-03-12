@@ -42,6 +42,17 @@ add_action( 'wp_loaded', 'fcnen_load_stubs' );
 // =======================================================================================
 
 define(
+  'FCNEN_API',
+  array(
+    'mailersend' => array(
+      'quota' => 'https://api.mailersend.com/v1/api-quota',
+      'bulk' => 'https://api.mailersend.com/v1/bulk-email',
+      'bulk_status' => 'https://api.mailersend.com/v1/bulk-email/{bulk_email_id}'
+    )
+  )
+);
+
+define(
   'FCNEN_DEFAULTS',
   array(
     'layout_confirmation' => __( '<p>Thank you for subscribing to <a href="{{site_link}}" target="_blank">{{site_name}}</a>.</p>' . "\n\n" . '<p>Please click the following link within 24 hours to confirm your subscription: <a href="{{activation_link}}">Activate Subscription</a>.</p>' . "\n\n" . '<p>Your edit code is <strong>{{code}}</strong>, which will also be included in any future emails. In case your code ever gets compromised, just delete your subscription and submit a new one.</p>' . "\n\n" . '<p>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24 hours. You can also immediately <a href="{{unsubscribe_link}}">delete it with this link</a>.</p>', 'fcnen' ),
