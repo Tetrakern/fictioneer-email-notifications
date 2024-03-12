@@ -13,6 +13,11 @@
     display: grid;
     grid-gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(300px, 600px));
+    align-items: start;
+
+    &._stretch {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
   }
 }
 
@@ -67,7 +72,7 @@
   &__body {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 12px;
     padding: 12px;
   }
 
@@ -75,15 +80,16 @@
     display: flex;
     flex-wrap: wrap;
     gap: 12px 20px;
-    margin: 12px 0;
+  }
 
-    &:not(:first-child) {
-      margin-top: 12px;
-    }
+  &__vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 12px 20px;
+  }
 
-    &:not(:last-child) {
-      margin-bottom: 12px;
-    }
+  p {
+    margin: 0;
   }
 }
 
@@ -97,6 +103,41 @@
   input:not([type="checkbox"], [type="radio"], [type="range"]) {
     margin: 0;
     width: 100%;
+  }
+
+  &._file {
+    cursor: pointer;
+    display: flex;
+    background: #fff;
+    white-space: nowrap;
+    line-height: 28px;
+    border-radius: 4px;
+  }
+
+  &__file-button {
+    flex: 0 0 auto;
+    background: #f6f7f7;
+    color: #2271b1;
+    padding: 0 8px;
+    border: 1px solid #2271b1;
+    border-radius: 4px 0 0 4px;
+
+    &:hover {
+      background: #f0f0f1;
+      color: #0a4b78;
+      border-color: #0a4b78;
+    }
+  }
+
+  &__file-field {
+    flex: 1 1 auto;
+    color: #5a6872;
+    text-overflow: ellipsis;
+    border: 1px solid #8c8f94;
+    padding: 0 8px;
+    border-width: 1px 1px 1px 0;
+    border-radius: 0 4px 4px 0;
+    overflow: hidden;
   }
 }
 

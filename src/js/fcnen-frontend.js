@@ -1,3 +1,7 @@
+// =============================================================================
+// SETUP
+// =============================================================================
+
 const fcnen_modal = document.getElementById('fcnen-subscription-modal');
 const fcnen_targetContainer = fcnen_modal?.querySelector('[data-target="fcnen-modal-loader"]');
 const fcnen_url_params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
@@ -21,6 +25,10 @@ if (fcnen_modal) {
   }
 }
 
+// =============================================================================
+// CLEAN UP URL
+// =============================================================================
+
 /**
  * Remove query args from URL.
  *
@@ -30,6 +38,10 @@ if (fcnen_modal) {
 (() => {
   history.replaceState && history.replaceState(null, '', location.pathname + location.search.replace(/[?&](fcnen-email|fcnen-code|fcnen-action|fcnen|)=[^&]+/g, '').replace(/^[?&]/, '?') + location.hash);
 })();
+
+// =============================================================================
+// MODAL FORM
+// =============================================================================
 
 /**
  * Add EventListeners.

@@ -363,31 +363,27 @@ function fcnen_subscribers_page() {
 
     <div class="fcnen-settings__content">
 
-      <div class="fcnen-settings__columns">
+      <div class="fcnen-settings__columns _stretch">
 
         <div class="fcnen-box">
-
           <div class="fcnen-box__header">
             <h2><?php _e( 'Add Subscriber', 'fcnen' ); ?></h2>
           </div>
-
           <div class="fcnen-box__body">
+            <div class="fcnen-box__row"><p class="fcnen-box__description"><?php _e( 'Add a subscriber, with the option to skip the confirmation. Duplicate emails will be ignored.', 'fcnen' ); ?></p></div>
             <div class="fcnen-box__row">
-              <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_submit_subscriber' ); ?>">
-
+              <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_submit_subscriber' ); ?>" class="fcnen-box__vertical">
                 <?php wp_nonce_field( 'submit_subscriber', 'fcnen-nonce' ); ?>
-
                 <div class="fcnen-input-wrap">
                   <input type="email" name="email" id="fcnen-submit-subscriber-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcnen' ); ?>" required>
                 </div>
-
                 <div class="fcnen-box__horizontal">
                   <div class="fcnen-checkbox-wrap">
                     <input type="checkbox" name="confirmed" id="fcnen-submit-subscriber-confirm" value="1">
                     <label for="fcnen-submit-subscriber-confirm"><?php _e( 'Confirmed', 'fcnen' ); ?></label>
                   </div>
                   <div class="fcnen-checkbox-wrap">
-                    <input type="checkbox" name="everything" id="fcnen-submit-subscriber-everything" value="1">
+                    <input type="checkbox" name="everything" id="fcnen-submit-subscriber-everything" value="1" checked>
                     <label for="fcnen-submit-subscriber-everything"><?php _e( 'Everything', 'fcnen' ); ?></label>
                   </div>
                   <div class="fcnen-checkbox-wrap">
@@ -399,16 +395,42 @@ function fcnen_subscribers_page() {
                     <label for="fcnen-submit-subscriber-content"><?php _e( 'Stories & Chapters', 'fcnen' ); ?></label>
                   </div>
                 </div>
-
                 <div class="fcnen-submit-wrap">
                   <button type="submit" class="button button-primary"><?php _e( 'Add Subscriber', 'fcnen' ); ?></button>
                 </div>
-
               </form>
             </div>
           </div>
-
         </div>
+
+        <div class="fcnen-box">
+          <div class="fcnen-box__header">
+            <h2><?php _e( 'Import CSV', 'fcnen' ); ?></h2>
+          </div>
+          <div class="fcnen-box__body">
+            <div class="fcnen-box__row"><p class="fcnen-box__description"><?php _e( 'Import subscribers from a CSV file. Duplicate emails will be ignored. Keep in mind that scopes are saved as IDs and may not match if the associated terms have changed.', 'fcnen' ); ?></p></div>
+            <div class="fcnen-box__row">
+              <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_import_csv' ); ?>" class="fcnen-box__vertical">
+                <?php wp_nonce_field( 'import_csv', 'fcnen-nonce' ); ?>
+                <div class="fcnen-box__horizontal">
+                  <div class="fcnen-input-wrap _file">
+                    <input type="file" name="csv-file" id="fcnen-import-csv-file" hidden required>
+                    <label for="fcnen-import-csv-file" class="fcnen-input-wrap__file-button"><?php _e( 'Choose File', 'fcnen' ); ?></label>
+                    <label for="fcnen-import-csv-file" class="fcnen-input-wrap__file-field"><?php _e( 'No file chosen', 'fcnen' ); ?></label>
+                  </div>
+                  <div class="fcnen-checkbox-wrap">
+                    <input type="checkbox" name="reset-scopes" id="fcnen-import-csv-reset-scopes" value="0">
+                    <label for="fcnen-import-csv-reset-scopes"><?php _e( 'Reset Scopes', 'fcnen' ); ?></label>
+                  </div>
+                </div>
+                <div class="fcnen-submit-wrap">
+                  <button type="submit" class="button button-primary"><?php _e( 'Import CSV', 'fcnen' ); ?></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div class="fcnen-settings__table fcnen-subscribers-table-wrapper">
