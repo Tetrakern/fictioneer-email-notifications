@@ -6,6 +6,7 @@
   &__content {
     display: grid;
     grid-gap: 40px;
+    margin-top: 16px;
   }
 
   &__columns {
@@ -68,5 +69,45 @@
     flex-direction: column;
     gap: 20px;
     padding: 12px;
+  }
+
+  &__horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin: 12px 0;
+
+    &:not(:first-child) {
+      margin-top: 12px;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+/* =============================================================================
+ * ELEMENTS
+ * ========================================================================== */
+
+.fcnen-input-wrap {
+  flex: 1 1 auto;
+
+  input:not([type="checkbox"], [type="radio"], [type="range"]) {
+    margin: 0;
+    width: 100%;
+  }
+}
+
+.fcnen-checkbox-wrap {
+  flex: 0 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+
+  input[type="checkbox"] {
+    margin: 0;
   }
 }

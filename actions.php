@@ -27,6 +27,9 @@ function fcnen_submit_subscriber() {
   // Setup
   $email = sanitize_email( $_POST['email'] ?? '' );
   $confirmed = ( $_POST['confirmed'] ?? 0 ) ? 1 : 0;
+  $scope_everything = ( $_POST['everything'] ?? 0 ) ? 1 : 0;
+  $scope_posts = ( $_POST['posts'] ?? 0 ) ? 1 : 0;
+  $scope_content = ( $_POST['content'] ?? 0 ) ? 1 : 0;
 
   // Check email
   if ( empty( $email ) ) {
@@ -38,8 +41,16 @@ function fcnen_submit_subscriber() {
     exit();
   }
 
+  // Prepare data
+  $args = array(
+    'confirmed' => $confirmed,
+    'scope-everything' => $scope_everything,
+    'scope-posts' => $scope_posts,
+    'scope-content' => $scope_content
+  );
+
   // Add subscriber
-  $result = fcnen_add_subscriber( $email, array( 'confirmed' => $confirmed ) );
+  $result = fcnen_add_subscriber( $email, $args );
 
   // Failure?
   if ( empty( $result ) ) {

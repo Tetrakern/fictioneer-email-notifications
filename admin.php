@@ -381,13 +381,27 @@ function fcnen_subscribers_page() {
                   <input type="email" name="email" id="fcnen-submit-subscriber-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcnen' ); ?>" required>
                 </div>
 
-                <div class="fcnen-checkbox-wrap">
-                  <input type="checkbox" name="confirmed" id="fcnen-submit-subscriber-confirm" value="1">
-                  <label for="fcnen-submit-subscriber-confirm"><?php _e( 'Confirmed', 'fcnen' ); ?></label>
+                <div class="fcnen-box__horizontal">
+                  <div class="fcnen-checkbox-wrap">
+                    <input type="checkbox" name="confirmed" id="fcnen-submit-subscriber-confirm" value="1">
+                    <label for="fcnen-submit-subscriber-confirm"><?php _e( 'Confirmed', 'fcnen' ); ?></label>
+                  </div>
+                  <div class="fcnen-checkbox-wrap">
+                    <input type="checkbox" name="everything" id="fcnen-submit-subscriber-everything" value="1">
+                    <label for="fcnen-submit-subscriber-everything"><?php _e( 'Everything', 'fcnen' ); ?></label>
+                  </div>
+                  <div class="fcnen-checkbox-wrap">
+                    <input type="checkbox" name="posts" id="fcnen-submit-subscriber-posts" value="1">
+                    <label for="fcnen-submit-subscriber-posts"><?php _e( 'Blogs', 'fcnen' ); ?></label>
+                  </div>
+                  <div class="fcnen-checkbox-wrap">
+                    <input type="checkbox" name="content" id="fcnen-submit-subscriber-content" value="1">
+                    <label for="fcnen-submit-subscriber-content"><?php _e( 'Stories & Chapters', 'fcnen' ); ?></label>
+                  </div>
                 </div>
 
                 <div class="fcnen-submit-wrap">
-                  <button type="submit" class="button button-primary"><?php _e( 'Submit Subscriber', 'fcnen' ); ?></button>
+                  <button type="submit" class="button button-primary"><?php _e( 'Add Subscriber', 'fcnen' ); ?></button>
                 </div>
 
               </form>
