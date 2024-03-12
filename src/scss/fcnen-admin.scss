@@ -72,20 +72,20 @@
   &__body {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
     padding: 12px;
   }
 
   &__horizontal {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px 20px;
+    gap: 14px 20px;
   }
 
   &__vertical {
     display: flex;
     flex-direction: column;
-    gap: 12px 20px;
+    gap: 14px 20px;
   }
 
   p {
@@ -97,6 +97,36 @@
 /* =============================================================================
  * ELEMENTS
  * ========================================================================== */
+
+.fcnen-left-right-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 6px 12px;
+
+  > :first-child {
+    flex: 0 0 auto;
+    font-weight: 700;
+  }
+
+  > :last-child {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 783px) {
+    flex-direction: row;
+
+    > :first-child {
+      flex: 0 0 64px;
+    }
+
+    .offset-top {
+      margin-top: 6px;
+    }
+  }
+}
 
 .fcnen-input-wrap {
   flex: 1 1 auto;
@@ -153,8 +183,13 @@
   align-items: center;
   justify-content: flex-start;
   gap: 6px;
+  white-space: nowrap;
 
   input[type="checkbox"] {
     margin: 0;
   }
+}
+
+.fcnen-submit-wrap {
+  margin-top: 10px;
 }

@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) OR exit;
 function fcnen_register_settings() {
   // General
   register_setting( 'fcnen_general_group', 'fcnen_from_email_address', 'sanitize_email' );
+  register_setting( 'fcnen_general_group', 'fcnen_from_email_name', 'sanitize_text_field' );
   register_setting( 'fcnen_general_group', 'fcnen_advanced_mode', 'absint' );
 }
 add_action( 'admin_init', 'fcnen_register_settings' );
@@ -540,6 +541,7 @@ function fcnen_settings_page() {
 
   // Setup
   $from = fcnen_get_from_email_address();
+  $name = fcnen_get_from_email_name();
 
   // Start HTML ---> ?>
   <div id="fcnen-admin-page-subscribers" class="wrap fcnen-settings _settings">
@@ -555,32 +557,39 @@ function fcnen_settings_page() {
             <h2><?php _e( 'General', 'fcnen' ); ?></h2>
           </div>
           <div class="fcnen-box__body">
-
             <div class="fcnen-box__row">
               <form method="POST" action="options.php" class="fcnen-box__vertical">
                 <?php
                   settings_fields( 'fcnen_general_group' );
                   do_settings_sections( 'fcnen_general_group' );
                 ?>
-
-                <div class="fcnen-input-wrap">
-                  <input type="email" name="fcnen_from_email_address" id="fcnen-from-email-address" placeholder="<?php _ex( 'noreply@your-site.com', 'From email address placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $from ); ?>" required>
-                  <p class="fcnen-input-wrap__sub-label"><?php _e( 'System email address', 'fcnen' ); ?></p>
+                <div class="fcnen-left-right-wrap">
+                  <label for="fcnen-from-email-address" class="offset-top"><?php _e( 'From', 'fcnen' ); ?></label>
+                  <div class="fcnen-input-wrap">
+                    <input type="email" name="fcnen_from_email_address" id="fcnen-from-email-address" placeholder="<?php _ex( 'noreply@your-site.com', 'From email address placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $from ); ?>" required>
+                    <p class="fcnen-input-wrap__sub-label"><?php _e( 'Defaults to noreply@* or admin email address.', 'fcnen' ); ?></p>
+                  </div>
                 </div>
-
-                <div class="fcnen-checkbox-wrap">
-                  <input type="hidden" name="fcnen_advanced_mode" value="0">
-                  <input type="checkbox" name="fcnen_advanced_mode" id="fcnen-advanced-mode" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_advanced_mode' ), false ); ?>>
-                  <label for="fcnen-advanced-mode"><?php _e( 'Advanced', 'fcnen' ); ?></label>
+                <div class="fcnen-left-right-wrap">
+                  <label for="fcnen-from-email-name" class="offset-top"><?php _e( 'Name', 'fcnen' ); ?></label>
+                  <div class="fcnen-input-wrap">
+                    <input type="text" name="fcnen_from_email_name" id="fcnen-from-email-name" placeholder="<?php _ex( 'Your Site', 'From email name placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $name ); ?>" required>
+                    <p class="fcnen-input-wrap__sub-label"><?php _e( 'Defaults to site name.', 'fcnen' ); ?></p>
+                  </div>
                 </div>
-
+                <div class="fcnen-left-right-wrap">
+                  <span><?php _e( 'Flags', 'fcnen' ); ?></span>
+                  <div class="fcnen-checkbox-wrap">
+                    <input type="hidden" name="fcnen_advanced_mode" value="0">
+                    <input type="checkbox" name="fcnen_advanced_mode" id="fcnen-advanced-mode" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_advanced_mode' ), false ); ?>>
+                    <label for="fcnen-advanced-mode"><?php _e( 'Advanced Mode', 'fcnen' ); ?></label>
+                  </div>
+                </div>
                 <div class="fcnen-submit-wrap">
                   <?php submit_button( __( 'Save Changes', 'fcnes' ), 'primary', 'submit', false ); ?>
                 </div>
-
               </form>
             </div>
-
           </div>
         </div>
 
