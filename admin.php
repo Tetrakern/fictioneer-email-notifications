@@ -4,6 +4,23 @@
 defined( 'ABSPATH' ) OR exit;
 
 // =======================================================================================
+// SETTINGS
+// =======================================================================================
+
+/**
+ * Register settings for the plugin
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_register_settings() {
+  // General
+  register_setting( 'fcnen_general_group', 'fcnen_from_email_address', 'sanitize_email' );
+  register_setting( 'fcnen_general_group', 'fcnen_advanced_mode', 'absint' );
+}
+add_action( 'admin_init', 'fcnen_register_settings' );
+
+// =======================================================================================
 // INCLUDES
 // =======================================================================================
 
@@ -405,7 +422,7 @@ function fcnen_subscribers_page() {
             <h2><?php _e( 'Add Subscriber', 'fcnen' ); ?></h2>
           </div>
           <div class="fcnen-box__body">
-            <div class="fcnen-box__row"><p class="fcnen-box__description"><?php _e( 'Add a subscriber, with the option to skip the confirmation. Duplicate emails will be ignored.', 'fcnen' ); ?></p></div>
+            <div class="fcnen-box__row"><p class="fcnen-box__description"><?php _e( 'Add a subscriber, optionally without confirmation. Duplicate emails will be ignored.', 'fcnen' ); ?></p></div>
             <div class="fcnen-box__row">
               <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_submit_subscriber' ); ?>" class="fcnen-box__vertical">
                 <?php wp_nonce_field( 'submit_subscriber', 'fcnen-nonce' ); ?>
@@ -521,6 +538,9 @@ function fcnen_settings_page() {
     wp_die( __( 'You do not have permission to access this page.', 'fcnes' ) );
   }
 
+  // Setup
+  $from = fcnen_get_from_email_address();
+
   // Start HTML ---> ?>
   <div id="fcnen-admin-page-subscribers" class="wrap fcnen-settings _settings">
     <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Settings', 'fcnen' ); ?></h1>
@@ -535,7 +555,32 @@ function fcnen_settings_page() {
             <h2><?php _e( 'General', 'fcnen' ); ?></h2>
           </div>
           <div class="fcnen-box__body">
-            <div class="fcnen-box__row"></div>
+
+            <div class="fcnen-box__row">
+              <form method="POST" action="options.php" class="fcnen-box__vertical">
+                <?php
+                  settings_fields( 'fcnen_general_group' );
+                  do_settings_sections( 'fcnen_general_group' );
+                ?>
+
+                <div class="fcnen-input-wrap">
+                  <input type="email" name="fcnen_from_email_address" id="fcnen-from-email-address" placeholder="<?php _ex( 'noreply@your-site.com', 'From email address placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $from ); ?>" required>
+                  <p class="fcnen-input-wrap__sub-label"><?php _e( 'System email address', 'fcnen' ); ?></p>
+                </div>
+
+                <div class="fcnen-checkbox-wrap">
+                  <input type="hidden" name="fcnen_advanced_mode" value="0">
+                  <input type="checkbox" name="fcnen_advanced_mode" id="fcnen-advanced-mode" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_advanced_mode' ), false ); ?>>
+                  <label for="fcnen-advanced-mode"><?php _e( 'Advanced', 'fcnen' ); ?></label>
+                </div>
+
+                <div class="fcnen-submit-wrap">
+                  <?php submit_button( __( 'Save Changes', 'fcnes' ), 'primary', 'submit', false ); ?>
+                </div>
+
+              </form>
+            </div>
+
           </div>
         </div>
 

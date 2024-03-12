@@ -89,6 +89,7 @@
   }
 
   p {
+    font-size: 14px;
     margin: 0;
   }
 }
@@ -138,6 +139,11 @@
     border-width: 1px 1px 1px 0;
     border-radius: 0 4px 4px 0;
     overflow: hidden;
+  }
+
+  &__sub-label:is(p) {
+    font-size: 13px;
+    padding: 2px 2px 0 2px;
   }
 }
 
