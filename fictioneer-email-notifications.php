@@ -356,17 +356,18 @@ add_filter( 'fictioneer_filter_subscribe_buttons', 'fcnen_filter_extend_subscrib
  * @param array  $args {
  *   Optional array of arguments. Default empty.
  *
- *   @type bool   $scope-everything  True or false. Default true.
- *   @type bool   $scope-posts       True or false. Default false.
- *   @type bool   $scope-content     True or false. Default false.
- *   @type array  $post_ids          Array of post IDs to subscribe to. Default empty.
- *   @type array  $post_types        Array of post types to subscribe to. Default empty.
- *   @type array  $categories        Array of category IDs to subscribe to. Default empty.
- *   @type array  $tags              Array of tag IDs to subscribe to. Default empty.
- *   @type array  $taxonomies        Array of taxonomy IDs to subscribe to. Default empty.
- *   @type array  $created_at        Date of creation. Defaults to current 'mysql' time.
- *   @type array  $updated_at        Date of last update. Defaults to current 'mysql' time.
- *   @type bool   $confirmed         Whether the subscriber is confirmed. Default false.
+ *   @type bool   'scope-everything'         True or false. Default true.
+ *   @type bool   'scope-posts'              True or false. Default false.
+ *   @type bool   'scope-content'            True or false. Default false.
+ *   @type array  'post_ids'                 Array of post IDs to subscribe to. Default empty.
+ *   @type array  'post_types'               Array of post types to subscribe to. Default empty.
+ *   @type array  'categories'               Array of category IDs to subscribe to. Default empty.
+ *   @type array  'tags'                     Array of tag IDs to subscribe to. Default empty.
+ *   @type array  'taxonomies'               Array of taxonomy IDs to subscribe to. Default empty.
+ *   @type array  'created_at'               Date of creation. Defaults to current 'mysql' time.
+ *   @type array  'updated_at'               Date of last update. Defaults to current 'mysql' time.
+ *   @type bool   'confirmed'                Whether the subscriber is confirmed. Default false.
+ *   @type bool   'skip-confirmation-email'  Whether to skip the confirmation email. Default false.
  * }
  *
  * @return int|false The ID of the inserted subscriber, false on failure.
@@ -399,7 +400,8 @@ function fcnen_add_subscriber( $email, $args = [] ) {
     'confirmed' => 0,
     'trashed' => 0,
     'created_at' => current_time( 'mysql' ),
-    'updated_at' => current_time( 'mysql' )
+    'updated_at' => current_time( 'mysql' ),
+    'skip-confirmation-email' => 0
   );
 
   // Merge provided args with defaults
@@ -450,7 +452,7 @@ function fcnen_add_subscriber( $email, $args = [] ) {
   if ( $wpdb->insert( $table_name, $data, ['%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d'] ) ) {
     $subscriber_id = $wpdb->insert_id;
 
-    if ( ! $args['confirmed'] ) {
+    if ( ! $args['confirmed'] && ! $args['skip-confirmation-email'] ) {
       fcnen_send_confirmation_email(
         array(
           'email' => $email,
@@ -474,14 +476,14 @@ function fcnen_add_subscriber( $email, $args = [] ) {
  * @param array  $args {
  *   Optional array of arguments. Default empty.
  *
- *   @type bool   $scope-everything  True or false. Default true.
- *   @type bool   $scope-posts       True or false. Default false.
- *   @type bool   $scope-content     True or false. Default false.
- *   @type array  $post_ids          Array of post IDs to subscribe to. Default empty.
- *   @type array  $post_types        Array of post types to subscribe to. Default empty.
- *   @type array  $categories        Array of category IDs to subscribe to. Default empty.
- *   @type array  $tags              Array of tag IDs to subscribe to. Default empty.
- *   @type array  $taxonomies        Array of taxonomy IDs to subscribe to. Default empty.
+ *   @type bool   'scope-everything'  True or false. Default true.
+ *   @type bool   'scope-posts'       True or false. Default false.
+ *   @type bool   'scope-content'     True or false. Default false.
+ *   @type array  'post_ids'          Array of post IDs to subscribe to. Default empty.
+ *   @type array  'post_types'        Array of post types to subscribe to. Default empty.
+ *   @type array  'categories'        Array of category IDs to subscribe to. Default empty.
+ *   @type array  'tags'              Array of tag IDs to subscribe to. Default empty.
+ *   @type array  'taxonomies'        Array of taxonomy IDs to subscribe to. Default empty.
  * }
  *
  * @return bool Whether the subscriber was successfully updated.

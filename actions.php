@@ -128,7 +128,7 @@ function fcnen_export_subscribers_csv() {
   }
 
   // Guard
-  if ( ! current_user_can( 'administrator' ) || ! is_admin() ) {
+  if ( ! current_user_can( 'manage_options' ) || ! is_admin() ) {
     wp_die( __( 'Insufficient permissions.', 'fcnen' ) );
   }
 
@@ -141,10 +141,16 @@ function fcnen_export_subscribers_csv() {
     $header_row = array(
       'ID',
       'Email',
-      'Confirmed',
       'Code',
+      'Everything',
+      'Post IDs',
+      'Post Types',
+      'Categories',
+      'Tags',
+      'Taxonomies',
       'Created At',
-      'Updated At'
+      'Updated At',
+      'Confirmed'
     );
 
     // Item rows
@@ -154,10 +160,16 @@ function fcnen_export_subscribers_csv() {
       $rows[] = array(
         $subscriber['id'],
         $subscriber['email'],
-        $subscriber['confirmed'],
         $subscriber['code'],
+        $subscriber['everything'],
+        $subscriber['post_ids'],
+        $subscriber['post_types'],
+        $subscriber['categories'],
+        $subscriber['tags'],
+        $subscriber['taxonomies'],
         $subscriber['created_at'],
-        $subscriber['updated_at']
+        $subscriber['updated_at'],
+        $subscriber['confirmed']
       );
     }
 
@@ -179,3 +191,143 @@ function fcnen_export_subscribers_csv() {
   }
 }
 add_action( 'admin_post_fcnen_export_subscribers_csv', 'fcnen_export_subscribers_csv' );
+
+/**
+ * Import subscribers' data from a CSV file
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_import_subscribers_csv() {
+  // Verify request
+  if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-import-csv', 'fcnen-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
+  }
+
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) || ! is_admin() ) {
+    wp_die( __( 'Insufficient permissions.', 'fcnen' ) );
+  }
+
+  // Check file
+  if ( empty( $_FILES['csv-file'] ?? 0 ) || $_FILES['csv-file']['error'] != UPLOAD_ERR_OK ) {
+    wp_die( __( 'Error. The file was not uploaded properly.', 'fcnen' ) );
+  }
+
+  // Setup
+  $file = $_FILES['csv-file']['tmp_name'];
+  $reset_scopes = ( $_POST['reset-scopes'] ?? 0 ) ? 1 : 0;
+  $allowed_mimes = ['text/comma-separated-values', 'text/csv', 'application/csv', 'application/excel', 'text/plain'];
+  $allowed_types = ['post', 'fcn_story', 'fcn_chapter'];
+  $count = 0;
+
+  // File empty?
+  if ( $_FILES['csv-file']['size'] < 1) {
+    wp_die( __( 'Error. The file is empty.', 'fcnen' ) );
+  }
+
+  // CSV?
+  if ( ! in_array( $_FILES['csv-file']['type'], $allowed_mimes ) ) {
+    wp_die( __( 'Error. Invalid file.', 'fcnen' ) );
+  }
+
+  // Open in read mode
+  $csv = fopen( $file, 'r' );
+
+  // Not opened?
+  if ( $csv === false ) {
+    wp_die( __( 'Error. File could not be opened.', 'fcnen' ) );
+  }
+
+  // Skip header row
+  fgetcsv( $csv );
+
+  // Digest
+  while ( ( $row = fgetcsv( $csv ) ) !== false ) {
+    // Get email
+    $email = sanitize_email( $row[1] ); // 0 is the ID, which will be newly assigned
+
+    // Valid and not already in list?
+    if ( ! filter_var( $email, FILTER_VALIDATE_EMAIL ) || fcnen_subscriber_exists( $email ) )  {
+      continue;
+    }
+
+    // Data
+    $code = sanitize_text_field( $row[2] );
+    $created_at = date( 'Y-m-d H:i:s', strtotime( $row[9] ) ) ?: current_time( 'mysql' );
+    $updated_at = date( 'Y-m-d H:i:s', strtotime( $row[10] ) ) ?: $created_at;
+    $confirmed = absint( $row[11] ) ? 1 : 0;
+
+    if ( $reset_scopes ) {
+      $everything = 1;
+      $post_ids = [];
+      $post_types = [];
+      $categories = [];
+      $tags = [];
+      $taxonomies = [];
+    } else {
+      $everything = absint( $row[3] ) ? 1 : 0;
+      $post_ids = is_serialized( $row[4] ) ? maybe_unserialize( $row[4] ) : [];
+      $post_types = is_serialized( $row[5] ) ? maybe_unserialize( $row[5] ) : [];
+      $categories = is_serialized( $row[6] ) ? maybe_unserialize( $row[6] ) : [];
+      $tags = is_serialized( $row[7] ) ? maybe_unserialize( $row[7] ) : [];
+      $taxonomies = is_serialized( $row[8] ) ? maybe_unserialize( $row[8] ) : [];
+    }
+
+    // Process arrays
+    if ( ! empty( $reset_scopes ) ) {
+      // Only allowed post types
+      $post_types = is_array( $post_types ) ? array_intersect( $post_types, $allowed_types ) : [];
+
+      // Sanitize post IDs and cast to string for SQL purposes (index type != value type)
+      $post_ids = is_array( $post_ids ) ? array_map( 'absint', $post_ids ) : [];
+      $post_ids = array_map( 'strval', $post_ids );
+
+      // Sanitize categories and cast to string for SQL purposes (index type != value type)
+      $categories = is_array( $categories ) ? array_map( 'absint', $categories ) : [];
+      $categories = array_map( 'strval', $categories );
+
+      // Sanitize tags and cast to string for SQL purposes (index type != value type)
+      $tags = is_array( $tags ) ? array_map( 'absint', $tags ) : [];
+      $tags = array_map( 'strval', $tags );
+
+      // Sanitize taxonomies and cast to string for SQL purposes (index type != value type)
+      $taxonomies = is_array( $taxonomies ) ? array_map( 'absint', $taxonomies ) : [];
+      $taxonomies = array_map( 'strval', $taxonomies );
+    }
+
+    // Add subscriber
+    $result = fcnen_add_subscriber(
+      $email,
+      array(
+        'code' => $code,
+        'scope-everything' => $everything,
+        'post_ids' => $post_ids,
+        'post_types' => $post_types,
+        'categories' => $categories,
+        'tags' => $tags,
+        'taxonomies' => $taxonomies,
+        'created_at' => $created_at,
+        'updated_at' => $updated_at,
+        'confirmed' => $confirmed,
+        'skip-confirmation-email' => 1
+      )
+    );
+
+    if ( $result ) {
+      $count++;
+    }
+  }
+
+  // Success!
+  wp_safe_redirect(
+    add_query_arg(
+      array( 'fcnen-notice' => 'csv-imported', 'fcnen-message' => $count ),
+      admin_url( 'admin.php?page=fcnen-subscribers' )
+    )
+  );
+
+  // Terminate
+  exit();
+}
+add_action( 'admin_post_fcnen_import_subscribers_csv', 'fcnen_import_subscribers_csv' );

@@ -228,6 +228,10 @@ function fcnen_admin_notices() {
       $notice = __( 'Emptied trash.', 'fcnen' );
       $class = 'notice-success';
       break;
+    case 'csv-imported':
+      $notice = sprintf( __( '%s subscriber(s) imported from CSV.', 'fcnen' ), $message ?: 0 );
+      $class = 'notice-success';
+      break;
   }
 
   // Render notice
@@ -410,8 +414,8 @@ function fcnen_subscribers_page() {
           <div class="fcnen-box__body">
             <div class="fcnen-box__row"><p class="fcnen-box__description"><?php _e( 'Import subscribers from a CSV file. Duplicate emails will be ignored. Keep in mind that scopes are saved as IDs and may not match if the associated terms have changed.', 'fcnen' ); ?></p></div>
             <div class="fcnen-box__row">
-              <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_import_csv' ); ?>" class="fcnen-box__vertical">
-                <?php wp_nonce_field( 'import_csv', 'fcnen-nonce' ); ?>
+              <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_import_subscribers_csv' ); ?>" enctype="multipart/form-data" class="fcnen-box__vertical">
+                <?php wp_nonce_field( 'fcnen-import-csv', 'fcnen-nonce' ); ?>
                 <div class="fcnen-box__horizontal">
                   <div class="fcnen-input-wrap _file">
                     <input type="file" name="csv-file" id="fcnen-import-csv-file" hidden required>
@@ -419,7 +423,7 @@ function fcnen_subscribers_page() {
                     <label for="fcnen-import-csv-file" class="fcnen-input-wrap__file-field"><?php _e( 'No file chosen', 'fcnen' ); ?></label>
                   </div>
                   <div class="fcnen-checkbox-wrap">
-                    <input type="checkbox" name="reset-scopes" id="fcnen-import-csv-reset-scopes" value="0">
+                    <input type="checkbox" name="reset-scopes" id="fcnen-import-csv-reset-scopes" value="1">
                     <label for="fcnen-import-csv-reset-scopes"><?php _e( 'Reset Scopes', 'fcnen' ); ?></label>
                   </div>
                 </div>
