@@ -35,6 +35,10 @@
   &__scopes {
     display: flex;
     gap: 1rem;
+
+    .checkbox-label {
+      height: auto;
+    }
   }
 
   &__notice {
@@ -45,10 +49,6 @@
     text-align: center;
     padding: 12px 12px 24px;
   }
-}
-
-.radio-label {
-  height: auto;
 }
 
 .fcnen-inline-button {
@@ -65,5 +65,14 @@
 
   .shape {
     background: var(--skeleton-shape-color);
+  }
+}
+
+.fcnen-subscription-form {
+  &._everything {
+    .checkbox-label:not(._everything) {
+      pointer-events: none;
+      opacity: .5;
+    }
   }
 }

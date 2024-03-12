@@ -64,6 +64,11 @@ function fcnen_addEventListeners() {
   document.querySelector('[data-click-action="fcnen-delete-subscription"]')?.addEventListener('click', () => {
     fcnen_unsubscribe();
   });
+
+  // Everything checkbox
+  document.getElementById('fcnen-modal-checkbox-scope-everything')?.addEventListener('change', event => {
+    fcnen_modal.querySelector('form').classList.toggle('_everything', event.currentTarget.checked);
+  });
 }
 
 /**
