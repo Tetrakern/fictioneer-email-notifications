@@ -18,6 +18,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
   private $table_data;
   private $view = '';
   private $uri = '';
+  private $term_names = [];
 
   public $total_items = 0;
   public $all_count = 0;
@@ -55,6 +56,19 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     $this->all_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name" ) - $this->trashed_count;
     $this->view = $_GET['view'] ?? '';
     $this->uri = remove_query_arg( ['action', 'id', 'subscribers', 'fcnen-nonce'], $_SERVER['REQUEST_URI'] );
+
+    // Initialize terms
+    $categories = get_categories( array( 'hide_empty' => 0 ) );
+    $tags = get_tags( array( 'hide_empty' => 0 ) ) ?: [];
+    $genres = get_terms( array( 'taxonomy' => 'fcn_genre', 'hide_empty' => 0 ) ) ?: [];
+    $fandoms = get_terms( array( 'taxonomy' => 'fcn_fandom', 'hide_empty' => 0 ) ) ?: [];
+    $characters = get_terms( array( 'taxonomy' => 'fcn_character', 'hide_empty' => 0 ) ) ?: [];
+    $warnings = get_terms( array( 'taxonomy' => 'fcn_content_warning', 'hide_empty' => 0 ) ) ?: [];
+    $merged_terms = array_merge( $categories, $tags, $genres, $fandoms, $characters, $warnings );
+
+    foreach ( $merged_terms as $term ) {
+      $this->term_names[ $term->term_id ] = $term->name;
+    }
 
     // Redirect from empty views
     switch ( $this->view ) {
@@ -95,6 +109,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       'cb' => '<input type="checkbox" />',
       'id' => __( 'ID', 'fcnen' ),
       'email' => __( 'Email', 'fcnen' ),
+      'scopes' => __( 'Scopes', 'fcnen' ),
       'status' => __( 'Status', 'fcnen' ),
       'date' => __( 'Date', 'fcnen' )
     );
@@ -344,6 +359,78 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       $item['email'],
       $this->row_actions( $actions )
     );
+  }
+
+  /**
+   * Render the content of the "scopes" column
+   *
+   * @since 0.1.0
+   *
+   * @param array $item  The data for the current row item.
+   *
+   * @return string The "scopes" column content.
+   */
+
+  function column_scopes( $item ) {
+    $scopes = array(
+      'post_ids' => unserialize( $item['post_ids'] ),
+      'post_types' => unserialize( $item['post_types'] ),
+      'categories' => unserialize( $item['categories'] ),
+      'tags' => unserialize( $item['tags'] ),
+      'taxonomies' => unserialize( $item['taxonomies'] ),
+    );
+
+    $translations = array(
+      'post_ids' => __( 'Posts', 'fcnen' ),
+      'post_types' => __( 'Types', 'fcnen' ),
+      'categories' => __( 'Categories', 'fcnen' ),
+      'tags' => __( 'Tags', 'fcnen' ),
+      'taxonomies' => __( 'Taxonomies', 'fcnen' )
+    );
+
+    if ( ! empty( $item['everything'] ) ) {
+      return __( 'Everything', 'fcnen' );
+    }
+
+    foreach ( $scopes as $key => $values ) {
+      if ( empty( $values ) ) {
+        unset( $scopes[ $key ] );
+      } else {
+        switch ( $key ) {
+          case 'post_types':
+            $values = array_map(
+              function( $val ) {
+                return get_post_type_object( $val )->labels->singular_name;
+              },
+              $values
+            );
+            break;
+          case 'post_ids':
+            $values = array_map(
+              function ( $val ) {
+                $link = get_permalink( $val );
+                if ( empty( $link ) ) {
+                  return $val;
+                } else {
+                  return '<a href="' . $link . '">' . mb_strimwidth( get_the_title( $val ), 0, 20, '…' ) . '</a>';
+                }
+              },
+              $values
+            );
+            break;
+          default:
+            $values = array_map(
+              function ( $val ) {
+                return isset( $this->term_names[ $val ] ) ? mb_strimwidth( $this->term_names[ $val ], 0, 20, '…' ) : $val;
+              },
+              $values
+            );
+        }
+        $scopes[ $key ] = '<strong>' . $translations[ $key ] . ':</strong> ' . implode( ', ', $values );
+      }
+    }
+
+    return implode( ' &bull; ', $scopes );
   }
 
   /**
