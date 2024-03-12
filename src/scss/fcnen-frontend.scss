@@ -49,6 +49,49 @@
     text-align: center;
     padding: 12px 12px 24px;
   }
+
+  &__advanced {
+    display: grid;
+    gap: 1.5px;
+  }
+
+  &__search {
+    position: relative;
+
+    &-string {
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+      padding-right: 40px !important;
+      width: 100%;
+    }
+
+    &-submit {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: grid;
+      place-content: center;
+      color: var(--fg-700);
+      font: var(--button-font-weight) 12px / 1 var(--ff-base);
+      height: 100%;
+      width: 32px;
+
+      &:hover {
+        color: var(--fg-400);
+      }
+    }
+  }
+
+  &__tokens {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: var(--input-background);
+    padding: 8px;
+    border-radius: 0 0 var(--layout-border-radius-small) var(--layout-border-radius-small);
+    min-height: 36px;
+  }
 }
 
 .fcnen-inline-button {
