@@ -126,14 +126,23 @@ function fcnen_get_modal_content() {
 
       <div class="dialog-modal__row fcnen-dialog-modal__advanced">
         <div class="fcnen-dialog-modal__advanced-search">
-          <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__advanced-search-string" placeholder="<?php _e( 'Type to search for anything…', 'fcnen' ); ?>" autocomplete="off" autocorrect="off" spellcheck="false">
+          <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__advanced-search-string" placeholder="<?php _e( 'Type to search for anything…', 'fcnen' ); ?>" autocomplete="off" autocorrect="off" spellcheck="false" data-input-target="fcnen-search">
         </div>
         <div class="fcnen-dialog-modal__advanced-lists">
-          <ol class="fcnen-dialog-modal__advanced-sources">
+          <ol class="fcnen-dialog-modal__advanced-sources" data-target="fcnen-sources">
             <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No matches found.', 'fcnen' ); ?></span></li>
           </ol>
           <ol class="fcnen-dialog-modal__advanced-selection"></ol>
         </div>
+        <template data-target="fcnen-spinner-template">
+          <li class="fcnen-dialog-modal__advanced-li _disabled" data-target="fcnen-loading-observer">
+            <i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i>
+            <span><?php _e( 'Loading', 'fcnen' ); ?></span>
+          </li>
+        </template>
+        <template data-target="fcnen-no-matches">
+          <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No matches found.', 'fcnen' ); ?></span></li>
+        </template>
       </div>
 
     </div>

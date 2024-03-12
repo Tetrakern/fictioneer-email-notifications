@@ -81,6 +81,9 @@ function fcnen_addEventListeners() {
   document.getElementById('fcnen-modal-checkbox-scope-everything')?.addEventListener('change', event => {
     fcnen_modal.querySelector('form').classList.toggle('_everything', event.currentTarget.checked);
   });
+
+  // Search
+  fcnen_initializeSearch();
 }
 
 /**
@@ -244,4 +247,61 @@ function fcnen_unsubscribe() {
     fcnen_targetContainer.innerHTML = `<div class="fcnen-dialog-modal__notice"><span>${response.data.notice}</span></div>`;
     fcnen_toggleInProgress(false);
   });
+}
+
+// =============================================================================
+// SEARCH & SELECT
+// =============================================================================
+
+var fcncn_searchTimer;
+
+function fcnen_initializeSearch() {
+  document.querySelectorAll('[data-input-target="fcnen-search"]').forEach(search => {
+    search.addEventListener('input', () => {
+      // Clear previous timer (if any)
+      clearTimeout(fcncn_searchTimer);
+
+      // Trigger search after delay
+      fcncn_searchTimer = setTimeout(() => {
+        // Get elements and values
+        const wrapper = search.closest('.fcnen-dialog-modal__advanced');
+        const sourceList = wrapper.querySelector('[data-target="fcnen-sources"]');
+
+        // Clear source list and add spinner
+        sourceList.innerHTML = '';
+        sourceList.appendChild(document.querySelector('[data-target="fcnen-spinner-template"]').content.cloneNode(true));
+
+        // Crop search input
+        if (search.value > 200) {
+          search.value = search.value.slice(0, 200);
+        }
+
+        // Search empty?
+        if (search.value == '') {
+          sourceList.innerHTML = '';
+          sourceList.appendChild(document.querySelector('[data-target="fcnen-no-matches"]').content.cloneNode(true));
+          return;
+        }
+
+        // Prepare payload
+        const payload = {
+          'action': 'fcnen_ajax_search_content',
+          'search': search.value,
+          'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? ''
+        };
+
+        // Request
+        fcnen_searchContent(payload, sourceList);
+      }, 800);
+    });
+  });
+}
+
+function fcnen_searchContent(payload, sourceList) {
+  fcn_ajaxPost(payload)
+  .then(response => {
+    if (response.success) {
+      sourceList.innerHTML = response.data.html;
+    }
+  })
 }

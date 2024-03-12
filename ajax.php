@@ -163,3 +163,53 @@ function fcnen_ajax_subscribe() {
 }
 add_action( 'wp_ajax_fcnen_ajax_subscribe', 'fcnen_ajax_subscribe' );
 add_action( 'wp_ajax_nopriv_fcnen_ajax_subscribe', 'fcnen_ajax_subscribe' );
+
+/**
+ * AJAX callback to search content
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_ajax_search_content() {
+  // Verify
+  if ( ! wp_doing_ajax() ) {
+    wp_send_json_error( __( 'Invalid request.', 'fcnen' ) );
+  }
+
+  if ( ! check_ajax_referer( 'fcnen-subscribe', 'nonce', false ) ) {
+    wp_send_json_error(
+      array( 'notice' => __( 'Nonce verification failed. Please reload and try again.', 'fcnen' ) )
+    );
+  }
+
+  // Setup
+  $search = sanitize_text_field( $_REQUEST['search'] ?? '' );
+  $page = absint( $_REQUEST['page'] ?? 1 );
+  $output = [];
+
+  // Query
+  // $query = new WP_Query(
+  //   array(
+  //     'post_status' => 'publish',
+  //     'orderby' => 'date',
+  //     'order' => 'desc',
+  //     'posts_per_page' => 10,
+  //     'paged' => $page,
+  //     's' => $search,
+  //     'update_post_meta_cache' => false, // Improve performance
+  //     'update_post_term_cache' => false // Improve performance
+  //   )
+  // );
+
+  $output[] = '<li class="fcnen-dialog-modal__advanced-li" data-id="#" data-type="foo"><span>Dummy result!</span></li>';
+
+
+  // Response
+  wp_send_json_success(
+    array(
+      'html' => implode( '', $output )
+    )
+  );
+}
+add_action( 'wp_ajax_fcnen_ajax_search_content', 'fcnen_ajax_search_content' );
+add_action( 'wp_ajax_nopriv_fcnen_ajax_search_content', 'fcnen_ajax_search_content' );
