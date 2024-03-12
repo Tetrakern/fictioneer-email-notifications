@@ -125,13 +125,14 @@ function fcnen_get_modal_content() {
       <hr>
 
       <div class="dialog-modal__row fcnen-dialog-modal__advanced">
-        <div class="fcnen-dialog-modal__search">
-          <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__search-string" placeholder="<?php _e( 'Type to search for anything…', 'fcnen' ); ?>" autocomplete="off" autocorrect="off" spellcheck="false">
-          <button type="button" class="fcnen-dialog-modal__search-submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <div class="fcnen-dialog-modal__advanced-search">
+          <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__advanced-search-string" placeholder="<?php _e( 'Type to search for anything…', 'fcnen' ); ?>" autocomplete="off" autocorrect="off" spellcheck="false">
         </div>
-
-        <div class="fcnen-dialog-modal__tokens keyword-input">
-          <div class="node" data-value=""><span class="node-name">Token</span><span class="node-delete"><i class="fa-solid fa-xmark"></i></span></div>
+        <div class="fcnen-dialog-modal__advanced-lists">
+          <ol class="fcnen-dialog-modal__advanced-sources">
+            <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No matches found.', 'fcnen' ); ?></span></li>
+          </ol>
+          <ol class="fcnen-dialog-modal__advanced-selection"></ol>
         </div>
       </div>
 
