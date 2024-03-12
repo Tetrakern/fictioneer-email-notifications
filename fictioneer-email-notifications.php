@@ -44,8 +44,8 @@ add_action( 'wp_loaded', 'fcnen_load_stubs' );
 define(
   'FCNEN_DEFAULTS',
   array(
-    'confirmation_layout' => __( '<p>Thank you for subscribing to <a href="{{site_link}}" target="_blank">{{site_name}}</a>.</p>' . "\n\n" . '<p>Please click the following link within 24 hours to confirm your subscription: <a href="{{activation_link}}">Activate Subscription</a>.</p>' . "\n\n" . '<p>Your edit code is <strong>{{code}}</strong>, which will also be included in any future emails. In case your code ever gets compromised, just delete your subscription and submit a new one.</p>' . "\n\n" . '<p>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24 hours. You can also immediately <a href="{{unsubscribe_link}}">delete it with this link</a>.</p>', 'fcnen' ),
-    'code_layout' => __( '<p>Following is the edit code for your email subscription on <a href="{{site_link}}" target="_blank">{{site_name}}</a>. Do not share it. If compromised, just delete your subscription and submit a new one.</p>' . "\n\n" . '<p><strong>{{code}}</strong></p>' . "\n\n" . '<p>You can also directly edit your subscription with this <a href="{{edit_link}}" target="_blank">link</a>.</p>', 'fcnen' )
+    'layout_confirmation' => __( '<p>Thank you for subscribing to <a href="{{site_link}}" target="_blank">{{site_name}}</a>.</p>' . "\n\n" . '<p>Please click the following link within 24 hours to confirm your subscription: <a href="{{activation_link}}">Activate Subscription</a>.</p>' . "\n\n" . '<p>Your edit code is <strong>{{code}}</strong>, which will also be included in any future emails. In case your code ever gets compromised, just delete your subscription and submit a new one.</p>' . "\n\n" . '<p>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24 hours. You can also immediately <a href="{{unsubscribe_link}}">delete it with this link</a>.</p>', 'fcnen' ),
+    'layout_code' => __( '<p>Following is the edit code for your email subscription on <a href="{{site_link}}" target="_blank">{{site_name}}</a>. Do not share it. If compromised, just delete your subscription and submit a new one.</p>' . "\n\n" . '<p><strong>{{code}}</strong></p>' . "\n\n" . '<p>You can also directly edit your subscription with this <a href="{{edit_link}}" target="_blank">link</a>.</p>', 'fcnen' )
   )
 );
 
@@ -788,11 +788,11 @@ function fcnen_send_transactional_email( $args, $subject, $body ) {
 function fcnen_send_confirmation_email( $args ) {
   // Setup
   $subject = __( 'Please confirm your subscription', 'fcnen' );
-  $body = FCNEN_DEFAULTS['confirmation_layout'];
+  $body = FCNEN_DEFAULTS['layout_confirmation'];
 
   // Customized?
-  $subject = get_option( 'fcnen_confirmation_email_subject' ) ?: $subject;
-  $body = get_option( 'fcnen_confirmation_email_body' ) ?: $body;
+  $subject = get_option( 'fcnen_subject_confirmation' ) ?: $subject;
+  $body = get_option( 'fcnen_template_layout_confirmation' ) ?: $body;
 
   // Send
   fcnen_send_transactional_email( $args, $subject, $body );
@@ -813,11 +813,11 @@ function fcnen_send_confirmation_email( $args ) {
 function fcnen_send_code_email( $args ) {
   // Setup
   $subject = __( 'Your subscription code', 'fcnen' );
-  $body = FCNEN_DEFAULTS['code_layout'];
+  $body = FCNEN_DEFAULTS['layout_code'];
 
   // Customized?
-  $subject = get_option( 'fcnen_code_email_subject' ) ?: $subject;
-  $custom_body = get_option( 'fcnen_code_email_body' ) ?: $body;
+  $subject = get_option( 'fcnen_subject_code' ) ?: $subject;
+  $custom_body = get_option( 'fcnen_template_layout_code' ) ?: $body;
 
   // Check for {{code}} presence
   if ( strpos( $custom_body, '{{code}}' ) !== false ) {

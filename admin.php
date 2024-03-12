@@ -18,6 +18,15 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_general_group', 'fcnen_from_email_address', 'sanitize_email' );
   register_setting( 'fcnen_general_group', 'fcnen_from_email_name', 'sanitize_text_field' );
   register_setting( 'fcnen_general_group', 'fcnen_advanced_mode', 'absint' );
+
+  // Templates
+  register_setting( 'fcnen_template_group', 'fcnen_template_layout_confirmation', 'wp_kses_post' );
+  register_setting( 'fcnen_template_group', 'fcnen_template_layout_code', 'wp_kses_post' );
+  register_setting( 'fcnen_template_group', 'fcnen_template_layout_edit', 'wp_kses_post' );
+  register_setting( 'fcnen_template_group', 'fcnen_template_layout_notification', 'wp_kses_post' );
+  register_setting( 'fcnen_template_group', 'fcnen_template_loop_part_post', 'wp_kses_post' );
+  register_setting( 'fcnen_template_group', 'fcnen_template_loop_part_story', 'wp_kses_post' );
+  register_setting( 'fcnen_template_group', 'fcnen_template_loop_part_chapter', 'wp_kses_post' );
 }
 add_action( 'admin_init', 'fcnen_register_settings' );
 
@@ -556,8 +565,13 @@ function fcnen_settings_page() {
   // Setup
   $from = fcnen_get_from_email_address();
   $name = fcnen_get_from_email_name();
-  $confirmation_layout = get_option( 'fcnen_template_layout_confirmation', FCNEN_DEFAULTS['confirmation_layout'] );
-  $code_layout = get_option( 'fcnen_template_code_confirmation', FCNEN_DEFAULTS['code_layout'] );
+  $layout_confirmation = get_option( 'fcnen_template_layout_confirmation', FCNEN_DEFAULTS['layout_confirmation'] ?? '' );
+  $layout_code = get_option( 'fcnen_template_layout_code', FCNEN_DEFAULTS['layout_code'] ?? '' );
+  $layout_edit = get_option( 'fcnen_template_layout_edit', FCNEN_DEFAULTS['layout_edit'] ?? '' );
+  $layout_notification = get_option( 'fcnen_template_layout_notification', FCNEN_DEFAULTS['layout_notification'] ?? '' );
+  $loop_part_post = get_option( 'fcnen_template_loop_part_post', FCNEN_DEFAULTS['loop_part_post'] ?? '' );
+  $loop_part_story = get_option( 'fcnen_template_loop_part_story', FCNEN_DEFAULTS['loop_part_story'] ?? '' );
+  $loop_part_chapter = get_option( 'fcnen_template_loop_part_chapter', FCNEN_DEFAULTS['loop_part_chapter'] ?? '' );
 
   // Start HTML ---> ?>
   <div id="fcnen-admin-page-subscribers" class="wrap fcnen-settings _settings">
@@ -642,21 +656,56 @@ function fcnen_settings_page() {
               <option value="layout-code"><?php _e( 'Code Layout', 'fcnen' ); ?></option>
               <option value="layout-edit"><?php _e( 'Edit Layout', 'fcnen' ); ?></option>
               <option value="layout-notification"><?php _e( 'Notification Layout', 'fcnen' ); ?></option>
-              <option value="loop-post"><?php _e( 'Post Loop Partial', 'fcnen' ); ?></option>
-              <option value="loop-story"><?php _e( 'Story Loop Partial', 'fcnen' ); ?></option>
-              <option value="loop-chapter"><?php _e( 'Chapter Loop Partial', 'fcnen' ); ?></option>
+              <option value="loop-part-post"><?php _e( 'Post Loop Partial', 'fcnen' ); ?></option>
+              <option value="loop-part-story"><?php _e( 'Story Loop Partial', 'fcnen' ); ?></option>
+              <option value="loop-part-chapter"><?php _e( 'Chapter Loop Partial', 'fcnen' ); ?></option>
             </select>
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-confirmation">
-            <textarea name="fcnen_template_layout_confirmation" id="fcnen-template-layout-confirmation" class="fcnen-codemirror"><?php echo esc_textarea( $confirmation_layout ); ?></textarea>
+            <textarea name="fcnen_template_layout_confirmation" id="fcnen-template-layout-confirmation" class="fcnen-codemirror"><?php echo esc_textarea( $layout_confirmation ); ?></textarea>
             <div class="fcnen-submit-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-code">
-            <textarea name="fcnen_template_layout_confirmation" id="fcnen-template-layout-code" class="fcnen-codemirror"><?php echo esc_textarea( $code_layout ); ?></textarea>
+            <textarea name="fcnen_template_layout_code" id="fcnen-template-layout-code" class="fcnen-codemirror"><?php echo esc_textarea( $layout_code ); ?></textarea>
+            <div class="fcnen-submit-wrap">
+              <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
+            </div>
+          </div>
+
+          <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-edit">
+            <textarea name="fcnen_template_layout_edit" id="fcnen-template-layout-edit" class="fcnen-codemirror"><?php echo esc_textarea( $layout_edit ); ?></textarea>
+            <div class="fcnen-submit-wrap">
+              <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
+            </div>
+          </div>
+
+          <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-notification">
+            <textarea name="fcnen_template_layout_notification" id="fcnen-template-layout-notification" class="fcnen-codemirror"><?php echo esc_textarea( $layout_notification ); ?></textarea>
+            <div class="fcnen-submit-wrap">
+              <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
+            </div>
+          </div>
+
+          <div class="fcnen-box__row fcnen-box__vertical hidden" id="loop-part-post">
+            <textarea name="fcnen_template_loop_part_post" id="fcnen-template-loop-part-post" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_post ); ?></textarea>
+            <div class="fcnen-submit-wrap">
+              <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
+            </div>
+          </div>
+
+          <div class="fcnen-box__row fcnen-box__vertical hidden" id="loop-part-story">
+            <textarea name="fcnen_template_loop_part_story" id="fcnen-template-loop-part-story" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_story ); ?></textarea>
+            <div class="fcnen-submit-wrap">
+              <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
+            </div>
+          </div>
+
+          <div class="fcnen-box__row fcnen-box__vertical hidden" id="loop-part-chapter">
+            <textarea name="fcnen_template_loop_part_chapter" id="fcnen-template-loop-part-chapter" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_chapter ); ?></textarea>
             <div class="fcnen-submit-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
