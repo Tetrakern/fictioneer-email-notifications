@@ -23,6 +23,18 @@
   width: 64px;
 }
 
+@media screen and (max-width: 782px) {
+  .fcnen-subscribers-table-wrapper .column-id:is(td, th):not(.hidden) {
+    display: none !important;
+  }
+}
+
+.fcnen-subscribers-table-wrapper .column-email {
+  @media screen and (min-width: 1024px) {
+    min-width: 265px;
+  }
+}
+
 .fcnen-subscribers-table-wrapper .column-status {
   width: 128px;
 }
