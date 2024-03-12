@@ -357,8 +357,8 @@ add_filter( 'fictioneer_filter_subscribe_buttons', 'fcnen_filter_extend_subscrib
  *   Optional array of arguments. Default empty.
  *
  *   @type bool   $scope-everything  True or false. Default true.
- *   @type bool   $scope-posts       True or false. Default true.
- *   @type bool   $scope-content     True or false. Default true.
+ *   @type bool   $scope-posts       True or false. Default false.
+ *   @type bool   $scope-content     True or false. Default false.
  *   @type array  $post_ids          Array of post IDs to subscribe to. Default empty.
  *   @type array  $post_types        Array of post types to subscribe to. Default empty.
  *   @type array  $categories        Array of category IDs to subscribe to. Default empty.
@@ -391,18 +391,18 @@ function fcnen_add_subscriber( $email, $args = [] ) {
     'scope-everything' => 1,
     'scope-posts' => 0,
     'scope-content' => 0,
-    'post_ids' => [],   // Not yet used
+    'post_ids' => [],
     'post_types' => [],
-    'categories' => [], // Not yet used
-    'tags' => [],       // Not yet used
-    'taxonomies' => [], // Not yet used
+    'categories' => [],
+    'tags' => [],
+    'taxonomies' => [],
     'confirmed' => 0,
     'trashed' => 0,
     'created_at' => current_time( 'mysql' ),
     'updated_at' => current_time( 'mysql' )
   );
 
-  // Merge provided data with defaults
+  // Merge provided args with defaults
   $args = array_merge( $defaults, $args );
 
   // Sanitize
@@ -434,11 +434,11 @@ function fcnen_add_subscriber( $email, $args = [] ) {
     'email' => $email,
     'code' => $args['code'],
     'everything' => $args['scope-everything'],
-    'post_ids' => serialize( $args['post_ids'] ),
-    'post_types' => serialize( $args['post_types'] ),
-    'categories' => serialize( $args['categories'] ),
-    'tags' => serialize( $args['tags'] ),
-    'taxonomies' => serialize( $args['taxonomies'] ),
+    'post_types' => serialize( array_map( 'strval', $args['post_types'] ) ),
+    'post_ids' => serialize( array_map( 'strval', $args['post_ids'] ) ),
+    'categories' => serialize( array_map( 'strval', $args['categories'] ) ),
+    'tags' => serialize( array_map( 'strval', $args['tags'] ) ),
+    'taxonomies' => serialize( array_map( 'strval', $args['taxonomies'] ) ),
     'pending_changes' => serialize( [] ),
     'created_at' => $args['created_at'],
     'updated_at' => $args['updated_at'],
@@ -474,19 +474,85 @@ function fcnen_add_subscriber( $email, $args = [] ) {
  * @param array  $args {
  *   Optional array of arguments. Default empty.
  *
- *   @type string $scope       Either 'everything' or 'stories'.
- *   @type array  $post_ids    Array of post IDs to subscribe to. Default empty.
- *   @type array  $post_types  Array of post types to subscribe to. Default empty.
- *   @type array  $categories  Array of category IDs to subscribe to. Default empty.
- *   @type array  $tags        Array of tag IDs to subscribe to. Default empty.
- *   @type array  $taxonomies  Array of taxonomy IDs to subscribe to. Default empty.
+ *   @type bool   $scope-everything  True or false. Default true.
+ *   @type bool   $scope-posts       True or false. Default false.
+ *   @type bool   $scope-content     True or false. Default false.
+ *   @type array  $post_ids          Array of post IDs to subscribe to. Default empty.
+ *   @type array  $post_types        Array of post types to subscribe to. Default empty.
+ *   @type array  $categories        Array of category IDs to subscribe to. Default empty.
+ *   @type array  $tags              Array of tag IDs to subscribe to. Default empty.
+ *   @type array  $taxonomies        Array of taxonomy IDs to subscribe to. Default empty.
  * }
  *
  * @return bool Whether the subscriber was successfully updated.
  */
 
 function fcnen_update_subscriber( $email, $args = [] ) {
-  return true;
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
+  $email = sanitize_email( $email );
+
+  // Valid email?
+  if ( empty( $email ) || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+    return false;
+  }
+
+  // Get subscriber
+  $subscriber = fcnen_get_subscriber_by_email( $email );
+
+  // Make sure subscriber exists and is not trashed
+  if ( ! $subscriber || $subscriber->trashed ) {
+    return false;
+  }
+
+  // Defaults
+  $defaults = array(
+    'scope-everything' => 1,
+    'scope-posts' => 0,
+    'scope-content' => 0,
+    'post_ids' => [],
+    'post_types' => [],
+    'categories' => [],
+    'tags' => [],
+    'taxonomies' => []
+  );
+
+  // Merge provided args with defaults
+  $args = array_merge( $defaults, $args );
+
+  // Post types
+  if ( $args['scope-posts'] ) {
+    $args['post_types'][] = 'post';
+  }
+
+  if ( $args['scope-content'] ) {
+    $args['post_types'][] = 'fcn_story';
+    $args['post_types'][] = 'fcn_chapter';
+  }
+
+  // Prepare data
+  $data = array(
+    'everything' => $args['scope-everything'],
+    'post_types' => serialize( array_map( 'strval', $args['post_types'] ) ),
+    'post_ids' => serialize( array_map( 'strval', $args['post_ids'] ) ),
+    'categories' => serialize( array_map( 'strval', $args['categories'] ) ),
+    'tags' => serialize( array_map( 'strval', $args['tags'] ) ),
+    'taxonomies' => serialize( array_map( 'strval', $args['taxonomies'] ) )
+  );
+
+  // Update
+  $result = $wpdb->update(
+    $table_name,
+    $data,
+    array( 'email' => $email ),
+    ['%d', '%s', '%s', '%s', '%s', '%s'],
+    ['%s']
+  );
+
+  // Return result
+  return ( $result !== false );
 }
 
 /**
