@@ -244,6 +244,11 @@ function fcnen_import_subscribers_csv() {
 
   // Digest
   while ( ( $row = fgetcsv( $csv ) ) !== false ) {
+    // Check ID
+    if ( ! is_numeric( $row[0] ) ) {
+      continue;
+    }
+
     // Get email
     $email = sanitize_email( $row[1] ); // 0 is the ID, which will be newly assigned
 
