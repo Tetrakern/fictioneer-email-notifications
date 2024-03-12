@@ -135,9 +135,11 @@
 .fcnen-input-wrap {
   flex: 1 1 auto;
 
-  input:not([type="checkbox"], [type="radio"], [type="range"]) {
+  input:not([type="checkbox"], [type="radio"], [type="range"]),
+  select {
     margin: 0;
     width: 100%;
+    max-width: none;
   }
 
   &._file {
@@ -194,7 +196,11 @@
   }
 }
 
-.fcnen-submit-wrap {
+.fcnen-action-wrap {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 14px 8px;
   margin-top: 10px;
 }
 

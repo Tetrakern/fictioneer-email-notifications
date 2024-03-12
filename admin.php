@@ -17,7 +17,8 @@ function fcnen_register_settings() {
   // General
   register_setting( 'fcnen_general_group', 'fcnen_from_email_address', 'sanitize_email' );
   register_setting( 'fcnen_general_group', 'fcnen_from_email_name', 'sanitize_text_field' );
-  register_setting( 'fcnen_general_group', 'fcnen_advanced_mode', 'absint' );
+  register_setting( 'fcnen_general_group', 'fcnen_flag_subscribe_to_stories', 'absint' );
+  register_setting( 'fcnen_general_group', 'fcnen_flag_subscribe_to_taxonomies', 'absint' );
 
   // Templates
   register_setting( 'fcnen_template_group', 'fcnen_template_layout_confirmation', 'wp_kses_post' );
@@ -471,7 +472,7 @@ function fcnen_subscribers_page() {
                     <label for="fcnen-submit-subscriber-content"><?php _e( 'Stories & Chapters', 'fcnen' ); ?></label>
                   </div>
                 </div>
-                <div class="fcnen-submit-wrap">
+                <div class="fcnen-action-wrap">
                   <button type="submit" class="button button-primary"><?php _e( 'Add Subscriber', 'fcnen' ); ?></button>
                 </div>
               </form>
@@ -499,7 +500,7 @@ function fcnen_subscribers_page() {
                     <label for="fcnen-import-csv-reset-scopes"><?php _e( 'Reset Scopes', 'fcnen' ); ?></label>
                   </div>
                 </div>
-                <div class="fcnen-submit-wrap">
+                <div class="fcnen-action-wrap">
                   <button type="submit" class="button button-primary"><?php _e( 'Import CSV', 'fcnen' ); ?></button>
                 </div>
               </form>
@@ -609,13 +610,20 @@ function fcnen_settings_page() {
                 </div>
                 <div class="fcnen-left-right-wrap">
                   <span><?php _e( 'Flags', 'fcnen' ); ?></span>
-                  <div class="fcnen-checkbox-wrap">
-                    <input type="hidden" name="fcnen_advanced_mode" value="0">
-                    <input type="checkbox" name="fcnen_advanced_mode" id="fcnen-advanced-mode" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_advanced_mode' ), false ); ?>>
-                    <label for="fcnen-advanced-mode"><?php _e( 'Advanced Mode', 'fcnen' ); ?></label>
+                  <div>
+                    <div class="fcnen-checkbox-wrap">
+                      <input type="hidden" name="fcnen_flag_subscribe_to_stories" value="0">
+                      <input type="checkbox" name="fcnen_flag_subscribe_to_stories" id="fcnen-flag-stories" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_subscribe_to_stories' ), false ); ?>>
+                      <label for="fcnen-flag-stories"><?php _e( 'Allow subscriptions to stories', 'fcnen' ); ?></label>
+                    </div>
+                    <div class="fcnen-checkbox-wrap" style="margin-top: 14px;">
+                      <input type="hidden" name="fcnen_flag_subscribe_to_taxonomies" value="0">
+                      <input type="checkbox" name="fcnen_flag_subscribe_to_taxonomies" id="fcnen-flag-taxonomies" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_subscribe_to_taxonomies' ), false ); ?>>
+                      <label for="fcnen-flag-taxonomies"><?php _e( 'Allow subscriptions to taxonomies', 'fcnen' ); ?></label>
+                    </div>
                   </div>
                 </div>
-                <div class="fcnen-submit-wrap">
+                <div class="fcnen-action-wrap">
                   <?php submit_button( __( 'Save Changes', 'fcnes' ), 'primary', 'submit', false ); ?>
                 </div>
               </form>
@@ -625,15 +633,44 @@ function fcnen_settings_page() {
 
         <div class="fcnen-box">
           <div class="fcnen-box__header">
-            <h2><?php _e( 'MailerSend API', 'fcnen' ); ?></h2>
+            <h2><?php _e( 'Service Provider API', 'fcnen' ); ?></h2>
           </div>
           <div class="fcnen-box__body">
-            <div class="fcnen-box__row"><p class="fcnen-box__description"><?php
-              printf(
-                __( 'Please enter your API Key and customize the endpoints (if necessary) to communicate with the <a href="%s" target="_blank">MailerSend API</a>. You can also change the batch limit for bulk requests.', 'fcnen' ),
-                'https://developers.mailersend.com/'
-              )
-            ?></p></div>
+            <div class="fcnen-box__row">
+              <form method="POST" action="options.php" class="fcnen-box__vertical">
+                <?php
+                  settings_fields( 'fcnen_provider_group' );
+                  do_settings_sections( 'fcnen_provider_group' );
+                ?>
+                <div class="fcnen-left-right-wrap">
+                  <label for="fcnen-select-service-provider" class="offset-top"><?php _e( 'Provider', 'fcnen' ); ?></label>
+                  <div class="fcnen-input-wrap">
+                    <select name="fcnen_service_provider" id="fcnen-select-service-provider">
+                      <option value="mailersend" disabled selected><?php _e( 'MailerSend', 'fcnen' ); ?></option>
+                    </select>
+                    <p class="fcnen-input-wrap__sub-label"><?php _e( 'Currently, only MailerSend is available.', 'fcnen' ); ?></p>
+                  </div>
+                </div>
+                <div class="fcnen-left-right-wrap">
+                  <label for="fcnen-api-key" class="offset-top"><?php _e( 'API Key', 'fcnen' ); ?></label>
+                  <div class="fcnen-input-wrap">
+                    <input type="text" name="fcnen_api_key" id="fcnen-api-key" value="<?php echo esc_attr( '' ); ?>" required>
+                    <p class="fcnen-input-wrap__sub-label"><?php _e( 'You can get that from your provider account.', 'fcnen' ); ?></p>
+                  </div>
+                </div>
+                <div class="fcnen-left-right-wrap">
+                  <label for="fcnen-api-bulk-limit" class="offset-top"><?php _e( 'Limit', 'fcnen' ); ?></label>
+                  <div class="fcnen-input-wrap">
+                    <input type="text" name="fcnen_api_bulk_limit" id="fcnen-api-bulk-limit" value="<?php echo esc_attr( '' ); ?>" style="max-width: 100px;" required>
+                    <p class="fcnen-input-wrap__sub-label"><?php _e( 'Emails per request.', 'fcnen' ); ?></p>
+                  </div>
+                </div>
+                <div class="fcnen-action-wrap">
+                  <?php submit_button( __( 'Save Changes', 'fcnes' ), 'primary', 'submit', false ); ?>
+                  <button type="subuttonbmit" id="fcnes-test-api" class="button"><?php _e( 'Test', 'fcnen' ); ?></button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
 
@@ -664,49 +701,49 @@ function fcnen_settings_page() {
 
           <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-confirmation">
             <textarea name="fcnen_template_layout_confirmation" id="fcnen-template-layout-confirmation" class="fcnen-codemirror"><?php echo esc_textarea( $layout_confirmation ); ?></textarea>
-            <div class="fcnen-submit-wrap">
+            <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-code">
             <textarea name="fcnen_template_layout_code" id="fcnen-template-layout-code" class="fcnen-codemirror"><?php echo esc_textarea( $layout_code ); ?></textarea>
-            <div class="fcnen-submit-wrap">
+            <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-edit">
             <textarea name="fcnen_template_layout_edit" id="fcnen-template-layout-edit" class="fcnen-codemirror"><?php echo esc_textarea( $layout_edit ); ?></textarea>
-            <div class="fcnen-submit-wrap">
+            <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-notification">
             <textarea name="fcnen_template_layout_notification" id="fcnen-template-layout-notification" class="fcnen-codemirror"><?php echo esc_textarea( $layout_notification ); ?></textarea>
-            <div class="fcnen-submit-wrap">
+            <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical hidden" id="loop-part-post">
             <textarea name="fcnen_template_loop_part_post" id="fcnen-template-loop-part-post" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_post ); ?></textarea>
-            <div class="fcnen-submit-wrap">
+            <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical hidden" id="loop-part-story">
             <textarea name="fcnen_template_loop_part_story" id="fcnen-template-loop-part-story" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_story ); ?></textarea>
-            <div class="fcnen-submit-wrap">
+            <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical hidden" id="loop-part-chapter">
             <textarea name="fcnen_template_loop_part_chapter" id="fcnen-template-loop-part-chapter" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_chapter ); ?></textarea>
-            <div class="fcnen-submit-wrap">
+            <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
