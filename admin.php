@@ -51,7 +51,7 @@ function fcnen_enqueue_admin_scripts( $hook_suffix ) {
     'fcnen-admin-styles',
     plugin_dir_url( __FILE__ ) . '/css/fcnen-admin.css',
     [],
-    fcnen_VERSION
+    FCNEN_VERSION
   );
 
   // Scripts
@@ -59,11 +59,25 @@ function fcnen_enqueue_admin_scripts( $hook_suffix ) {
     'fcnen-admin-scripts',
     plugin_dir_url( __FILE__ ) . '/js/fcnen-admin.min.js',
     ['fictioneer-utility-scripts'],
-    fcnen_VERSION,
+    FCNEN_VERSION,
     true
   );
 }
 add_action( 'admin_enqueue_scripts', 'fcnen_enqueue_admin_scripts' );
+
+/**
+ * Enqueues CodeMirror for the plugin's code editor
+ *
+ * @since 01.0
+ */
+
+function fcnen_enqueue_codemirror() {
+  $cm_settings['codeEditor'] = wp_enqueue_code_editor( array( 'type' => 'text/css' ) );
+  wp_localize_script( 'jquery', 'cm_settings', $cm_settings );
+  wp_enqueue_script( 'wp-theme-plugin-editor' );
+  wp_enqueue_style( 'wp-codemirror' );
+}
+add_action( 'admin_enqueue_scripts', 'fcnen_enqueue_codemirror' );
 
 /**
  * Change text in bottom-left corner of the admin panel
@@ -77,7 +91,7 @@ function fcnen_admin_footer_text( $default ) {
   if ( strpos( $_GET['page'] ?? '', 'fcnen-' ) !== false ) {
     return sprintf(
       _x( 'Fictioneer Email Notifications %s', 'Admin page footer text.', 'fcnes' ),
-      fcnen_VERSION
+      FCNEN_VERSION
     );
   }
 
@@ -542,6 +556,8 @@ function fcnen_settings_page() {
   // Setup
   $from = fcnen_get_from_email_address();
   $name = fcnen_get_from_email_name();
+  $confirmation_layout = get_option( 'fcnen_template_layout_confirmation', FCNEN_DEFAULTS['confirmation_layout'] );
+  $code_layout = get_option( 'fcnen_template_code_confirmation', FCNEN_DEFAULTS['code_layout'] );
 
   // Start HTML ---> ?>
   <div id="fcnen-admin-page-subscribers" class="wrap fcnen-settings _settings">
@@ -607,6 +623,46 @@ function fcnen_settings_page() {
           </div>
         </div>
 
+      </div>
+
+      <div class="fcnen-box">
+        <div class="fcnen-box__header">
+          <h2><?php _e( 'Templates', 'fcnen' ); ?></h2>
+        </div>
+        <form method="POST" action="options.php" class="fcnen-box__body">
+          <?php
+            settings_fields( 'fcnen_template_group' );
+            do_settings_sections( 'fcnen_template_group' );
+          ?>
+
+          <div class="fcnen-box__row">
+            <select id="fcnen-select-template">
+              <option value=""><?php _e( '— Select a template to edit —', 'fcnen' ); ?></option>
+              <option value="layout-confirmation"><?php _e( 'Confirmation Layout', 'fcnen' ); ?></option>
+              <option value="layout-code"><?php _e( 'Code Layout', 'fcnen' ); ?></option>
+              <option value="layout-edit"><?php _e( 'Edit Layout', 'fcnen' ); ?></option>
+              <option value="layout-notification"><?php _e( 'Notification Layout', 'fcnen' ); ?></option>
+              <option value="loop-post"><?php _e( 'Post Loop Partial', 'fcnen' ); ?></option>
+              <option value="loop-story"><?php _e( 'Story Loop Partial', 'fcnen' ); ?></option>
+              <option value="loop-chapter"><?php _e( 'Chapter Loop Partial', 'fcnen' ); ?></option>
+            </select>
+          </div>
+
+          <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-confirmation">
+            <textarea name="fcnen_template_layout_confirmation" id="fcnen-template-layout-confirmation" class="fcnen-codemirror"><?php echo esc_textarea( $confirmation_layout ); ?></textarea>
+            <div class="fcnen-submit-wrap">
+              <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
+            </div>
+          </div>
+
+          <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-code">
+            <textarea name="fcnen_template_layout_confirmation" id="fcnen-template-layout-code" class="fcnen-codemirror"><?php echo esc_textarea( $code_layout ); ?></textarea>
+            <div class="fcnen-submit-wrap">
+              <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
+            </div>
+          </div>
+
+        </form>
       </div>
 
     </div>

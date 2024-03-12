@@ -19,6 +19,10 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
   }
+
+  .hidden {
+    display: none !important;
+  }
 }
 
 /* =============================================================================
@@ -192,4 +196,14 @@
 
 .fcnen-submit-wrap {
   margin-top: 10px;
+}
+
+.fcnen-codemirror {
+  width: 100%;
+  height: 400px;
+}
+
+.CodeMirror {
+  border: 1px solid #ddd;
+  height: 400px;
 }
