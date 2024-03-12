@@ -242,6 +242,37 @@ function fcnen_admin_notices() {
 add_action( 'admin_notices', 'fcnen_admin_notices' );
 
 // =======================================================================================
+// SAVE SCREEN OPTIONS
+// =======================================================================================
+
+/**
+ * Save custom screen options values
+ *
+ * @since 0.1.0
+ *
+ * @param bool   $status  The current status of the screen option saving.
+ * @param string $option  The name of the screen option being saved.
+ * @param mixed  $value   The value of the screen option being saved.
+ *
+ * @return bool The updated status of the screen option saving.
+ */
+
+function fcnen_save_screen_options( $status, $option, $value ) {
+  // Subscribers per page
+  if ( $option === 'fcnen_subscribers_per_page' ) {
+    update_user_meta( get_current_user_id(), $option, $value );
+  }
+
+  // Updated per page
+  if ( $option === 'fcnen_notifications_per_page' ) {
+    update_user_meta( get_current_user_id(), $option, $value );
+  }
+
+  return $status;
+}
+add_filter( 'set-screen-option', 'fcnen_save_screen_options', 10, 3 );
+
+// =======================================================================================
 // ADMIN NOTIFICATIONS PAGE
 // =======================================================================================
 
