@@ -128,6 +128,11 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     $sortable = $this->get_sortable_columns();
     $primary = 'email';
 
+    // Hidden columns?
+    if ( is_array( get_user_meta( get_current_user_id(), 'managenotifications_page_fcnen-subscriberscolumnshidden', true ) ) ) {
+      $hidden = get_user_meta( get_current_user_id(), 'managenotifications_page_fcnen-subscriberscolumnshidden', true );
+    }
+
     // Data
     $this->table_data = $this->get_table_data();
     $this->_column_headers = [ $columns, $hidden, $sortable, $primary ];
