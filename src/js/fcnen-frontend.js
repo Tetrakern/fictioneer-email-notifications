@@ -117,8 +117,12 @@ function fcnen_getPreparedFormData(form) {
   for (let [key, value] of formData.entries()) {
     let modifiedKey = key.replace(/\[\]/g, '');
 
-    if (modifiedKey in formFields) {
-      formFields[modifiedKey].push(value);
+    if (key.endsWith('[]')) {
+      if (modifiedKey in formFields) {
+        formFields[modifiedKey].push(value);
+      } else {
+        formFields[modifiedKey] = [value];
+      }
     } else {
       formFields[modifiedKey] = [value];
     }
