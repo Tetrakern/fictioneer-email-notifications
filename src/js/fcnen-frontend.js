@@ -371,6 +371,10 @@ function fcnen_searchContent(payload, append) {
     // Remove observer (if any)
     fcnen_modal.querySelector('[data-target="fcnen-observer-item"]')?.remove();
 
+    // Pass on response
+    return response;
+  })
+  .then(response => {
     // Evaluate response...
     if (response.success) {
       if (append) {
@@ -392,7 +396,8 @@ function fcnen_searchContent(payload, append) {
     if (errorMessage) {
       const clone = fcnen_modal.querySelector('[data-target="fcnen-error-item"]').content.cloneNode(true);
 
-      clone.querySelector('.error-message').textContent = errorMessage;
+      sourceList.innerHTML = '';
+      clone.querySelector('.fcnen-error-message').textContent = errorMessage;
       sourceList.appendChild(clone);
     }
   });

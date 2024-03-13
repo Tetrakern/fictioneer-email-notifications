@@ -188,7 +188,7 @@ function fcnen_get_modal_content() {
             <li class="fcnen-dialog-modal__advanced-li _selected" data-click-action="fcnen-remove" data-type="" data-compare="" data-id=""><span class="fcnen-item-label"></span> <span class="fcnen-item-name"></span><input type="hidden" name="" value=""></li>
           </template>
           <template data-target="fcnen-error-item">
-            <li class="fcnen-dialog-modal__advanced-li _error"><span></span></li>
+            <li class="fcnen-dialog-modal__advanced-li _error"><span class="fcnen-error-message"></span></li>
           </template>
         </div>
 
