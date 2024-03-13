@@ -168,7 +168,7 @@ function fcnen_get_modal_content() {
             <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No search query.', 'fcnen' ); ?></span></li>
           </template>
           <template data-target="fcnen-selection-item">
-            <li class="fcnen-dialog-modal__advanced-li _selected" data-type="" data-compare="" data-id=""><span></span><input type="hidden" name="" value=""></li>
+            <li class="fcnen-dialog-modal__advanced-li _selected" data-click-action="fcnen-remove" data-type="" data-compare="" data-id=""><span></span><input type="hidden" name="" value=""></li>
           </template>
           <template data-target="fcnen-error-item">
             <li class="fcnen-dialog-modal__advanced-li _error"><span></span></li>
