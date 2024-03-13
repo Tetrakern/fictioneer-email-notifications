@@ -183,25 +183,40 @@ function fcnen_ajax_search_content() {
   }
 
   // Setup
+  $type = sanitize_text_field( $_REQUEST['type'] ?? '' );
   $search = sanitize_text_field( $_REQUEST['search'] ?? '' );
   $page = absint( $_REQUEST['page'] ?? 1 );
   $output = [];
 
   // Query
-  // $query = new WP_Query(
-  //   array(
-  //     'post_status' => 'publish',
-  //     'orderby' => 'date',
-  //     'order' => 'desc',
-  //     'posts_per_page' => 10,
-  //     'paged' => $page,
-  //     's' => $search,
-  //     'update_post_meta_cache' => false, // Improve performance
-  //     'update_post_term_cache' => false // Improve performance
-  //   )
-  // );
+  if ( $type === 'fcn_story' ) {
+    $query = new WP_Query(
+      array(
+        'post_type' => 'fcn_story',
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'order' => 'desc',
+        'posts_per_page' => 10,
+        'paged' => $page,
+        's' => $search,
+        'update_post_meta_cache' => false, // Improve performance
+        'update_post_term_cache' => false // Improve performance
+      )
+    );
 
-  $output[] = '<li class="fcnen-dialog-modal__advanced-li" data-id="#" data-type="foo"><span>Dummy result!</span></li>';
+    foreach ( $query->posts as $item ) {
+      // Chapter setup
+      $title = fictioneer_get_safe_title( $item, 'fcnen-search-stories' );
+
+      // Build and append item
+      $item = "<li class='fcnen-dialog-modal__advanced-li' data-click-action='fcnen-add' data-type='story' data-id='{$item->ID}'><span>{$title}</span></li>";
+
+      // Add to output
+      $output[] = $item;
+    }
+  }
+
+  // $output[] = '<li class="fcnen-dialog-modal__advanced-li" data-id="#" data-type="foo"><span>Dummy result!</span></li>';
 
 
   // Response

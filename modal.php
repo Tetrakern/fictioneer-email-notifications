@@ -127,6 +127,10 @@ function fcnen_get_modal_content() {
       <div class="dialog-modal__row fcnen-dialog-modal__advanced">
         <div class="fcnen-dialog-modal__advanced-search">
           <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__advanced-search-string" placeholder="<?php _e( 'Type to search for anything…', 'fcnen' ); ?>" autocomplete="off" autocorrect="off" spellcheck="false" data-input-target="fcnen-search">
+          <select class="fcnen-dialog-modal__advanced-search-select" id="fcnen-modal-search-select">
+            <option value="fcn_story" selected><?php _e( 'Stories', 'fcnen' ); ?></option>
+            <option value="taxonomies"><?php _e( 'Taxonomies', 'fcnen' ); ?></option>
+          </select>
         </div>
         <div class="fcnen-dialog-modal__advanced-lists">
           <ol class="fcnen-dialog-modal__advanced-sources" data-target="fcnen-sources">

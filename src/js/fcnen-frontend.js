@@ -256,45 +256,54 @@ function fcnen_unsubscribe() {
 var fcncn_searchTimer;
 
 function fcnen_initializeSearch() {
-  document.querySelectorAll('[data-input-target="fcnen-search"]').forEach(search => {
-    search.addEventListener('input', () => {
-      // Clear previous timer (if any)
-      clearTimeout(fcncn_searchTimer);
+  document.querySelector('[data-input-target="fcnen-search"]')?.addEventListener('input', () => {
+    // Clear previous timer (if any)
+    clearTimeout(fcncn_searchTimer);
 
-      // Trigger search after delay
-      fcncn_searchTimer = setTimeout(() => {
-        // Get elements and values
-        const wrapper = search.closest('.fcnen-dialog-modal__advanced');
-        const sourceList = wrapper.querySelector('[data-target="fcnen-sources"]');
-
-        // Clear source list and add spinner
-        sourceList.innerHTML = '';
-        sourceList.appendChild(document.querySelector('[data-target="fcnen-spinner-template"]').content.cloneNode(true));
-
-        // Crop search input
-        if (search.value > 200) {
-          search.value = search.value.slice(0, 200);
-        }
-
-        // Search empty?
-        if (search.value == '') {
-          sourceList.innerHTML = '';
-          sourceList.appendChild(document.querySelector('[data-target="fcnen-no-matches"]').content.cloneNode(true));
-          return;
-        }
-
-        // Prepare payload
-        const payload = {
-          'action': 'fcnen_ajax_search_content',
-          'search': search.value,
-          'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? ''
-        };
-
-        // Request
-        fcnen_searchContent(payload, sourceList);
-      }, 800);
-    });
+    // Trigger search after delay
+    fcncn_searchTimer = setTimeout(() => {
+      fcnen_search();
+    }, 800);
   });
+
+  document.getElementById('fcnen-modal-search-select')?.addEventListener('change', () => {
+    fcnen_search();
+  });
+}
+
+function fcnen_search() {
+  // Get elements and values
+  const search = document.querySelector('[data-input-target="fcnen-search"]');
+  const wrapper = search.closest('.fcnen-dialog-modal__advanced');
+  const sourceList = wrapper.querySelector('[data-target="fcnen-sources"]');
+  const type = document.getElementById('fcnen-modal-search-select');
+
+  // Clear source list and add spinner
+  sourceList.innerHTML = '';
+  sourceList.appendChild(document.querySelector('[data-target="fcnen-spinner-template"]').content.cloneNode(true));
+
+  // Crop search input
+  if (search.value > 200) {
+    search.value = search.value.slice(0, 200);
+  }
+
+  // Search empty?
+  if (search.value == '') {
+    sourceList.innerHTML = '';
+    sourceList.appendChild(document.querySelector('[data-target="fcnen-no-matches"]').content.cloneNode(true));
+    return;
+  }
+
+  // Prepare payload
+  const payload = {
+    'action': 'fcnen_ajax_search_content',
+    'search': search.value,
+    'type': type?.value ?? 'fcn_story',
+    'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? ''
+  };
+
+  // Request
+  fcnen_searchContent(payload, sourceList);
 }
 
 function fcnen_searchContent(payload, sourceList) {

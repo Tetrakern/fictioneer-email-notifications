@@ -55,10 +55,31 @@
     gap: 1.5px;
 
     &-search {
+      position: relative;
+
       &-string {
         border-bottom-left-radius: 0 !important;
         border-bottom-right-radius: 0 !important;
+        padding-right: 80px !important;
         width: 100%;
+      }
+
+      &-select {
+        appearance: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: none;
+        color: var(--fg-700);
+        font-size: 11px;
+        line-height: 32px;
+        text-align: right;
+        padding: 0 8px;
+        height: 32px;
+
+        &:hover {
+          color: var(--fg-300);
+        }
       }
     }
 

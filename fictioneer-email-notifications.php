@@ -34,6 +34,10 @@ function fcnen_load_stubs() {
   if ( ! function_exists( 'fictioneer_icon' ) ) {
     function fictioneer_icon( $icon ) {}
   }
+
+  if ( ! function_exists( 'fictioneer_get_safe_title' ) ) {
+    function fictioneer_get_safe_title( $post, $content = null ) {}
+  }
 }
 add_action( 'wp_loaded', 'fcnen_load_stubs' );
 
