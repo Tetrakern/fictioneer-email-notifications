@@ -54,6 +54,20 @@ function fcnen_replace_placeholders( $string, $extra = [] ) {
   return $string;
 }
 
+/**
+ * Extracts an array from $_POST
+ *
+ * @since 0.1.0
+ *
+ * @param string $key  The key to extract from $_POST.
+ *
+ * @return array The extracted array or an empty array.
+ */
+
+function fcnen_get_array_from_post_string( $key ) {
+  return ( $_POST[ $key ] ?? 0 ) ? explode( ',', $_POST[ $key ] ) : [];
+}
+
 // =======================================================================================
 // EMAILS
 // =======================================================================================
