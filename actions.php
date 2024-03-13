@@ -152,7 +152,8 @@ function fcnen_export_subscribers_csv() {
       'Taxonomies',
       'Created At',
       'Updated At',
-      'Confirmed'
+      'Confirmed',
+      'Trashed'
     );
 
     // Item rows
@@ -171,7 +172,8 @@ function fcnen_export_subscribers_csv() {
         $subscriber['taxonomies'],
         $subscriber['created_at'],
         $subscriber['updated_at'],
-        $subscriber['confirmed']
+        $subscriber['confirmed'],
+        $subscriber['trashed']
       );
     }
 
@@ -263,7 +265,8 @@ function fcnen_import_subscribers_csv() {
     $code = sanitize_text_field( $row[2] );
     $created_at = date( 'Y-m-d H:i:s', strtotime( $row[9] ) ) ?: current_time( 'mysql' );
     $updated_at = date( 'Y-m-d H:i:s', strtotime( $row[10] ) ) ?: $created_at;
-    $confirmed = absint( $row[11] ) ? 1 : 0;
+    $confirmed = absint( $row[11] ?? 0 ) ? 1 : 0;
+    $trashed = absint( $row[12] ?? 0 ) ? 1 : 0;
 
     if ( $reset_scopes ) {
       $everything = 1;
@@ -317,6 +320,7 @@ function fcnen_import_subscribers_csv() {
         'created_at' => $created_at,
         'updated_at' => $updated_at,
         'confirmed' => $confirmed,
+        'trashed' => $trashed,
         'skip-confirmation-email' => 1
       )
     );
