@@ -1,3 +1,7 @@
+:root[data-mode=light] {
+  --fcnen-li-background-hover: rgb(0 0 0 / 10%);
+}
+
 .fcnen-dialog-modal {
   --modal-width: 600px;
 
@@ -109,7 +113,7 @@
       padding: 4px;
 
       &:hover {
-        background: rgb(0 0 0 / 10%);
+        background: var(--fcnen-li-background-hover, rgb(255 255 255 / 10%));
         color: var(--fg-400);
       }
 
