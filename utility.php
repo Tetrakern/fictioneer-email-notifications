@@ -379,3 +379,25 @@ function fcnen_sanitize_post_ids( $post_ids ) {
     )
   );
 }
+
+/**
+ * Returns sanitized array of term IDs
+ *
+ * @since 0.1.0
+ *
+ * @param array $term_ids  IDs that should be terms.
+ *
+ * @return array Array of term IDs.
+ */
+
+function fcnen_sanitize_term_ids( $term_ids ) {
+  return empty( $term_ids ) ? [] : get_terms(
+    array(
+      'taxonomy' => ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],
+      'include' => $term_ids,
+      'fields' => 'ids',
+      'hide_empty' => false,
+      'update_term_meta_cache' => false // Improve performance
+    )
+  );
+}

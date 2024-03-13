@@ -472,7 +472,9 @@ function fcnen_add_subscriber( $email, $args = [] ) {
 
   // Sanitize taxonomies
   if ( get_option( 'fcnen_flag_subscribe_to_taxonomies' ) ) {
-    // TODO if I feel like it (we can do without, it does not matter)
+    $args['categories'] = fcnen_sanitize_term_ids( $args['categories'] );
+    $args['tags'] = fcnen_sanitize_term_ids( $args['tags'] );
+    $args['taxonomies'] = fcnen_sanitize_term_ids( $args['taxonomies'] );
   } else {
     $args['categories'] = [];
     $args['tags'] = [];
@@ -516,8 +518,6 @@ function fcnen_add_subscriber( $email, $args = [] ) {
 
 /**
  * Updates an existing subscriber
- *
- * Note: Only called via the AJAX function, which already performs sanitization.
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
@@ -594,6 +594,17 @@ function fcnen_update_subscriber( $email, $args = [] ) {
     $args['post_ids'] = fcnen_sanitize_post_ids( $args['post_ids'] );
   } else {
     $args['post_ids'] = [];
+  }
+
+  // Sanitize taxonomies
+  if ( get_option( 'fcnen_flag_subscribe_to_taxonomies' ) ) {
+    $args['categories'] = fcnen_sanitize_term_ids( $args['categories'] );
+    $args['tags'] = fcnen_sanitize_term_ids( $args['tags'] );
+    $args['taxonomies'] = fcnen_sanitize_term_ids( $args['taxonomies'] );
+  } else {
+    $args['categories'] = [];
+    $args['tags'] = [];
+    $args['taxonomies'] = [];
   }
 
   // Prepare data
