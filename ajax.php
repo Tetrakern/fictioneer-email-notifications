@@ -46,6 +46,7 @@ function fcnen_ajax_subscribe_or_update() {
   $scope_posts = boolval( absint( $_POST['scope-posts'] ?? 0 ) );
   $scope_stories = boolval( absint( $_POST['scope-stories'] ?? 0 ) );
   $scope_chapters = boolval( absint( $_POST['scope-chapters'] ?? 0 ) );
+  $post_ids = fcnen_get_array_from_post_string( 'fcn_story' );
   $default_notice = __( 'Submission successful. If everything was in order, you will get an email.', 'fcnen' );
   $result = false;
 
@@ -54,12 +55,19 @@ function fcnen_ajax_subscribe_or_update() {
     wp_send_json_error( array( 'notice' => __( 'Invalid email address.', 'fcnen' ) ) );
   }
 
+  // Sanitize
+  $post_ids = array_map( 'trim', $post_ids );
+  $post_ids = array_unique( $post_ids );
+  $post_ids = array_map( 'absint', $post_ids );
+  $post_ids = array_map( 'strval', $post_ids );
+
   // Arguments
   $args = array(
     'scope-everything' => $scope_everything,
     'scope-posts' => $scope_posts,
     'scope-stories' => $scope_stories,
-    'scope-chapters' => $scope_chapters
+    'scope-chapters' => $scope_chapters,
+    'post_ids' => $post_ids
   );
 
   // New or update?
