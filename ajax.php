@@ -3,10 +3,13 @@
 /**
  * AJAX callback to retrieve the modal content
  *
+ * Note: The "fictioneer_ajax_" prefix enables the plugin skipping
+ * in the theme's must-use-plugin.
+ *
  * @since 0.1.0
  */
 
-function fcnen_ajax_get_form_content() {
+function fictioneer_ajax_fcnen_get_form_content() {
   // Verify
   if ( ! wp_doing_ajax() ) {
     wp_send_json_error( __( 'Invalid request.', 'fcnen' ) );
@@ -18,16 +21,19 @@ function fcnen_ajax_get_form_content() {
   // Response
   wp_send_json_success( array( 'html' => $html ) );
 }
-add_action( 'wp_ajax_fcnen_ajax_get_form_content', 'fcnen_ajax_get_form_content' );
-add_action( 'wp_ajax_nopriv_fcnen_ajax_get_form_content', 'fcnen_ajax_get_form_content' );
+add_action( 'wp_ajax_fictioneer_ajax_fcnen_get_form_content', 'fictioneer_ajax_fcnen_get_form_content' );
+add_action( 'wp_ajax_nopriv_fictioneer_ajax_fcnen_get_form_content', 'fictioneer_ajax_fcnen_get_form_content' );
 
 /**
  * AJAX callback to subscribe
  *
+ * Note: The "fictioneer_ajax_" prefix enables the plugin skipping
+ * in the theme's must-use-plugin.
+ *
  * @since 0.1.0
  */
 
-function fcnen_ajax_subscribe_or_update() {
+function fictioneer_ajax_fcnen_subscribe_or_update() {
   // Verify
   if ( ! wp_doing_ajax() ) {
     wp_send_json_error( __( 'Invalid request.', 'fcnen' ) );
@@ -109,16 +115,19 @@ function fcnen_ajax_subscribe_or_update() {
     wp_send_json_success( array( 'notice' => $notice ) );
   }
 }
-add_action( 'wp_ajax_fcnen_ajax_subscribe_or_update', 'fcnen_ajax_subscribe_or_update' );
-add_action( 'wp_ajax_nopriv_fcnen_ajax_subscribe_or_update', 'fcnen_ajax_subscribe_or_update' );
+add_action( 'wp_ajax_fictioneer_ajax_fcnen_subscribe_or_update', 'fictioneer_ajax_fcnen_subscribe_or_update' );
+add_action( 'wp_ajax_nopriv_fictioneer_ajax_fcnen_subscribe_or_update', 'fictioneer_ajax_fcnen_subscribe_or_update' );
 
 /**
  * AJAX callback to unsubscribe
  *
+ * Note: The "fictioneer_ajax_" prefix enables the plugin skipping
+ * in the theme's must-use-plugin.
+ *
  * @since 0.1.0
  */
 
-function fcnen_ajax_unsubscribe() {
+function fictioneer_ajax_fcnen_unsubscribe() {
   // Verify
   if ( ! wp_doing_ajax() ) {
     wp_send_json_error( __( 'Invalid request.', 'fcnen' ) );
@@ -171,16 +180,19 @@ function fcnen_ajax_unsubscribe() {
     wp_send_json_success( array( 'notice' => $notice ) );
   }
 }
-add_action( 'wp_ajax_fcnen_ajax_unsubscribe', 'fcnen_ajax_unsubscribe' );
-add_action( 'wp_ajax_nopriv_fcnen_ajax_unsubscribe', 'fcnen_ajax_unsubscribe' );
+add_action( 'wp_ajax_fictioneer_ajax_fcnen_unsubscribe', 'fictioneer_ajax_fcnen_unsubscribe' );
+add_action( 'wp_ajax_nopriv_fictioneer_ajax_fcnen_unsubscribe', 'fictioneer_ajax_fcnen_unsubscribe' );
 
 /**
  * AJAX callback to search content
  *
+ * Note: The "fictioneer_ajax_" prefix enables the plugin skipping
+ * in the theme's must-use-plugin.
+ *
  * @since 0.1.0
  */
 
-function fcnen_ajax_search_content() {
+function fictioneer_ajax_fcnen_search_content() {
   // Verify
   if ( ! wp_doing_ajax() ) {
     wp_send_json_error( __( 'Invalid request.', 'fcnen' ) );
@@ -249,5 +261,5 @@ function fcnen_ajax_search_content() {
     )
   );
 }
-add_action( 'wp_ajax_fcnen_ajax_search_content', 'fcnen_ajax_search_content' );
-add_action( 'wp_ajax_nopriv_fcnen_ajax_search_content', 'fcnen_ajax_search_content' );
+add_action( 'wp_ajax_fictioneer_ajax_fcnen_search_content', 'fictioneer_ajax_fcnen_search_content' );
+add_action( 'wp_ajax_nopriv_fictioneer_ajax_fcnen_search_content', 'fictioneer_ajax_fcnen_search_content' );

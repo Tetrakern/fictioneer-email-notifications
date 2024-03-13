@@ -171,7 +171,7 @@ function fcnen_getModalForm(context = 'new') {
 
   // Prepare payload
   const payload = {
-    'action': 'fcnen_ajax_get_form_content',
+    'action': 'fictioneer_ajax_fcnen_get_form_content',
     'auth-email': email,
     'auth-code': code
   };
@@ -218,7 +218,7 @@ function fcnen_subscribe_or_update(button) {
 
   // Prepare payload
   let payload = {
-    'action': 'fcnen_ajax_subscribe_or_update',
+    'action': 'fictioneer_ajax_fcnen_subscribe_or_update',
     'email': email, // Manually added since disabled fields are not in formData
     'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? ''
   };
@@ -245,7 +245,7 @@ function fcnen_unsubscribe() {
 
   // Prepare payload
   const payload = {
-    'action': 'fcnen_ajax_unsubscribe',
+    'action': 'fictioneer_ajax_fcnen_unsubscribe',
     'email': document.getElementById('fcnen-modal-submit-email')?.value ?? '',
     'code': document.getElementById('fcnen-modal-submit-code')?.value ?? 0,
     'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? ''
@@ -340,7 +340,7 @@ function fcnen_search(page = 1, append = false) {
 
   // Prepare payload
   const payload = {
-    'action': 'fcnen_ajax_search_content',
+    'action': 'fictioneer_ajax_fcnen_search_content',
     'search': search.value,
     'filter': filter?.value ?? search.dataset.defaultFilter,
     'page': page,
@@ -421,7 +421,7 @@ function fcnen_observe() {
 
         // Prepare payload
         const payload = {
-          'action': 'fcnen_ajax_search_content',
+          'action': 'fictioneer_ajax_fcnen_search_content',
           'search': search.value,
           'filter': document.getElementById('fcnen-modal-search-select')?.value ?? search.dataset.defaultFilter,
           'page': entry.target.dataset.page,
