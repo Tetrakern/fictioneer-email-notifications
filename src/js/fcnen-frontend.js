@@ -393,6 +393,7 @@ function fcnen_searchContent(payload, append) {
     errorMessage = error;
   })
   .then(() => {
+    // Just render the error into the source list
     if (errorMessage) {
       const clone = fcnen_modal.querySelector('[data-target="fcnen-error-item"]').content.cloneNode(true);
 
@@ -489,14 +490,15 @@ function fcnen_addSelection(source) {
 
   // Fill data
   const li = clone.querySelector('li');
+  const input = li.querySelector('input[type="hidden"]');
 
   li.setAttribute('data-id', source.dataset.id);
   li.setAttribute('data-compare', source.dataset.compare);
   li.setAttribute('data-type', source.dataset.type);
   li.querySelector('.fcnen-item-label').innerHTML = source.querySelector('.fcnen-item-label').innerHTML;
   li.querySelector('.fcnen-item-name').innerHTML = source.querySelector('.fcnen-item-name').innerHTML;
-  li.querySelector('input[type="hidden"]').value = source.dataset.id;
-  li.querySelector('input[type="hidden"]').name = source.dataset.name;
+  input.value = source.dataset.id;
+  input.name = source.dataset.name;
 
   // Append to destination
   destination.appendChild(clone);
