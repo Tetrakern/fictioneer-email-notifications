@@ -68,6 +68,59 @@ function fcnen_get_array_from_post_string( $key ) {
   return ( $_POST[ $key ] ?? 0 ) ? explode( ',', $_POST[ $key ] ) : [];
 }
 
+/**
+ * Return label of a taxonomy
+ *
+ * @since 0.1.0
+ *
+ * @param string $term_name  Name of the taxonomy.
+ *
+ * @return string The taxonomy label.
+ */
+
+function fcnen_get_term_label( $term_name ) {
+  $term_labels = array(
+    'category' => _x( 'Cat', 'List item term label.', 'fcnen' ),
+    'post_tag' => _x( 'Tag', 'List item term label.', 'fcnen' ),
+    'fcn_genre' => _x( 'Genre', 'List item term label.', 'fcnen' ),
+    'fcn_fandom' => _x( 'Fandom', 'List item term label.', 'fcnen' ),
+    'fcn_character' => _x( 'Character', 'List item term label.', 'fcnen' ),
+    'fcn_content_warning' => _x( 'Warning', 'List item term label.', 'fcnen' )
+  );
+
+  $label = $term_labels[ $term_name ] ?? _x( 'Tax', 'Default term label.', 'fcnen' );
+
+  return $label;
+}
+
+/**
+ * Return attribute of a taxonomy for HTML elements
+ *
+ * @since 0.1.0
+ *
+ * @param string $term_name  Name of the taxonomy.
+ *
+ * @return string The taxonomy attribute.
+ */
+
+function fcnen_get_term_html_attribute( $term_name ) {
+  $attribute = 'taxonomies';
+
+  switch ( $term_name ) {
+    case 'category':
+      $attribute = 'categories';
+      break;
+    case 'post_tag':
+      $attribute = 'tags';
+      break;
+    default:
+      $attribute = 'taxonomies';
+      break;
+  }
+
+  return $attribute;
+}
+
 // =======================================================================================
 // EMAILS
 // =======================================================================================

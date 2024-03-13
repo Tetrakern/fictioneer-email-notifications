@@ -208,12 +208,12 @@ function fictioneer_ajax_fcnen_search_content() {
   $filter = sanitize_text_field( $_REQUEST['filter'] ?? '' );
   $search = sanitize_text_field( $_REQUEST['search'] ?? '' );
   $page = absint( $_REQUEST['page'] ?? 1 );
-  $query = null;
+  $stories = null;
   $output = [];
 
   // Query stories
   if ( $filter === 'story' ) {
-    $query = new WP_Query(
+    $stories = new WP_Query(
       array(
         'post_type' => 'fcn_story',
         'post_status' => 'publish',
@@ -227,12 +227,37 @@ function fictioneer_ajax_fcnen_search_content() {
       )
     );
 
-    foreach ( $query->posts as $item ) {
-      // Chapter setup
+    // Build and add items
+    foreach ( $stories->posts as $item ) {
       $title = fictioneer_get_safe_title( $item, 'fcnen-search-stories' );
 
       // Build and append item
-      $item = "<li class='fcnen-dialog-modal__advanced-li' data-click-action='fcnen-add' data-name='post_id[]' data-type='post_id' data-compare='story-{$item->ID}' data-id='{$item->ID}'><span class='fcnen-item-label'>" . _x( 'Story', 'List item label.', 'fcnen' ) . "</span> <span class='fcnen-item-name'>{$title}</span></li>";
+      $item = "<li class='fcnen-dialog-modal__advanced-li _story' data-click-action='fcnen-add' data-name='post_id[]' data-type='post_id' data-compare='story-{$item->ID}' data-id='{$item->ID}'><span class='fcnen-item-label'>" . _x( 'Story', 'List item label.', 'fcnen' ) . "</span> <span class='fcnen-item-name'>{$title}</span></li>";
+
+      // Add to output
+      $output[] = $item;
+    }
+  }
+
+  // Query taxonomies
+  if ( $filter === 'taxonomies' ) {
+    $terms = get_terms(
+      array(
+        'taxonomy' => ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],
+        'name__like' => $search,
+        'hide_empty' => false,
+        'number' => 25, // Paginate
+        'update_term_meta_cache' => false // Improve performance
+      )
+    );
+
+    // Build and add items
+    foreach ( $terms as $term ) {
+      $taxonomy = fcnen_get_term_html_attribute( $term->taxonomy );
+      $label = fcnen_get_term_label( $term->taxonomy );
+
+      // Build and append item
+      $item = "<li class='fcnen-dialog-modal__advanced-li _taxonomy' data-click-action='fcnen-add' data-name='{$taxonomy}[]' data-type='{$taxonomy}' data-compare='taxonomy-{$term->term_id}' data-id='{$term->term_id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$term->name}</span></li>";
 
       // Add to output
       $output[] = $item;
@@ -240,7 +265,7 @@ function fictioneer_ajax_fcnen_search_content() {
   }
 
   // Add observer?
-  if ( $query && $page < $query->max_num_pages ) {
+  if ( $stories && $page < $stories->max_num_pages ) {
     $page++;
 
     $observer = '<li class="fcnen-dialog-modal__advanced-li _observer" data-target="fcnen-observer-item" data-page="' . $page . '"><i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i> ' . __( 'Loading…', 'fcnen' ) . '<span></span></li>';
