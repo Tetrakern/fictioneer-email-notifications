@@ -89,19 +89,27 @@
 
     &-lists {
       display: flex;
+      flex-direction: column;
       gap: 1.5px;
       border-radius: 0 0 var(--layout-border-radius-small) var(--layout-border-radius-small);
       overflow: hidden;
+
+      @media screen and (min-width: 500px) {
+        flex-direction: row;
+      }
     }
 
     &-sources,
     &-selection {
-      flex: 1 1 50%;
       list-style: none;
       background: var(--input-background);
       padding: 4px;
       height: 150px;
       overflow: hidden auto;
+
+      @media screen and (min-width: 500px) {
+        flex: 1 1 50%;
+      }
     }
 
     &-li {
