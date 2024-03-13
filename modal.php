@@ -60,6 +60,21 @@ function fcnen_get_modal_content() {
     $form_classes[] = '_everything';
   }
 
+  // Validate stories
+  if ( ! empty( $post_ids ) ) {
+    $args = array(
+      'post_type'=> 'fcn_story',
+      'post_status'=> ['publish', 'private', 'future'],
+      'posts_per_page' => -1,
+      'post__in' => $post_ids,
+      'orderby' => 'post__in',
+      'update_post_term_cache' => true, // Improve performance
+      'no_found_rows' => true // Improve performance
+    );
+
+    $stories = new WP_Query( $args );
+  }
+
   ob_start();
   // Start HTML ---> ?>
   <form method="post" id="fcnen-subscription-form" class="<?php echo implode( ' ', $form_classes ); ?>">
@@ -150,10 +165,10 @@ function fcnen_get_modal_content() {
             </ol>
             <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection"><?php
               if ( $allow_stories ) {
-                foreach ( $post_ids as $post_id ) {
-                  $title = fictioneer_get_safe_title( $post_id );
+                foreach ( $stories->posts as $story ) {
+                  $title = fictioneer_get_safe_title( $story->ID );
 
-                  echo "<li class='fcnen-dialog-modal__advanced-li' data-click-action='fcnen-remove' data-type='post_id' data-compare='story-{$post_id}' data-id='{$post_id}'><span>{$title}</span><input type='hidden' name='post_id[]' value='{$post_id}'></li>";
+                  echo "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='post_id' data-compare='story-{$story->ID}' data-id='{$story->ID}'><span class='fcnen-dialog-modal__advanced-li-label'>" . _x( 'Story', 'List item label.', 'fcnen' ) . "</span> <span>{$title}</span><input type='hidden' name='post_id[]' value='{$story->ID}'></li>";
                 }
               }
             ?></ol>
