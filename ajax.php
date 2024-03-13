@@ -260,13 +260,16 @@ function fictioneer_ajax_fcnen_search_content() {
 
     // Build and add items
     foreach ( $stories->posts as $item ) {
-      $title = fictioneer_get_safe_title( $item, 'fcnen-search-stories' );
-
-      // Build and append item
-      $item = "<li class='fcnen-dialog-modal__advanced-li _story' data-click-action='fcnen-add' data-name='post_id[]' data-type='post_id' data-compare='story-{$item->ID}' data-id='{$item->ID}'><span class='fcnen-item-label'>" . _x( 'Story', 'List item label.', 'fcnen' ) . "</span> <span class='fcnen-item-name'>{$title}</span></li>";
-
       // Add to output
-      $output[] = $item;
+      $output[] = fcnen_get_source_node(
+        array(
+          'name' => 'post_id',
+          'type' => 'fcn_story',
+          'id' => $item->ID,
+          'label' => _x( 'Story', 'List item label.', 'fcnen' ),
+          'title' => fictioneer_get_safe_title( $item, 'fcnen-search-stories' )
+        )
+      );
     }
   }
 
@@ -285,13 +288,17 @@ function fictioneer_ajax_fcnen_search_content() {
     // Build and add items
     foreach ( $terms as $term ) {
       $taxonomy = fcnen_get_term_html_attribute( $term->taxonomy );
-      $label = fcnen_get_term_label( $term->taxonomy );
-
-      // Build and append item
-      $item = "<li class='fcnen-dialog-modal__advanced-li _taxonomy' data-click-action='fcnen-add' data-name='{$taxonomy}[]' data-type='{$taxonomy}' data-compare='taxonomy-{$term->term_id}' data-id='{$term->term_id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$term->name}</span></li>";
 
       // Add to output
-      $output[] = $item;
+      $output[] = fcnen_get_source_node(
+        array(
+          'name' => $taxonomy,
+          'type' => $taxonomy,
+          'id' => $term->term_id,
+          'label' => fcnen_get_term_label( $term->taxonomy ),
+          'title' => $term->name
+        )
+      );
     }
   }
 

@@ -199,18 +199,31 @@ function fcnen_get_modal_content() {
             <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection"><?php
               if ( $allow_stories && $stories ) {
                 foreach ( $stories->posts as $story ) {
-                  $title = fictioneer_get_safe_title( $story->ID, 'fcnen-search-stories' );
-
-                  echo "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='post_id' data-compare='story-{$story->ID}' data-id='{$story->ID}'><span class='fcnen-item-label'>" . _x( 'Story', 'List item label.', 'fcnen' ) . "</span> <span class='fcnen-item-name'>{$title}</span><input type='hidden' name='post_id[]' value='{$story->ID}'></li>";
+                  echo fcnen_get_selection_node(
+                    array(
+                      'name' => 'post_id',
+                      'type' => 'fcn_story',
+                      'id' => $story->ID,
+                      'label' => _x( 'Story', 'List item label.', 'fcnen' ),
+                      'title' => fictioneer_get_safe_title( $story->ID, 'fcnen-search-stories' )
+                    )
+                  );
                 }
               }
 
               if ( $allow_taxonomies && $terms ) {
                 foreach ( $terms as $term ) {
                   $taxonomy = fcnen_get_term_html_attribute( $term->taxonomy );
-                  $label = fcnen_get_term_label( $term->taxonomy );
 
-                  echo "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='{$taxonomy}' data-compare='taxonomy-{$term->term_id}' data-id='{$term->term_id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$term->name}</span><input type='hidden' name='{$taxonomy}[]' value='{$term->term_id}'></li>";
+                  echo fcnen_get_selection_node(
+                    array(
+                      'name' => $taxonomy,
+                      'type' => $taxonomy,
+                      'id' => $term->term_id,
+                      'label' => fcnen_get_term_label( $term->taxonomy ),
+                      'title' => $term->name
+                    )
+                  );
                 }
               }
             ?></ol>
@@ -225,7 +238,7 @@ function fcnen_get_modal_content() {
             <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No search query.', 'fcnen' ); ?></span></li>
           </template>
           <template data-target="fcnen-selection-item">
-            <li class="fcnen-dialog-modal__advanced-li _selected" data-click-action="fcnen-remove" data-type="" data-compare="" data-id=""><span class="fcnen-item-label"></span> <span class="fcnen-item-name"></span><input type="hidden" name="" value=""></li>
+            <?php echo fcnen_get_selection_node(); ?>
           </template>
           <template data-target="fcnen-error-item">
             <li class="fcnen-dialog-modal__advanced-li _error"><span class="fcnen-error-message"></span></li>
