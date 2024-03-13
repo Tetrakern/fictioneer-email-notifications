@@ -208,6 +208,7 @@ function fictioneer_ajax_fcnen_search_content() {
   $filter = sanitize_text_field( $_REQUEST['filter'] ?? '' );
   $search = sanitize_text_field( $_REQUEST['search'] ?? '' );
   $page = absint( $_REQUEST['page'] ?? 1 );
+  $query = null;
   $output = [];
 
   // Query
@@ -239,7 +240,7 @@ function fictioneer_ajax_fcnen_search_content() {
   }
 
   // Add observer?
-  if ( $page < $query->max_num_pages ) {
+  if ( $query && $page < $query->max_num_pages ) {
     $page++;
 
     $observer = '<li class="fcnen-dialog-modal__advanced-li _observer" data-target="fcnen-observer-item" data-page="' . $page . '"><i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i> ' . __( 'Loading…', 'fcnen' ) . '<span></span></li>';
