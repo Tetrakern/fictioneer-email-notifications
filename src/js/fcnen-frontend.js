@@ -83,7 +83,9 @@ function fcnen_addEventListeners() {
   });
 
   // Search
-  fcnen_initializeSearch();
+  if (fcnen_modal.querySelector('.fcnen-dialog-modal__advanced')) {
+    fcnen_initializeSearch();
+  }
 }
 
 /**
@@ -187,6 +189,10 @@ function fcnen_getModalForm(context = 'new') {
   });
 }
 
+// =============================================================================
+// SUBSCRIBE & UNSUBSCRIBE
+// =============================================================================
+
 /**
  * AJAX: Create new or update subscription.
  *
@@ -257,9 +263,16 @@ function fcnen_unsubscribe() {
 // SEARCH & SELECT
 // =============================================================================
 
-var fcncn_searchTimer;
+var /** @type {timeoutID} */ fcncn_searchTimer;
+
+/**
+ * Initialize subscription search item functionality.
+ *
+ * @since 0.1.0
+ */
 
 function fcnen_initializeSearch() {
+  // Query with input, after typing stops
   document.querySelector('[data-input-target="fcnen-search"]')?.addEventListener('input', () => {
     // Clear previous timer (if any)
     clearTimeout(fcncn_searchTimer);
@@ -270,10 +283,12 @@ function fcnen_initializeSearch() {
     }, 800);
   });
 
+  // Refresh search if type selection changes
   document.getElementById('fcnen-modal-search-select')?.addEventListener('change', () => {
     fcnen_search();
   });
 
+  // Listen for clicks on source list to add items to selection
   fcnen_modal.querySelector('[data-target="fcnen-sources"]').addEventListener('click', event => {
     const item = event.target.closest('[data-click-action="fcnen-add"]');
 
@@ -283,6 +298,14 @@ function fcnen_initializeSearch() {
   });
 }
 
+/**
+ * Search for subscription items.
+ *
+ * @since 0.1.0
+ * @param {number} [page=1] - Pagination argument. Default 1.
+ * @param {boolean} [append=false] - Whether to append the response or replace the results. Default false.
+ */
+
 function fcnen_search(page = 1, append = false) {
   // Get elements and values
   const search = fcnen_modal.querySelector('[data-input-target="fcnen-search"]');
@@ -290,7 +313,7 @@ function fcnen_search(page = 1, append = false) {
   const sourceList = wrapper.querySelector('[data-target="fcnen-sources"]');
   const type = document.getElementById('fcnen-modal-search-select');
 
-  // Clear source list and add spinner
+  // Clear source list and add loader
   sourceList.innerHTML = '';
   sourceList.appendChild(fcnen_modal.querySelector('[data-target="fcnen-loader-item"]').content.cloneNode(true));
 
@@ -366,6 +389,12 @@ function fcnen_searchContent(payload, append) {
   });
 }
 
+/**
+ * Observe scroll container to load next page.
+ *
+ * @since 0.1.0
+ */
+
 function fcnen_observe() {
   // Setup
   const root = fcnen_modal.querySelector('[data-target="fcnen-sources"]');
@@ -416,6 +445,7 @@ function fcnen_disableSelected() {
   // Setup
   const selection = fcnen_modal.querySelector('[data-target="fcnen-selection"]');
 
+  // Compare each item with selection
   fcnen_modal.querySelectorAll('[data-target="fcnen-sources"] > li').forEach(item => {
     item.classList.toggle(
       '_disabled',
