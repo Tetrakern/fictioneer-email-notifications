@@ -193,13 +193,13 @@ function fcnen_ajax_search_content() {
   }
 
   // Setup
-  $type = sanitize_text_field( $_REQUEST['type'] ?? '' );
+  $filter = sanitize_text_field( $_REQUEST['filter'] ?? '' );
   $search = sanitize_text_field( $_REQUEST['search'] ?? '' );
   $page = absint( $_REQUEST['page'] ?? 1 );
   $output = [];
 
   // Query
-  if ( $type === 'fcn_story' ) {
+  if ( $filter === 'story' ) {
     $query = new WP_Query(
       array(
         'post_type' => 'fcn_story',

@@ -320,7 +320,7 @@ function fcnen_search(page = 1, append = false) {
   const search = fcnen_modal.querySelector('[data-input-target="fcnen-search"]');
   const wrapper = search.closest('.fcnen-dialog-modal__advanced');
   const sourceList = wrapper.querySelector('[data-target="fcnen-sources"]');
-  const type = document.getElementById('fcnen-modal-search-select');
+  const filter = document.getElementById('fcnen-modal-search-select');
 
   // Clear source list and add loader
   sourceList.innerHTML = '';
@@ -342,7 +342,7 @@ function fcnen_search(page = 1, append = false) {
   const payload = {
     'action': 'fcnen_ajax_search_content',
     'search': search.value,
-    'type': type?.value ?? 'fcn_story',
+    'filter': filter?.value ?? search.dataset.defaultFilter,
     'page': page,
     'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? '',
     'fcn_fast_ajax': 1
@@ -412,18 +412,18 @@ function fcnen_observe() {
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        let search = fcnen_modal.querySelector('[data-input-target="fcnen-search"]')?.value ?? '';
+        let search = fcnen_modal.querySelector('[data-input-target="fcnen-search"]');
 
         // Crop search input
-        if (search.length > 200) {
-          search = search.slice(0, 200);
+        if (search.value > 200) {
+          search.value = search.value.slice(0, 200);
         }
 
         // Prepare payload
         const payload = {
           'action': 'fcnen_ajax_search_content',
-          'search': search,
-          'type': document.getElementById('fcnen-modal-search-select')?.value ?? 'fcn_story',
+          'search': search.value,
+          'filter': document.getElementById('fcnen-modal-search-select')?.value ?? search.dataset.defaultFilter,
           'page': entry.target.dataset.page,
           'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? '',
           'fcn_fast_ajax': 1
