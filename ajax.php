@@ -65,25 +65,35 @@ function fictioneer_ajax_fcnen_subscribe_or_update() {
   }
 
   // Sanitize
-  $post_ids = array_map( 'trim', $post_ids );
-  $post_ids = array_unique( $post_ids );
-  $post_ids = array_map( 'absint', $post_ids );
-  $post_ids = array_map( 'strval', $post_ids );
+  if ( get_option( 'fcnen_flag_subscribe_to_stories' ) ) {
+    $post_ids = array_map( 'trim', $post_ids );
+    $post_ids = array_unique( $post_ids );
+    $post_ids = array_map( 'absint', $post_ids );
+    $post_ids = array_map( 'strval', $post_ids );
+  } else {
+    $post_ids = [];
+  }
 
-  $categories = array_map( 'trim', $categories );
-  $categories = array_unique( $categories );
-  $categories = array_map( 'absint', $categories );
-  $categories = array_map( 'strval', $categories );
+  if ( get_option( 'fcnen_flag_subscribe_to_taxonomies' ) ) {
+    $categories = array_map( 'trim', $categories );
+    $categories = array_unique( $categories );
+    $categories = array_map( 'absint', $categories );
+    $categories = array_map( 'strval', $categories );
 
-  $tags = array_map( 'trim', $tags );
-  $tags = array_unique( $tags );
-  $tags = array_map( 'absint', $tags );
-  $tags = array_map( 'strval', $tags );
+    $tags = array_map( 'trim', $tags );
+    $tags = array_unique( $tags );
+    $tags = array_map( 'absint', $tags );
+    $tags = array_map( 'strval', $tags );
 
-  $taxonomies = array_map( 'trim', $taxonomies );
-  $taxonomies = array_unique( $taxonomies );
-  $taxonomies = array_map( 'absint', $taxonomies );
-  $taxonomies = array_map( 'strval', $taxonomies );
+    $taxonomies = array_map( 'trim', $taxonomies );
+    $taxonomies = array_unique( $taxonomies );
+    $taxonomies = array_map( 'absint', $taxonomies );
+    $taxonomies = array_map( 'strval', $taxonomies );
+  } else {
+    $categories = [];
+    $tags = [];
+    $taxonomies = [];
+  }
 
   // Arguments
   $args = array(
@@ -233,7 +243,7 @@ function fictioneer_ajax_fcnen_search_content() {
   $output = [];
 
   // Query stories
-  if ( $filter === 'story' ) {
+  if ( $filter === 'story' && get_option( 'fcnen_flag_subscribe_to_stories' ) ) {
     $stories = new WP_Query(
       array(
         'post_type' => 'fcn_story',
@@ -261,7 +271,7 @@ function fictioneer_ajax_fcnen_search_content() {
   }
 
   // Query taxonomies
-  if ( $filter === 'taxonomies' ) {
+  if ( $filter === 'taxonomies' && get_option( 'fcnen_flag_subscribe_to_taxonomies' ) ) {
     $terms = get_terms(
       array(
         'taxonomy' => ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],

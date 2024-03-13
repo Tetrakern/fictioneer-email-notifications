@@ -52,6 +52,15 @@ function fcnen_get_modal_content() {
   $taxonomies = [];
   $stories = null;
   $terms = null;
+  $search_placeholder = __( 'Search for stories or taxonomies…', 'fcnen' );
+
+  if ( ! $allow_stories ) {
+    $search_placeholder = __( 'Search for taxonomies…', 'fcnen' );
+  }
+
+  if ( ! $allow_taxonomies ) {
+    $search_placeholder = __( 'Search for stories…', 'fcnen' );
+  }
 
   if ( $subscriber ) {
     $check_everything = $subscriber->everything;
@@ -175,7 +184,7 @@ function fcnen_get_modal_content() {
 
         <div class="dialog-modal__row fcnen-dialog-modal__advanced">
           <div class="fcnen-dialog-modal__advanced-search">
-            <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__advanced-search-string" placeholder="<?php _e( 'Search for stories or taxonomies…', 'fcnen' ); ?>" autocomplete="off" autocorrect="off" spellcheck="false" data-input-target="fcnen-search" data-default-filter="<?php echo $default_filter; ?>">
+            <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__advanced-search-string" placeholder="<?php echo $search_placeholder; ?>" autocomplete="off" autocorrect="off" spellcheck="false" data-input-target="fcnen-search" data-default-filter="<?php echo $default_filter; ?>">
             <?php if ( $allow_stories && $allow_taxonomies ) : ?>
               <select class="fcnen-dialog-modal__advanced-search-select" id="fcnen-modal-search-select">
                 <option value="story" selected><?php _e( 'Stories', 'fcnen' ); ?></option>

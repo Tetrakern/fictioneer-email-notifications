@@ -463,8 +463,8 @@ function fcnen_add_subscriber( $email, $args = [] ) {
     $args['post_types'][] = 'fcn_chapter';
   }
 
-  // Only allow post IDs of stories
-  if ( ! empty( $args['post_ids'] ) ) {
+  // Sanitize post IDs
+  if ( ! empty( $args['post_ids'] ) && get_option( 'fcnen_flag_subscribe_to_stories' ) ) {
     $args['post_ids'] = get_posts(
       array(
         'post_type'=> 'fcn_story',
@@ -478,6 +478,17 @@ function fcnen_add_subscriber( $email, $args = [] ) {
         'no_found_rows' => true // Improve performance
       )
     );
+  } else {
+    $args['post_ids'] = [];
+  }
+
+  // Sanitize taxonomies
+  if ( get_option( 'fcnen_flag_subscribe_to_taxonomies' ) ) {
+    // TODO if I feel like it (we can do without, it does not matter)
+  } else {
+    $args['categories'] = [];
+    $args['tags'] = [];
+    $args['taxonomies'] = [];
   }
 
   // Prepare data
@@ -517,6 +528,8 @@ function fcnen_add_subscriber( $email, $args = [] ) {
 
 /**
  * Updates an existing subscriber
+ *
+ * Note: Only called via the AJAX function, which already performs sanitization.
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
