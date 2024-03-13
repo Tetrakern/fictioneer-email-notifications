@@ -44,12 +44,14 @@ function fcnen_get_modal_content() {
   $check_posts = 0;
   $check_stories = 0;
   $check_chapters = 0;
+  $post_ids = [];
 
   if ( $subscriber ) {
     $check_everything = $subscriber->everything;
     $check_posts = in_array( 'post', $subscriber->post_types );
     $check_stories = in_array( 'fcn_story', $subscriber->post_types );
     $check_chapters = in_array( 'fcn_chapter', $subscriber->post_types );
+    $post_ids = $subscriber->post_ids;
   }
 
   if ( ! $subscriber || $subscriber->everything ) {
@@ -132,7 +134,7 @@ function fcnen_get_modal_content() {
 
       <div class="dialog-modal__row fcnen-dialog-modal__advanced">
         <div class="fcnen-dialog-modal__advanced-search">
-          <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__advanced-search-string" placeholder="<?php _e( 'Type to search for anything…', 'fcnen' ); ?>" autocomplete="off" autocorrect="off" spellcheck="false" data-input-target="fcnen-search">
+          <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__advanced-search-string" placeholder="<?php _e( 'Type to search…', 'fcnen' ); ?>" autocomplete="off" autocorrect="off" spellcheck="false" data-input-target="fcnen-search">
           <select class="fcnen-dialog-modal__advanced-search-select" id="fcnen-modal-search-select">
             <option value="fcn_story" selected><?php _e( 'Stories', 'fcnen' ); ?></option>
             <option value="taxonomies"><?php _e( 'Taxonomies', 'fcnen' ); ?></option>
@@ -142,7 +144,13 @@ function fcnen_get_modal_content() {
           <ol class="fcnen-dialog-modal__advanced-sources" data-target="fcnen-sources">
             <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No search query.', 'fcnen' ); ?></span></li>
           </ol>
-          <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection"></ol>
+          <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection"><?php
+            foreach ( $post_ids as $post_id ) {
+              $title = fictioneer_get_safe_title( $post_id );
+
+              echo "<li class='fcnen-dialog-modal__advanced-li' data-click-action='fcnen-remove' data-type='post_id' data-compare='story-{$post_id}' data-id='{$post_id}'><span>{$title}</span><input type='hidden' name='post_id[]' value='{$post_id}'></li>";
+            }
+          ?></ol>
         </div>
         <template data-target="fcnen-loader-item">
           <li class="fcnen-dialog-modal__advanced-li _disabled">
