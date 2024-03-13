@@ -152,5 +152,9 @@
       pointer-events: none;
       opacity: .5;
     }
+
+    :is(hr, .fcnen-dialog-modal__advanced) {
+      display: none;
+    }
   }
 }
