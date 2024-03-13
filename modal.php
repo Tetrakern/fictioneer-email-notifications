@@ -47,6 +47,8 @@ function fcnen_get_modal_content() {
   $check_stories = 0;
   $check_chapters = 0;
   $post_ids = [];
+  $stories = null;
+  $taxonomies = null;
 
   if ( $subscriber ) {
     $check_everything = $subscriber->everything;
@@ -164,11 +166,11 @@ function fcnen_get_modal_content() {
               <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No search query.', 'fcnen' ); ?></span></li>
             </ol>
             <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection"><?php
-              if ( $allow_stories ) {
+              if ( $allow_stories && $stories ) {
                 foreach ( $stories->posts as $story ) {
                   $title = fictioneer_get_safe_title( $story->ID );
 
-                  echo "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='post_id' data-compare='story-{$story->ID}' data-id='{$story->ID}'><span class='fcnen-dialog-modal__advanced-li-label'>" . _x( 'Story', 'List item label.', 'fcnen' ) . "</span> <span>{$title}</span><input type='hidden' name='post_id[]' value='{$story->ID}'></li>";
+                  echo "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='post_id' data-compare='story-{$story->ID}' data-id='{$story->ID}'><span class='fcnen-item-label'>" . _x( 'Story', 'List item label.', 'fcnen' ) . "</span> <span class='fcnen-item-name'>{$title}</span><input type='hidden' name='post_id[]' value='{$story->ID}'></li>";
                 }
               }
             ?></ol>
@@ -183,7 +185,7 @@ function fcnen_get_modal_content() {
             <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No search query.', 'fcnen' ); ?></span></li>
           </template>
           <template data-target="fcnen-selection-item">
-            <li class="fcnen-dialog-modal__advanced-li _selected" data-click-action="fcnen-remove" data-type="" data-compare="" data-id=""><span></span><input type="hidden" name="" value=""></li>
+            <li class="fcnen-dialog-modal__advanced-li _selected" data-click-action="fcnen-remove" data-type="" data-compare="" data-id=""><span class="fcnen-item-label"></span> <span class="fcnen-item-name"></span><input type="hidden" name="" value=""></li>
           </template>
           <template data-target="fcnen-error-item">
             <li class="fcnen-dialog-modal__advanced-li _error"><span></span></li>

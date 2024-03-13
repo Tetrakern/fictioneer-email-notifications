@@ -232,7 +232,7 @@ function fictioneer_ajax_fcnen_search_content() {
       $title = fictioneer_get_safe_title( $item, 'fcnen-search-stories' );
 
       // Build and append item
-      $item = "<li class='fcnen-dialog-modal__advanced-li' data-click-action='fcnen-add' data-name='post_id[]' data-type='post_id' data-compare='story-{$item->ID}' data-id='{$item->ID}'><span>{$title}</span></li>";
+      $item = "<li class='fcnen-dialog-modal__advanced-li' data-click-action='fcnen-add' data-name='post_id[]' data-type='post_id' data-compare='story-{$item->ID}' data-id='{$item->ID}'><span class='fcnen-item-label'>" . _x( 'Story', 'List item label.', 'fcnen' ) . "</span> <span class='fcnen-item-name'>{$title}</span></li>";
 
       // Add to output
       $output[] = $item;

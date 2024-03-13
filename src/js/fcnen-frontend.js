@@ -483,12 +483,15 @@ function fcnen_addSelection(source) {
   const clone = fcnen_modal.querySelector('[data-target="fcnen-selection-item"]').content.cloneNode(true);
 
   // Fill data
-  clone.querySelector('li').setAttribute('data-id', source.dataset.id);
-  clone.querySelector('li').setAttribute('data-compare', source.dataset.compare);
-  clone.querySelector('li').setAttribute('data-type', source.dataset.type);
-  clone.querySelector('span').innerHTML = source.querySelector('span').innerHTML;
-  clone.querySelector('input[type="hidden"]').value = source.dataset.id;
-  clone.querySelector('input[type="hidden"]').name = source.dataset.name;
+  const li = clone.querySelector('li');
+
+  li.setAttribute('data-id', source.dataset.id);
+  li.setAttribute('data-compare', source.dataset.compare);
+  li.setAttribute('data-type', source.dataset.type);
+  li.querySelector('.fcnen-item-label').innerHTML = source.querySelector('.fcnen-item-label').innerHTML;
+  li.querySelector('.fcnen-item-name').innerHTML = source.querySelector('.fcnen-item-name').innerHTML;
+  li.querySelector('input[type="hidden"]').value = source.dataset.id;
+  li.querySelector('input[type="hidden"]').name = source.dataset.name;
 
   // Append to destination
   destination.appendChild(clone);
