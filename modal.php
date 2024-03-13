@@ -42,13 +42,14 @@ function fcnen_get_modal_content() {
   $button_label = $subscriber ? __( 'Update', 'fcnen' ) : __( 'Subscribe', 'fcnen' );
   $check_everything = 1;
   $check_posts = 0;
-  $check_content = 0;
+  $check_stories = 0;
+  $check_chapters = 0;
 
   if ( $subscriber ) {
     $check_everything = $subscriber->everything;
     $check_posts = in_array( 'post', $subscriber->post_types );
-    $check_content = in_array( 'fcn_story', $subscriber->post_types );
-    $check_content = $check_content || in_array( 'fcn_chapter', $subscriber->post_types );
+    $check_stories = in_array( 'fcn_story', $subscriber->post_types );
+    $check_chapters = in_array( 'fcn_chapter', $subscriber->post_types );
   }
 
   if ( ! $subscriber || $subscriber->everything ) {
@@ -115,10 +116,15 @@ function fcnen_get_modal_content() {
           <input type="checkbox" id="fcnen-modal-checkbox-scope-posts" name="scope-posts" value="1" <?php echo $check_posts ? 'checked' : ''; ?>>
           <label for="fcnen-modal-checkbox-scope-posts"><?php _e( 'Blogs', 'fcnen' ); ?></label>
         </div>
-        <div class="checkbox-label _content">
-          <input type="hidden" name="scope-content" value="0">
-          <input type="checkbox" id="fcnen-modal-checkbox-scope-content" name="scope-content" value="1" <?php echo $check_content ? 'checked' : ''; ?>>
-          <label for="fcnen-modal-checkbox-scope-content"><?php _e( 'Stories & Chapters', 'fcnen' ); ?></label>
+        <div class="checkbox-label _stories">
+          <input type="hidden" name="scope-stories" value="0">
+          <input type="checkbox" id="fcnen-modal-checkbox-scope-stories" name="scope-stories" value="1" <?php echo $check_stories ? 'checked' : ''; ?>>
+          <label for="fcnen-modal-checkbox-scope-stories"><?php _e( 'Stories', 'fcnen' ); ?></label>
+        </div>
+        <div class="checkbox-label _chapters">
+          <input type="hidden" name="scope-chapters" value="0">
+          <input type="checkbox" id="fcnen-modal-checkbox-scope-chapters" name="scope-chapters" value="1" <?php echo $check_chapters ? 'checked' : ''; ?>>
+          <label for="fcnen-modal-checkbox-scope-chapters"><?php _e( 'Chapters', 'fcnen' ); ?></label>
         </div>
       </div>
 

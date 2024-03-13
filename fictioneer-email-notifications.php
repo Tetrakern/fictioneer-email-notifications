@@ -385,7 +385,8 @@ add_filter( 'fictioneer_filter_subscribe_buttons', 'fcnen_filter_extend_subscrib
  *
  *   @type bool   'scope-everything'         True or false. Default true.
  *   @type bool   'scope-posts'              True or false. Default false.
- *   @type bool   'scope-content'            True or false. Default false.
+ *   @type bool   'scope-stories'            True or false. Default false.
+ *   @type bool   'scope-chapters'           True or false. Default false.
  *   @type array  'post_ids'                 Array of post IDs to subscribe to. Default empty.
  *   @type array  'post_types'               Array of post types to subscribe to. Default empty.
  *   @type array  'categories'               Array of category IDs to subscribe to. Default empty.
@@ -418,7 +419,8 @@ function fcnen_add_subscriber( $email, $args = [] ) {
     'code' => wp_generate_password( 32, false ),
     'scope-everything' => 1,
     'scope-posts' => 0,
-    'scope-content' => 0,
+    'scope-stories' => 0,
+    'scope-chapters' => 0,
     'post_ids' => [],
     'post_types' => [],
     'categories' => [],
@@ -448,13 +450,16 @@ function fcnen_add_subscriber( $email, $args = [] ) {
     $args['updated_at'] = current_time( 'mysql' );
   }
 
-  // Post types
+  // Scopes
   if ( $args['scope-posts'] ) {
     $args['post_types'][] = 'post';
   }
 
-  if ( $args['scope-content'] ) {
+  if ( $args['scope-stories'] ) {
     $args['post_types'][] = 'fcn_story';
+  }
+
+  if ( $args['scope-chapters'] ) {
     $args['post_types'][] = 'fcn_chapter';
   }
 
@@ -505,7 +510,8 @@ function fcnen_add_subscriber( $email, $args = [] ) {
  *
  *   @type bool   'scope-everything'  True or false. Default true.
  *   @type bool   'scope-posts'       True or false. Default false.
- *   @type bool   'scope-content'     True or false. Default false.
+ *   @type bool   'scope-stories'     True or false. Default false.
+ *   @type bool   'scope-chapters'    True or false. Default false.
  *   @type array  'post_ids'          Array of post IDs to subscribe to. Default empty.
  *   @type array  'post_types'        Array of post types to subscribe to. Default empty.
  *   @type array  'categories'        Array of category IDs to subscribe to. Default empty.
@@ -540,7 +546,8 @@ function fcnen_update_subscriber( $email, $args = [] ) {
   $defaults = array(
     'scope-everything' => 1,
     'scope-posts' => 0,
-    'scope-content' => 0,
+    'scope-stories' => 0,
+    'scope-chapters' => 0,
     'post_ids' => [],
     'post_types' => [],
     'categories' => [],
@@ -551,13 +558,16 @@ function fcnen_update_subscriber( $email, $args = [] ) {
   // Merge provided args with defaults
   $args = array_merge( $defaults, $args );
 
-  // Post types
+  // Scopes
   if ( $args['scope-posts'] ) {
     $args['post_types'][] = 'post';
   }
 
-  if ( $args['scope-content'] ) {
+  if ( $args['scope-stories'] ) {
     $args['post_types'][] = 'fcn_story';
+  }
+
+  if ( $args['scope-chapters'] ) {
     $args['post_types'][] = 'fcn_chapter';
   }
 

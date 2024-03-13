@@ -473,8 +473,12 @@ function fcnen_subscribers_page() {
                     <label for="fcnen-submit-subscriber-posts"><?php _e( 'Blogs', 'fcnen' ); ?></label>
                   </div>
                   <div class="fcnen-checkbox-wrap">
-                    <input type="checkbox" name="content" id="fcnen-submit-subscriber-content" value="1">
-                    <label for="fcnen-submit-subscriber-content"><?php _e( 'Stories & Chapters', 'fcnen' ); ?></label>
+                    <input type="checkbox" name="stories" id="fcnen-submit-subscriber-stories" value="1">
+                    <label for="fcnen-submit-subscriber-stories"><?php _e( 'Stories', 'fcnen' ); ?></label>
+                  </div>
+                  <div class="fcnen-checkbox-wrap">
+                    <input type="checkbox" name="chapters" id="fcnen-submit-subscriber-chapters" value="1">
+                    <label for="fcnen-submit-subscriber-chapters"><?php _e( 'Chapters', 'fcnen' ); ?></label>
                   </div>
                 </div>
                 <div class="fcnen-action-wrap">

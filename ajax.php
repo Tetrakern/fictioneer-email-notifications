@@ -44,7 +44,8 @@ function fcnen_ajax_subscribe_or_update() {
   $code = sanitize_text_field( $_POST['code'] ?? '' );
   $scope_everything = boolval( absint( $_POST['scope-everything'] ?? 1 ) );
   $scope_posts = boolval( absint( $_POST['scope-posts'] ?? 0 ) );
-  $scope_content = boolval( absint( $_POST['scope-content'] ?? 0 ) );
+  $scope_stories = boolval( absint( $_POST['scope-stories'] ?? 0 ) );
+  $scope_chapters = boolval( absint( $_POST['scope-chapters'] ?? 0 ) );
   $default_notice = __( 'Submission successful. If everything was in order, you will get an email.', 'fcnen' );
   $result = false;
 
@@ -57,7 +58,8 @@ function fcnen_ajax_subscribe_or_update() {
   $args = array(
     'scope-everything' => $scope_everything,
     'scope-posts' => $scope_posts,
-    'scope-content' => $scope_content
+    'scope-stories' => $scope_stories,
+    'scope-chapters' => $scope_chapters
   );
 
   // New or update?
