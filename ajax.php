@@ -226,6 +226,22 @@ function fcnen_ajax_search_content() {
     }
   }
 
+  // Add observer?
+  if ( $page < $query->max_num_pages ) {
+    $page++;
+
+    $observer = '<li class="fcnen-dialog-modal__advanced-li _observer" data-target="fcnen-observer-item" data-page="' . $page . '"><i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i> ' . __( 'Loading…', 'fcnen' ) . '<span></span></li>';
+
+    $output[] = $observer;
+  }
+
+  // No results?
+  if ( empty( $output ) ) {
+    $no_matches = '<li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span>' . __( 'No matches found.', 'fcnen' ) . '</span></li>';
+
+    $output[] = $no_matches;
+  }
+
   // Response
   wp_send_json_success(
     array(

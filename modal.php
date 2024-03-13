@@ -140,21 +140,24 @@ function fcnen_get_modal_content() {
         </div>
         <div class="fcnen-dialog-modal__advanced-lists">
           <ol class="fcnen-dialog-modal__advanced-sources" data-target="fcnen-sources">
-            <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No matches found.', 'fcnen' ); ?></span></li>
+            <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No search query.', 'fcnen' ); ?></span></li>
           </ol>
           <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection"></ol>
         </div>
-        <template data-target="fcnen-spinner-template">
-          <li class="fcnen-dialog-modal__advanced-li _disabled" data-target="fcnen-loading-observer">
+        <template data-target="fcnen-loader-item">
+          <li class="fcnen-dialog-modal__advanced-li _disabled">
             <i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i>
-            <span><?php _e( 'Loading', 'fcnen' ); ?></span>
+            <span><?php _e( 'Loading…', 'fcnen' ); ?></span>
           </li>
         </template>
-        <template data-target="fcnen-no-matches">
-          <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No matches found.', 'fcnen' ); ?></span></li>
+        <template data-target="fcnen-no-matches-item">
+          <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No search query.', 'fcnen' ); ?></span></li>
         </template>
         <template data-target="fcnen-selection-item">
           <li class="fcnen-dialog-modal__advanced-li _selected" data-type="" data-compare="" data-id=""><span></span><input type="hidden" name="" value=""></li>
+        </template>
+        <template data-target="fcnen-error-item">
+          <li class="fcnen-dialog-modal__advanced-li _error"><span></span></li>
         </template>
       </div>
 

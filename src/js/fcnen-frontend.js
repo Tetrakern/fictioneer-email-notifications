@@ -283,16 +283,16 @@ function fcnen_initializeSearch() {
   });
 }
 
-function fcnen_search() {
+function fcnen_search(page = 1, append = false) {
   // Get elements and values
-  const search = document.querySelector('[data-input-target="fcnen-search"]');
+  const search = fcnen_modal.querySelector('[data-input-target="fcnen-search"]');
   const wrapper = search.closest('.fcnen-dialog-modal__advanced');
   const sourceList = wrapper.querySelector('[data-target="fcnen-sources"]');
   const type = document.getElementById('fcnen-modal-search-select');
 
   // Clear source list and add spinner
   sourceList.innerHTML = '';
-  sourceList.appendChild(document.querySelector('[data-target="fcnen-spinner-template"]').content.cloneNode(true));
+  sourceList.appendChild(fcnen_modal.querySelector('[data-target="fcnen-loader-item"]').content.cloneNode(true));
 
   // Crop search input
   if (search.value > 200) {
@@ -302,7 +302,7 @@ function fcnen_search() {
   // Search empty?
   if (search.value == '') {
     sourceList.innerHTML = '';
-    sourceList.appendChild(document.querySelector('[data-target="fcnen-no-matches"]').content.cloneNode(true));
+    sourceList.appendChild(fcnen_modal.querySelector('[data-target="fcnen-no-matches-item"]').content.cloneNode(true));
     return;
   }
 
@@ -311,19 +311,116 @@ function fcnen_search() {
     'action': 'fcnen_ajax_search_content',
     'search': search.value,
     'type': type?.value ?? 'fcn_story',
-    'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? ''
+    'page': page,
+    'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? '',
+    'fcn_fast_ajax': 1
   };
 
-  // Request
-  fcnen_searchContent(payload, sourceList);
+  // Search request
+  fcnen_searchContent(payload, append);
 }
 
-function fcnen_searchContent(payload, sourceList) {
+/**
+ * Search for subscription items.
+ *
+ * @since 0.1.0
+ * @param {JSON} payload - POST request payload.
+ * @param {boolean} append - Whether to append the response or replace the results.
+ */
+
+function fcnen_searchContent(payload, append) {
+  // Setup
+  const sourceList = fcnen_modal.querySelector('[data-target="fcnen-sources"]');
+  let errorMessage = null;
+
+  // Request
   fcn_ajaxPost(payload)
   .then(response => {
+    // Remove observer (if any)
+    fcnen_modal.querySelector('[data-target="fcnen-observer-item"]')?.remove();
+
+    // Evaluate response...
     if (response.success) {
-      sourceList.innerHTML = response.data.html;
+      if (append) {
+        sourceList.innerHTML += response.data.html;
+      } else {
+        sourceList.innerHTML = response.data.html;
+      }
+
+      fcnen_disableSelected();
+      fcnen_observe();
+    } else {
+      errorMessage = response.data.error;
     }
+  })
+  .catch(error => {
+    errorMessage = error;
+  })
+  .then(() => {
+    if (errorMessage) {
+      const clone = fcnen_modal.querySelector('[data-target="fcnen-error-item"]').content.cloneNode(true);
+
+      clone.querySelector('.error-message').textContent = errorMessage;
+      sourceList.appendChild(clone);
+    }
+  });
+}
+
+function fcnen_observe() {
+  // Setup
+  const root = fcnen_modal.querySelector('[data-target="fcnen-sources"]');
+
+  // Observer setup
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        let search = fcnen_modal.querySelector('[data-input-target="fcnen-search"]')?.value ?? '';
+
+        // Crop search input
+        if (search.length > 200) {
+          search = search.slice(0, 200);
+        }
+
+        // Prepare payload
+        const payload = {
+          'action': 'fcnen_ajax_search_content',
+          'search': search,
+          'type': document.getElementById('fcnen-modal-search-select')?.value ?? 'fcn_story',
+          'page': entry.target.dataset.page,
+          'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? '',
+          'fcn_fast_ajax': 1
+        };
+
+        // Remove this observer
+        observer.unobserve(entry.target);
+
+        // Search request
+        fcnen_searchContent(payload, true);
+      }
+    });
+  }, { root: root, rootMargin: '0px', threshold: 0.5 });
+
+  // Observe scrolling in sourceList
+  fcnen_modal.querySelectorAll('[data-target="fcnen-observer-item"]').forEach(target => {
+    observer.observe(target);
+  });
+}
+
+/**
+ * Disable queried items that are already selected.
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_disableSelected() {
+  // Setup
+  const selection = fcnen_modal.querySelector('[data-target="fcnen-selection"]');
+
+  fcnen_modal.querySelectorAll('[data-target="fcnen-sources"] > li').forEach(item => {
+    item.classList.toggle(
+      '_disabled',
+      selection.querySelector(`[data-compare="${item.dataset.compare}"]`)
+    );
   });
 }
 
@@ -332,7 +429,6 @@ function fcnen_searchContent(payload, sourceList) {
  *
  * @since 0.1.0
  * @param {HTMLElement} source - The source item.
- * @param {HTMLElement} destination - The destination container.
  */
 
 function fcnen_addSelection(source) {

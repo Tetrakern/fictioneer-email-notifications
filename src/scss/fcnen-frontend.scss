@@ -113,7 +113,7 @@
         color: var(--fg-400);
       }
 
-      &._disabled {
+      &:is(._disabled, ._no-match) {
         cursor: default;
         color: var(--fg-900);
 
