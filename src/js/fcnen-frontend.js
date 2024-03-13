@@ -235,7 +235,7 @@ function fcnen_unsubscribe() {
 
   // Prepare payload
   const payload = {
-    'action': 'fcnen_ajax_subscribe',
+    'action': 'fcnen_ajax_unsubscribe',
     'email': document.getElementById('fcnen-modal-submit-email')?.value ?? '',
     'code': document.getElementById('fcnen-modal-submit-code')?.value ?? 0,
     'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? ''

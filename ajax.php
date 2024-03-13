@@ -110,7 +110,7 @@ add_action( 'wp_ajax_nopriv_fcnen_ajax_subscribe_or_update', 'fcnen_ajax_subscri
  * @since 0.1.0
  */
 
-function fcnen_ajax_subscribe() {
+function fcnen_ajax_unsubscribe() {
   // Verify
   if ( ! wp_doing_ajax() ) {
     wp_send_json_error( __( 'Invalid request.', 'fcnen' ) );
@@ -163,8 +163,8 @@ function fcnen_ajax_subscribe() {
     wp_send_json_success( array( 'notice' => $notice ) );
   }
 }
-add_action( 'wp_ajax_fcnen_ajax_subscribe', 'fcnen_ajax_subscribe' );
-add_action( 'wp_ajax_nopriv_fcnen_ajax_subscribe', 'fcnen_ajax_subscribe' );
+add_action( 'wp_ajax_fcnen_ajax_unsubscribe', 'fcnen_ajax_unsubscribe' );
+add_action( 'wp_ajax_nopriv_fcnen_ajax_unsubscribe', 'fcnen_ajax_unsubscribe' );
 
 /**
  * AJAX callback to search content
