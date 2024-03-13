@@ -10,7 +10,7 @@ function fcnen_subscription_modal() {
   // Start HTML ---> ?>
   <dialog id="fcnen-subscription-modal" class="dialog-modal fcnen-dialog-modal" data-nosnippet>
     <button class="dialog-modal__close" aria-label="<?php esc_attr_e( 'Close modal', 'fictioneer' ); ?>" data-click-action="close-dialog-modal" autofocus><?php fictioneer_icon( 'fa-xmark' ); ?></button>
-    <h4 class="dialog-modal__header"><?php _e( 'Email Subscription', 'fcnen' ); ?></h4>
+    <div class="dialog-modal__header"><?php _e( 'Email Subscription', 'fcnen' ); ?></div>
     <div class="fcnen-dialog-modal__ajax-target" data-target="fcnen-modal-loader">
       <div class="fcnen-modal-skeleton">
         <div class="shape" style="margin: 12px; height: 18px; max-width: min(500px, 70vw);"></div>
