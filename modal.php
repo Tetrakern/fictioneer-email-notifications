@@ -136,7 +136,7 @@ function fcnen_get_modal_content() {
           <ol class="fcnen-dialog-modal__advanced-sources" data-target="fcnen-sources">
             <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No matches found.', 'fcnen' ); ?></span></li>
           </ol>
-          <ol class="fcnen-dialog-modal__advanced-selection"></ol>
+          <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection"></ol>
         </div>
         <template data-target="fcnen-spinner-template">
           <li class="fcnen-dialog-modal__advanced-li _disabled" data-target="fcnen-loading-observer">
@@ -146,6 +146,9 @@ function fcnen_get_modal_content() {
         </template>
         <template data-target="fcnen-no-matches">
           <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No matches found.', 'fcnen' ); ?></span></li>
+        </template>
+        <template data-target="fcnen-selection-item">
+          <li class="fcnen-dialog-modal__advanced-li _selected" data-type="" data-compare="" data-id=""><span></span><input type="hidden" name="" value=""></li>
         </template>
       </div>
 

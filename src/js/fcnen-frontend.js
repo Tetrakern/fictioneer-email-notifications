@@ -269,6 +269,14 @@ function fcnen_initializeSearch() {
   document.getElementById('fcnen-modal-search-select')?.addEventListener('change', () => {
     fcnen_search();
   });
+
+  fcnen_modal.querySelector('[data-target="fcnen-sources"]').addEventListener('click', event => {
+    const item = event.target.closest('[data-click-action="fcnen-add"]');
+
+    if (item && !item.classList.contains('_disabled')) {
+      fcnen_addSelection(item);
+    }
+  });
 }
 
 function fcnen_search() {
@@ -312,5 +320,40 @@ function fcnen_searchContent(payload, sourceList) {
     if (response.success) {
       sourceList.innerHTML = response.data.html;
     }
-  })
+  });
+}
+
+/**
+ * Add selection item.
+ *
+ * @since 0.1.0
+ * @param {HTMLElement} source - The source item.
+ * @param {HTMLElement} destination - The destination container.
+ */
+
+function fcnen_addSelection(source) {
+  // Setup
+  const destination = fcnen_modal.querySelector('[data-target="fcnen-selection"]');
+
+  // Check if already added
+  if (destination.querySelector(`[data-compare="${source.dataset.compare}"]`)) {
+    return;
+  }
+
+  // Clone template
+  const clone = fcnen_modal.querySelector('[data-target="fcnen-selection-item"]').content.cloneNode(true);
+
+  // Fill data
+  clone.querySelector('li').setAttribute('data-id', source.dataset.id);
+  clone.querySelector('li').setAttribute('data-compare', source.dataset.compare);
+  clone.querySelector('li').setAttribute('data-type', source.dataset.type);
+  clone.querySelector('span').innerHTML = source.querySelector('span').innerHTML;
+  clone.querySelector('input[type="hidden"]').value = source.dataset.id;
+  clone.querySelector('input[type="hidden"]').name = source.dataset.name;
+
+  // Append to destination
+  destination.appendChild(clone);
+
+  // Disable source item
+  source.classList.add('_disabled');
 }

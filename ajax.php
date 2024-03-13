@@ -209,15 +209,12 @@ function fcnen_ajax_search_content() {
       $title = fictioneer_get_safe_title( $item, 'fcnen-search-stories' );
 
       // Build and append item
-      $item = "<li class='fcnen-dialog-modal__advanced-li' data-click-action='fcnen-add' data-type='story' data-id='{$item->ID}'><span>{$title}</span></li>";
+      $item = "<li class='fcnen-dialog-modal__advanced-li' data-click-action='fcnen-add' data-name='fcn_story[]' data-type='fcn_story' data-compare='story-{$item->ID}' data-id='{$item->ID}'><span>{$title}</span></li>";
 
       // Add to output
       $output[] = $item;
     }
   }
-
-  // $output[] = '<li class="fcnen-dialog-modal__advanced-li" data-id="#" data-type="foo"><span>Dummy result!</span></li>';
-
 
   // Response
   wp_send_json_success(
