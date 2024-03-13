@@ -70,6 +70,7 @@ function fcnen_get_modal_content() {
       'posts_per_page' => -1,
       'post__in' => $post_ids,
       'orderby' => 'post__in',
+      'update_post_meta_cache' => true, // We might need that
       'update_post_term_cache' => true, // Improve performance
       'no_found_rows' => true // Improve performance
     );
@@ -168,7 +169,7 @@ function fcnen_get_modal_content() {
             <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection"><?php
               if ( $allow_stories && $stories ) {
                 foreach ( $stories->posts as $story ) {
-                  $title = fictioneer_get_safe_title( $story->ID );
+                  $title = fictioneer_get_safe_title( $story->ID, 'fcnen-search-stories' );
 
                   echo "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='post_id' data-compare='story-{$story->ID}' data-id='{$story->ID}'><span class='fcnen-item-label'>" . _x( 'Story', 'List item label.', 'fcnen' ) . "</span> <span class='fcnen-item-name'>{$title}</span><input type='hidden' name='post_id[]' value='{$story->ID}'></li>";
                 }

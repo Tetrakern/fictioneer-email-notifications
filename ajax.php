@@ -211,7 +211,7 @@ function fictioneer_ajax_fcnen_search_content() {
   $query = null;
   $output = [];
 
-  // Query
+  // Query stories
   if ( $filter === 'story' ) {
     $query = new WP_Query(
       array(
@@ -222,7 +222,7 @@ function fictioneer_ajax_fcnen_search_content() {
         'posts_per_page' => 10,
         'paged' => $page,
         's' => $search,
-        'update_post_meta_cache' => false, // Improve performance
+        'update_post_meta_cache' => true, // We might need that
         'update_post_term_cache' => false // Improve performance
       )
     );
