@@ -463,6 +463,23 @@ function fcnen_add_subscriber( $email, $args = [] ) {
     $args['post_types'][] = 'fcn_chapter';
   }
 
+  // Only allow post IDs of stories
+  if ( ! empty( $args['post_ids'] ) ) {
+    $args['post_ids'] = get_posts(
+      array(
+        'post_type'=> 'fcn_story',
+        'post_status'=> ['publish', 'private', 'future'],
+        'posts_per_page' => -1,
+        'post__in' => $args['post_ids'],
+        'orderby' => 'post__in',
+        'fields' => 'ids',
+        'update_post_meta_cache' => false, // Improve performance
+        'update_post_term_cache' => true, // Improve performance
+        'no_found_rows' => true // Improve performance
+      )
+    );
+  }
+
   // Prepare data
   $data = array(
     'email' => $email,
