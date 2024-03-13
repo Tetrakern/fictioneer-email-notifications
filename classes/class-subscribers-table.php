@@ -386,7 +386,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     );
 
     $translations = array(
-      'post_ids' => __( 'Posts', 'fcnen' ),
+      'post_ids' => __( 'Stories', 'fcnen' ),
       'post_types' => __( 'Types', 'fcnen' ),
       'categories' => __( 'Categories', 'fcnen' ),
       'tags' => __( 'Tags', 'fcnen' ),
