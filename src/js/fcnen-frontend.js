@@ -296,6 +296,15 @@ function fcnen_initializeSearch() {
       fcnen_addSelection(item);
     }
   });
+
+  // Listen for clicks on selection list to remove items
+  fcnen_modal.querySelector('[data-target="fcnen-selection"]').addEventListener('click', event => {
+    const item = event.target.closest('[data-click-action="fcnen-remove"]');
+
+    if (item) {
+      fcnen_removeSelection(item);
+    }
+  });
 }
 
 /**
@@ -486,4 +495,19 @@ function fcnen_addSelection(source) {
 
   // Disable source item
   source.classList.add('_disabled');
+}
+
+/**
+ * Remove selection item.
+ *
+ * @since 0.1.0
+ * @param {HTMLElement} item - The selected item.
+ */
+
+function fcnen_removeSelection(item) {
+  // Remove item from list
+  item.remove();
+
+  // Refresh disabled state of source items
+  fcnen_disableSelected();
 }
