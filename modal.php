@@ -47,8 +47,11 @@ function fcnen_get_modal_content() {
   $check_stories = 0;
   $check_chapters = 0;
   $post_ids = [];
+  $categories = [];
+  $tags = [];
+  $taxonomies = [];
   $stories = null;
-  $taxonomies = null;
+  $terms = null;
 
   if ( $subscriber ) {
     $check_everything = $subscriber->everything;
@@ -56,6 +59,9 @@ function fcnen_get_modal_content() {
     $check_stories = in_array( 'fcn_story', $subscriber->post_types );
     $check_chapters = in_array( 'fcn_chapter', $subscriber->post_types );
     $post_ids = $subscriber->post_ids;
+    $categories = $subscriber->categories;
+    $tags = $subscriber->tags;
+    $taxonomies = $subscriber->taxonomies;
   }
 
   if ( ! $subscriber || $subscriber->everything ) {
@@ -63,7 +69,7 @@ function fcnen_get_modal_content() {
   }
 
   // Validate stories
-  if ( ! empty( $post_ids ) ) {
+  if ( $post_ids ) {
     $args = array(
       'post_type'=> 'fcn_story',
       'post_status'=> ['publish', 'private', 'future'],
@@ -76,6 +82,21 @@ function fcnen_get_modal_content() {
     );
 
     $stories = new WP_Query( $args );
+  }
+
+  // Validate terms
+  if ( $categories || $tags || $taxonomies ) {
+    $term_ids = array_merge( $categories, $tags, $taxonomies );
+
+    $terms = get_terms(
+      array(
+        'taxonomy' => ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],
+        'orderby' => 'taxonomy',
+        'include' => $term_ids,
+        'hide_empty' => false,
+        'update_term_meta_cache' => false // Improve performance
+      )
+    );
   }
 
   ob_start();
@@ -172,6 +193,15 @@ function fcnen_get_modal_content() {
                   $title = fictioneer_get_safe_title( $story->ID, 'fcnen-search-stories' );
 
                   echo "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='post_id' data-compare='story-{$story->ID}' data-id='{$story->ID}'><span class='fcnen-item-label'>" . _x( 'Story', 'List item label.', 'fcnen' ) . "</span> <span class='fcnen-item-name'>{$title}</span><input type='hidden' name='post_id[]' value='{$story->ID}'></li>";
+                }
+              }
+
+              if ( $allow_taxonomies && $terms ) {
+                foreach ( $terms as $term ) {
+                  $taxonomy = fcnen_get_term_html_attribute( $term->taxonomy );
+                  $label = fcnen_get_term_label( $term->taxonomy );
+
+                  echo "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='{$taxonomy}' data-compare='taxonomy-{$term->term_id}' data-id='{$term->term_id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$term->name}</span><input type='hidden' name='{$taxonomy}[]' value='{$term->term_id}'></li>";
                 }
               }
             ?></ol>

@@ -53,6 +53,9 @@ function fictioneer_ajax_fcnen_subscribe_or_update() {
   $scope_stories = boolval( absint( $_POST['scope-stories'] ?? 0 ) );
   $scope_chapters = boolval( absint( $_POST['scope-chapters'] ?? 0 ) );
   $post_ids = fcnen_get_array_from_post_string( 'post_id' );
+  $categories = fcnen_get_array_from_post_string( 'categories' );
+  $tags = fcnen_get_array_from_post_string( 'tags' );
+  $taxonomies = fcnen_get_array_from_post_string( 'taxonomies' );
   $default_notice = __( 'Submission successful. If everything was in order, you will get an email.', 'fcnen' );
   $result = false;
 
@@ -67,13 +70,31 @@ function fictioneer_ajax_fcnen_subscribe_or_update() {
   $post_ids = array_map( 'absint', $post_ids );
   $post_ids = array_map( 'strval', $post_ids );
 
+  $categories = array_map( 'trim', $categories );
+  $categories = array_unique( $categories );
+  $categories = array_map( 'absint', $categories );
+  $categories = array_map( 'strval', $categories );
+
+  $tags = array_map( 'trim', $tags );
+  $tags = array_unique( $tags );
+  $tags = array_map( 'absint', $tags );
+  $tags = array_map( 'strval', $tags );
+
+  $taxonomies = array_map( 'trim', $taxonomies );
+  $taxonomies = array_unique( $taxonomies );
+  $taxonomies = array_map( 'absint', $taxonomies );
+  $taxonomies = array_map( 'strval', $taxonomies );
+
   // Arguments
   $args = array(
     'scope-everything' => $scope_everything,
     'scope-posts' => $scope_posts,
     'scope-stories' => $scope_stories,
     'scope-chapters' => $scope_chapters,
-    'post_ids' => $post_ids
+    'post_ids' => $post_ids,
+    'categories' => $categories,
+    'tags' => $tags,
+    'taxonomies' => $taxonomies
   );
 
   // New or update?
