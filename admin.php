@@ -730,6 +730,7 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-confirmation">
+            <div><?php _e( 'This email is sent when a new subscription is submitted, prompting the subscriber to confirm it as security measure against fraudulent submissions. Anyone could enter anyone’s email address, after all. If not confirmed within 24 hours, the subscription and all data will be deleted once the cron job runs (every 12 hours). Make sure to always include the necessary replacement tokens.', 'fcnen' ); ?></div>
             <div class="fcnen-spacer"></div>
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-confirmation" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
