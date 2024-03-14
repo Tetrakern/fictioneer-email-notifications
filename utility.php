@@ -355,6 +355,31 @@ function fcnen_get_subscriber_by_email_and_code( $email, $code ) {
 // =======================================================================================
 
 /**
+ * Returns database-ready array of IDs
+ *
+ * Note: Saving ID as string instead of integer is better for SQL
+ * queries, because serialized arrays can also us integers as key
+ * and that creates problems for certain matching operations.
+ *
+ * @since 0.1.0
+ *
+ * @param array $ids  The IDs to prepare.
+ *
+ * @return array Sanitized and stringified IDs.
+ */
+
+function fcnen_prepare_id_array( $ids ) {
+  if ( empty( $ids ) ) {
+    return [];
+  }
+
+  $ids = array_map( 'absint', $ids );
+  $ids = array_unique( $ids );
+
+  return array_map( 'strval', $ids );
+}
+
+/**
  * Returns sanitized array of story-type post IDs
  *
  * @since 0.1.0

@@ -66,29 +66,15 @@ function fictioneer_ajax_fcnen_subscribe_or_update() {
 
   // Sanitize
   if ( get_option( 'fcnen_flag_subscribe_to_stories' ) ) {
-    $post_ids = array_map( 'trim', $post_ids );
-    $post_ids = array_unique( $post_ids );
-    $post_ids = array_map( 'absint', $post_ids );
-    $post_ids = array_map( 'strval', $post_ids );
+    $post_ids = fcnen_prepare_id_array( $post_ids );
   } else {
     $post_ids = [];
   }
 
   if ( get_option( 'fcnen_flag_subscribe_to_taxonomies' ) ) {
-    $categories = array_map( 'trim', $categories );
-    $categories = array_unique( $categories );
-    $categories = array_map( 'absint', $categories );
-    $categories = array_map( 'strval', $categories );
-
-    $tags = array_map( 'trim', $tags );
-    $tags = array_unique( $tags );
-    $tags = array_map( 'absint', $tags );
-    $tags = array_map( 'strval', $tags );
-
-    $taxonomies = array_map( 'trim', $taxonomies );
-    $taxonomies = array_unique( $taxonomies );
-    $taxonomies = array_map( 'absint', $taxonomies );
-    $taxonomies = array_map( 'strval', $taxonomies );
+    $categories = fcnen_prepare_id_array( $categories );
+    $tags = fcnen_prepare_id_array( $tags );
+    $taxonomies = fcnen_prepare_id_array( $taxonomies );
   } else {
     $categories = [];
     $tags = [];
