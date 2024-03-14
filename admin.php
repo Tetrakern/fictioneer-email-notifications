@@ -786,6 +786,7 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-edit">
+            <div><?php _e( 'This email is sent whenever a subscriber updates their preferences, both as confirmation and security notification about the change. Just in case a malicious actor managed to acquire both their email address and code. Make sure to always include the necessary replacement tokens.', 'fcnen' ); ?></div>
             <div class="fcnen-spacer"></div>
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-edit" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
