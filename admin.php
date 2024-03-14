@@ -27,9 +27,17 @@ function fcnen_register_settings() {
 
   // Templates
   register_setting( 'fcnen_template_group', 'fcnen_template_layout_confirmation', 'wp_kses_post' );
+  register_setting( 'fcnen_template_group', 'fcnen_template_subject_confirmation', 'sanitize_text_field' );
+
   register_setting( 'fcnen_template_group', 'fcnen_template_layout_code', 'wp_kses_post' );
+  register_setting( 'fcnen_template_group', 'fcnen_template_subject_code', 'sanitize_text_field' );
+
   register_setting( 'fcnen_template_group', 'fcnen_template_layout_edit', 'wp_kses_post' );
+  register_setting( 'fcnen_template_group', 'fcnen_template_subject_edit', 'sanitize_text_field' );
+
   register_setting( 'fcnen_template_group', 'fcnen_template_layout_notification', 'wp_kses_post' );
+  register_setting( 'fcnen_template_group', 'fcnen_template_subject_notification', 'sanitize_text_field' );
+
   register_setting( 'fcnen_template_group', 'fcnen_template_loop_part_post', 'wp_kses_post' );
   register_setting( 'fcnen_template_group', 'fcnen_template_loop_part_story', 'wp_kses_post' );
   register_setting( 'fcnen_template_group', 'fcnen_template_loop_part_chapter', 'wp_kses_post' );
@@ -581,6 +589,8 @@ function fcnen_settings_page() {
   $api_bulk_limit = get_option( 'fcnen_api_bulk_limit', 400 );
 
   $layout_confirmation = get_option( 'fcnen_template_layout_confirmation', FCNEN_DEFAULTS['layout_confirmation'] ?? '' );
+  $subject_confirmation = get_option( 'fcnen_template_subject_confirmation' );
+
   $layout_code = get_option( 'fcnen_template_layout_code', FCNEN_DEFAULTS['layout_code'] ?? '' );
   $layout_edit = get_option( 'fcnen_template_layout_edit', FCNEN_DEFAULTS['layout_edit'] ?? '' );
   $layout_notification = get_option( 'fcnen_template_layout_notification', FCNEN_DEFAULTS['layout_notification'] ?? '' );
@@ -713,49 +723,56 @@ function fcnen_settings_page() {
             </select>
           </div>
 
-          <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-confirmation">
+          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-confirmation">
+            <div class="fcnen-spacer"></div>
+            <div class="fcnen-left-right-wrap">
+              <label for="fcnen-template-subject-confirmation" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
+              <div class="fcnen-input-wrap">
+                <input type="text" name="fcnen_template_subject_confirmation" id="fcnen-template-subject-confirmation" placeholder="<?php echo $subject_confirmation; ?>" value="<?php echo $subject_confirmation; ?>">
+              </div>
+            </div>
             <textarea name="fcnen_template_layout_confirmation" id="fcnen-template-layout-confirmation" class="fcnen-codemirror"><?php echo esc_textarea( $layout_confirmation ); ?></textarea>
             <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
-          <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-code">
+          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-code">
             <textarea name="fcnen_template_layout_code" id="fcnen-template-layout-code" class="fcnen-codemirror"><?php echo esc_textarea( $layout_code ); ?></textarea>
             <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
-          <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-edit">
+          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-edit">
             <textarea name="fcnen_template_layout_edit" id="fcnen-template-layout-edit" class="fcnen-codemirror"><?php echo esc_textarea( $layout_edit ); ?></textarea>
             <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
-          <div class="fcnen-box__row fcnen-box__vertical hidden" id="layout-notification">
+          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-notification">
             <textarea name="fcnen_template_layout_notification" id="fcnen-template-layout-notification" class="fcnen-codemirror"><?php echo esc_textarea( $layout_notification ); ?></textarea>
             <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
-          <div class="fcnen-box__row fcnen-box__vertical hidden" id="loop-part-post">
+          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-post">
             <textarea name="fcnen_template_loop_part_post" id="fcnen-template-loop-part-post" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_post ); ?></textarea>
             <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
-          <div class="fcnen-box__row fcnen-box__vertical hidden" id="loop-part-story">
+          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-story">
             <textarea name="fcnen_template_loop_part_story" id="fcnen-template-loop-part-story" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_story ); ?></textarea>
             <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
-          <div class="fcnen-box__row fcnen-box__vertical hidden" id="loop-part-chapter">
+          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-chapter">
             <textarea name="fcnen_template_loop_part_chapter" id="fcnen-template-loop-part-chapter" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_chapter ); ?></textarea>
             <div class="fcnen-action-wrap">
               <?php submit_button( __( 'Save Template', 'fcnes' ), 'primary', 'submit', false ); ?>
@@ -765,7 +782,21 @@ function fcnen_settings_page() {
         </form>
       </div>
 
+      <div class="fcnen-box">
+        <div class="fcnen-box__header">
+          <h2><?php _e( 'Preview', 'fcnen' ); ?></h2>
+        </div>
+        <div class="fcnen-box__body">
+          <div class="fcnen-box__row" id="fcnen-preview-notice">
+            No template selected.
+          </div>
+          <div class="fcnen-box__row _iframe hidden" id="fcnen-preview">
+            <iframe id="fcnen-preview-iframe"></iframe>
+          </div>
+        </div>
+      </div>
+
     </div>
-</div>
+  </div>
   <?php // <--- End HTML
 }
