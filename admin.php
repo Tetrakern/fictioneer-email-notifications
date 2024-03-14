@@ -758,6 +758,7 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-code">
+            <div><?php _e( 'This email can be manually triggered in the subscriber list, sending the edit code to a confirmed subscriber along with an edit link for convenience. This should normally not be required since the code should be included in all other emails anyway, but people are people. Make sure to always include the necessary replacement tokens.', 'fcnen' ); ?></div>
             <div class="fcnen-spacer"></div>
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-code" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
