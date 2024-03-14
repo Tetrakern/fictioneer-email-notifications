@@ -730,7 +730,7 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-confirmation">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This email is sent when a new subscription is submitted, prompting the subscriber to confirm it as security measure against fraudulent submissions. Anyone could enter anyone’s email address, after all. If not confirmed within 24 hours, the subscription and all data will be deleted once the cron job runs (every 12 hours). Make sure to always include the necessary replacement tokens.', 'fcnen' ); ?></div>
+            <div class="fcnen-replacement-tokens"><?php _e( 'This email is sent when a new subscription is submitted, prompting the subscriber to confirm it as security measure against fraudulent submissions. Anyone could enter anyone’s email address, after all. If not confirmed within 24 hours, the subscription and all data will be deleted once the cron job runs (every 12 hours). Make sure to always include the necessary replacement tokens. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
             <div class="fcnen-spacer"></div>
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-confirmation" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
@@ -758,7 +758,7 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-code">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This email can be manually triggered in the subscriber list, sending the edit code to a confirmed subscriber along with an edit link for convenience. This should normally not be required since the code should be included in all other emails anyway, but people are people. Make sure to always include the necessary replacement tokens.', 'fcnen' ); ?></div>
+            <div class="fcnen-replacement-tokens"><?php _e( 'This email can be manually triggered in the subscriber list, sending the edit code to a confirmed subscriber along with an edit link for convenience. This should normally not be required since the code should be included in all other emails anyway, but people are people. Make sure to always include the necessary replacement tokens. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
             <div class="fcnen-spacer"></div>
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-code" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
@@ -786,7 +786,7 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-edit">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This email is sent whenever a subscriber updates their preferences, both as confirmation and security notification about the change. Just in case a malicious actor managed to acquire both their email address and code. Make sure to always include the necessary replacement tokens.', 'fcnen' ); ?></div>
+            <div class="fcnen-replacement-tokens"><?php _e( 'This email is sent whenever a subscriber updates their preferences, both as confirmation and security notification about the change. Just in case a malicious actor managed to acquire both their email address and code. Make sure to always include the necessary replacement tokens. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
             <div class="fcnen-spacer"></div>
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-edit" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
@@ -822,7 +822,7 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-notification">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This email is sent for actual update notifications and consists of multiple parts: layout and loop partials. While this layout provides the surrounding body with some nice text of your choice (and the code, really important), the loop partials render the individual content matching the subscriber’s preferences. Make sure to always include the necessary replacement tokens.', 'fcnen' ); ?></div>
+            <div class="fcnen-replacement-tokens"><?php _e( 'This email is sent for actual update notifications and consists of multiple parts: layout and loop partials. While this layout provides the surrounding body with some nice text of your choice (and the code, really important), the loop partials render the individual content matching the subscriber’s preferences. Make sure to always include the necessary replacement tokens. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
             <div class="fcnen-spacer"></div>
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-notification" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
@@ -851,7 +851,7 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-post">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders post updates in notification emails inside the <code>{{updates}}</code> replacement token.', 'fcnen' ); ?></div>
+            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders post updates in notification emails inside the <code>{{updates}}</code> replacement token. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
             <div class="fcnen-spacer"></div>
             <textarea name="fcnen_template_loop_part_post" id="fcnen-template-loop-part-post" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_post ); ?></textarea>
             <div class="fcnen-placeholders">
@@ -878,7 +878,7 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-story">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders story updates in notification emails inside the <code>{{updates}}</code> replacement token.', 'fcnen' ); ?></div>
+            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders story updates in notification emails inside the <code>{{updates}}</code> replacement token. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
             <div class="fcnen-spacer"></div>
             <textarea name="fcnen_template_loop_part_story" id="fcnen-template-loop-part-story" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_story ); ?></textarea>
             <div class="fcnen-placeholders">
@@ -909,7 +909,7 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-chapter">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders chapter updates in notification emails inside the <code>{{updates}}</code> replacement token.', 'fcnen' ); ?></div>
+            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders chapter updates in notification emails inside the <code>{{updates}}</code> replacement token. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
             <div class="fcnen-spacer"></div>
             <textarea name="fcnen_template_loop_part_chapter" id="fcnen-template-loop-part-chapter" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_chapter ); ?></textarea>
             <div class="fcnen-placeholders">
