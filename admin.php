@@ -843,6 +843,8 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-post">
+            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders post updates in notification emails inside the <code>{{updates}}</code> replacement token.', 'fcnen' ); ?></div>
+            <div class="fcnen-spacer"></div>
             <textarea name="fcnen_template_loop_part_post" id="fcnen-template-loop-part-post" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_post ); ?></textarea>
             <div class="fcnen-placeholders">
               <code>{{site_name}}</code>
@@ -863,6 +865,8 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-story">
+            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders story updates in notification emails inside the <code>{{updates}}</code> replacement token.', 'fcnen' ); ?></div>
+            <div class="fcnen-spacer"></div>
             <textarea name="fcnen_template_loop_part_story" id="fcnen-template-loop-part-story" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_story ); ?></textarea>
             <div class="fcnen-placeholders">
               <code>{{site_name}}</code>
@@ -883,6 +887,8 @@ function fcnen_settings_page() {
           </div>
 
           <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-chapter">
+            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders chapter updates in notification emails inside the <code>{{updates}}</code> replacement token.', 'fcnen' ); ?></div>
+            <div class="fcnen-spacer"></div>
             <textarea name="fcnen_template_loop_part_chapter" id="fcnen-template-loop-part-chapter" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_chapter ); ?></textarea>
             <div class="fcnen-placeholders">
               <code>{{site_name}}</code>
