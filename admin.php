@@ -803,6 +803,14 @@ function fcnen_settings_page() {
               <code>{{edit_link}}</code>
               <code>{{email}}</code>
               <code>{{code}}</code>
+              <code>{{scope_everything}}</code>
+              <code>{{scope_post_types}}</code>
+              <code>{{scope_stories}}</code>
+              <code>{{scope_categories}}</code>
+              <code>{{scope_tags}}</code>
+              <code>{{scope_fandoms}}</code>
+              <code>{{scope_characters}}</code>
+              <code>{{scope_warnings}}</code>
             </div>
             <details class="fcnen-default-code">
               <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
