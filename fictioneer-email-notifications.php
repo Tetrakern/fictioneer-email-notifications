@@ -68,7 +68,7 @@ define(
     'layout_edit' => '',
     'layout_notification' => '',
     'loop_part_post' => '',
-    'loop_part_story' => '',
+    'loop_part_story' => "<fieldset style='padding: 10px; margin: 20px 0; border: 1px solid #ccc;'>\n  <div>\n    <div style='font-size: 14px;'>\n      <strong>{{type}}: <a href='{{link}}' style='text-decoration: none;'>{{title}}</a></strong>\n    </div>\n    <div style='font-size: 11px; margin-top: 5px;'>by {{author}}</div>\n  </div>\n  <div style='margin-top: 10px'>{{excerpt}}</div>\n</fieldset>",
     'loop_part_chapter' => ''
   )
 );
