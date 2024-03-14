@@ -133,7 +133,9 @@ details {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
 
+:is(.fcnen-placeholders, .fcnen-replacement-tokens) {
   code {
     user-select: all;
     font-size: 10px;
