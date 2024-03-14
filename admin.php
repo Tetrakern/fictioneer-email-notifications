@@ -847,13 +847,18 @@ function fcnen_settings_page() {
             <div class="fcnen-spacer"></div>
             <textarea name="fcnen_template_loop_part_post" id="fcnen-template-loop-part-post" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_post ); ?></textarea>
             <div class="fcnen-placeholders">
+              <code>{{type}}</code>
+              <code>{{title}}</code>
+              <code>{{link}}</code>
+              <code>{{author}}</code>
+              <code>{{excerpt}}</code>
+              <code>{{date}}</code>
+              <code>{{time}}</code>
+              <code>{{thumbnail}}</code>
+              <code>{{categories}}</code>
+              <code>{{tags}}</code>
               <code>{{site_name}}</code>
               <code>{{site_link}}</code>
-              <code>{{activation_link}}</code>
-              <code>{{unsubscribe_link}}</code>
-              <code>{{edit_link}}</code>
-              <code>{{email}}</code>
-              <code>{{code}}</code>
             </div>
             <details class="fcnen-default-code">
               <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
@@ -869,13 +874,22 @@ function fcnen_settings_page() {
             <div class="fcnen-spacer"></div>
             <textarea name="fcnen_template_loop_part_story" id="fcnen-template-loop-part-story" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_story ); ?></textarea>
             <div class="fcnen-placeholders">
+              <code>{{type}}</code>
+              <code>{{title}}</code>
+              <code>{{link}}</code>
+              <code>{{author}}</code>
+              <code>{{excerpt}}</code>
+              <code>{{date}}</code>
+              <code>{{time}}</code>
+              <code>{{thumbnail}}</code>
+              <code>{{categories}}</code>
+              <code>{{tags}}</code>
+              <code>{{genres}}</code>
+              <code>{{fandoms}}</code>
+              <code>{{characters}}</code>
+              <code>{{warnings}}</code>
               <code>{{site_name}}</code>
               <code>{{site_link}}</code>
-              <code>{{activation_link}}</code>
-              <code>{{unsubscribe_link}}</code>
-              <code>{{edit_link}}</code>
-              <code>{{email}}</code>
-              <code>{{code}}</code>
             </div>
             <details class="fcnen-default-code">
               <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
@@ -891,13 +905,24 @@ function fcnen_settings_page() {
             <div class="fcnen-spacer"></div>
             <textarea name="fcnen_template_loop_part_chapter" id="fcnen-template-loop-part-chapter" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_chapter ); ?></textarea>
             <div class="fcnen-placeholders">
+              <code>{{type}}</code>
+              <code>{{title}}</code>
+              <code>{{link}}</code>
+              <code>{{author}}</code>
+              <code>{{excerpt}}</code>
+              <code>{{date}}</code>
+              <code>{{time}}</code>
+              <code>{{thumbnail}}</code>
+              <code>{{categories}}</code>
+              <code>{{tags}}</code>
+              <code>{{genres}}</code>
+              <code>{{fandoms}}</code>
+              <code>{{characters}}</code>
+              <code>{{warnings}}</code>
+              <code>{{story_title}}</code>
+              <code>{{story_link}}</code>
               <code>{{site_name}}</code>
               <code>{{site_link}}</code>
-              <code>{{activation_link}}</code>
-              <code>{{unsubscribe_link}}</code>
-              <code>{{edit_link}}</code>
-              <code>{{email}}</code>
-              <code>{{code}}</code>
             </div>
             <details class="fcnen-default-code">
               <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
