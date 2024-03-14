@@ -80,6 +80,15 @@ function fcnen_templatePreview(html, height = null) {
   const iframe = document.getElementById('fcnen-preview-iframe');
   const doc = iframe.contentWindow.document;
 
+  // Remove replacement tokens for preview
+  const regex = /\{\{[#/^]?[^{}]+\}\}/g;
+
+  Object.entries(fcnes_preview_replacements).forEach(([token, replacement]) => {
+    html = html.replaceAll(token, replacement);
+  });
+
+  html = html.replace(regex, '');
+
   // Write HTML to iframe
   doc.open();
   doc.write(html);

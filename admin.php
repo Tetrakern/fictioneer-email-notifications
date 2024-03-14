@@ -604,7 +604,35 @@ function fcnen_settings_page() {
   $loop_part_story = get_option( 'fcnen_template_loop_part_story', FCNEN_DEFAULTS['loop_part_story'] ?? '' );
   $loop_part_chapter = get_option( 'fcnen_template_loop_part_chapter', FCNEN_DEFAULTS['loop_part_chapter'] ?? '' );
 
+  // Preview replacements
+  $preview_replacements = array(
+    '{{site_name}}' => get_bloginfo( 'name' ),
+    '{{author}}' => _x( 'Author', 'Preview replacement string.', 'fcnen' ),
+    '{{title}}' => _x( 'Preview Title', 'Preview replacement string.', 'fcnen' ),
+    '{{story_title}}' => _x( 'Preview Story Title', 'Preview replacement string.', 'fcnen' ),
+    '{{excerpt}}' => _x( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel lacus luctus, laoreet augue vitae, dignissim arcu. Curabitur fermentum euismod justo et luctus. Cras sit amet gravida libero.', 'Preview replacement string.', 'fcnen' ),
+    '{{date}}' => date( get_option( 'date_format' ) ),
+    '{{time}}' => date( get_option( 'time_format' ) ),
+    '{{code}}' => wp_generate_password( 32, false ),
+    '{{email}}' => _x( 'subscriber@email.com', 'Preview replacement string.', 'fcnen' ),
+    '{{type}}' => _x( 'Type', 'Preview replacement string.', 'fcnen' ),
+    '{{scope_post_types}}' => _x( 'Blogs, Stories, Chapters', 'Preview replacement string.', 'fcnen' ),
+    '{{scope_stories}}' => _x( 'Dracula, Sherlock Holmes, My Immortal', 'Preview replacement string.', 'fcnen' ),
+    '{{scope_categories}}' => _x( 'External, Wholesome, Creepy', 'Preview replacement string.', 'fcnen' ),
+    '{{scope_tags}}' => _x( 'Amnesia, Dystopian, Magical Girls', 'Preview replacement string.', 'fcnen' ),
+    '{{scope_genres}}' => _x( 'Science Fiction, Solarpunk, Cosmic Horror', 'Preview replacement string.', 'fcnen' ),
+    '{{scope_fandoms}}' => _x( 'Original, Sol Bianca, Little Witch Academia', 'Preview replacement string.', 'fcnen' ),
+    '{{scope_characters}}' => _x( 'Twilight Sparkle, Luz Noceda, Rebecca', 'Preview replacement string.', 'fcnen' ),
+    '{{scope_warnings}}' => _x( 'Profanity, Violence, Gore', 'Preview replacement string.', 'fcnen' ),
+    '{{site_link}}' => '#',
+    '{{activation_link}}' => '#',
+    '{{unsubscribe_link}}' => '#',
+    '{{edit_link}}' => '#',
+    '{{story_link}}' => '#'
+  );
+
   // Start HTML ---> ?>
+  <script><?php echo 'var fcnes_preview_replacements = ' . json_encode( $preview_replacements ) . ';'; ?></script>
   <div id="fcnen-admin-page-subscribers" class="wrap fcnen-settings _settings">
     <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Settings', 'fcnen' ); ?></h1>
     <hr class="wp-header-end">
