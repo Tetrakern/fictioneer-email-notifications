@@ -175,6 +175,86 @@ function fcnen_get_from_email_address() {
 }
 
 /**
+ * Get the subject for the confirmation email
+ *
+ * @since 0.1.0
+ *
+ * @return string The subject.
+ */
+
+function fcnen_get_confirmation_email_subject() {
+  // Return custom subject if set
+  $subject = get_option( 'fcnen_template_subject_confirmation' );
+
+  if ( $subject ) {
+    return $subject;
+  }
+
+  // Return default otherwise
+  return FCNEN_DEFAULTS['subject_confirmation'];
+}
+
+/**
+ * Get the subject for the code email
+ *
+ * @since 0.1.0
+ *
+ * @return string The subject.
+ */
+
+function fcnen_get_code_email_subject() {
+  // Return custom subject if set
+  $subject = get_option( 'fcnen_template_subject_code' );
+
+  if ( $subject ) {
+    return $subject;
+  }
+
+  // Return default otherwise
+  return FCNEN_DEFAULTS['subject_code'];
+}
+
+/**
+ * Get the subject for the edit email
+ *
+ * @since 0.1.0
+ *
+ * @return string The subject.
+ */
+
+function fcnen_get_edit_email_subject() {
+  // Return custom subject if set
+  $subject = get_option( 'fcnen_template_subject_edit' );
+
+  if ( $subject ) {
+    return $subject;
+  }
+
+  // Return default otherwise
+  return FCNEN_DEFAULTS['subject_edit'];
+}
+
+/**
+ * Get the subject for the edit email
+ *
+ * @since 0.1.0
+ *
+ * @return string The subject.
+ */
+
+function fcnen_get_notification_email_subject() {
+  // Return custom subject if set
+  $subject = get_option( 'fcnen_template_subject_notification' );
+
+  if ( $subject ) {
+    return $subject;
+  }
+
+  // Return default otherwise
+  return FCNEN_DEFAULTS['subject_notification'];
+}
+
+/**
  * Get the activation link for the subscriber
  *
  * @since 0.1.0

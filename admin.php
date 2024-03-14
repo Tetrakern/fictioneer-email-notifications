@@ -734,7 +734,7 @@ function fcnen_settings_page() {
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-confirmation" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
               <div class="fcnen-input-wrap">
-                <input type="text" name="fcnen_template_subject_confirmation" id="fcnen-template-subject-confirmation" placeholder="<?php echo $subject_confirmation; ?>" value="<?php echo $subject_confirmation; ?>">
+                <input type="text" name="fcnen_template_subject_confirmation" id="fcnen-template-subject-confirmation" placeholder="<?php echo FCNEN_DEFAULTS['subject_confirmation']; ?>" value="<?php echo $subject_confirmation; ?>">
               </div>
             </div>
             <textarea name="fcnen_template_layout_confirmation" id="fcnen-template-layout-confirmation" class="fcnen-codemirror"><?php echo esc_textarea( $layout_confirmation ); ?></textarea>
@@ -761,7 +761,7 @@ function fcnen_settings_page() {
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-code" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
               <div class="fcnen-input-wrap">
-                <input type="text" name="fcnen_template_subject_code" id="fcnen-template-subject-code" placeholder="<?php echo $subject_code; ?>" value="<?php echo $subject_code; ?>">
+                <input type="text" name="fcnen_template_subject_code" id="fcnen-template-subject-code" placeholder="<?php echo FCNEN_DEFAULTS['subject_code']; ?>" value="<?php echo $subject_code; ?>">
               </div>
             </div>
             <textarea name="fcnen_template_layout_code" id="fcnen-template-layout-code" class="fcnen-codemirror"><?php echo esc_textarea( $layout_code ); ?></textarea>
@@ -788,7 +788,7 @@ function fcnen_settings_page() {
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-edit" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
               <div class="fcnen-input-wrap">
-                <input type="text" name="fcnen_template_subject_edit" id="fcnen-template-subject-edit" placeholder="<?php echo $subject_edit; ?>" value="<?php echo $subject_edit; ?>">
+                <input type="text" name="fcnen_template_subject_edit" id="fcnen-template-subject-edit" placeholder="<?php echo FCNEN_DEFAULTS['subject_edit']; ?>" value="<?php echo $subject_edit; ?>">
               </div>
             </div>
             <textarea name="fcnen_template_layout_edit" id="fcnen-template-layout-edit" class="fcnen-codemirror"><?php echo esc_textarea( $layout_edit ); ?></textarea>
@@ -815,7 +815,7 @@ function fcnen_settings_page() {
             <div class="fcnen-left-right-wrap">
               <label for="fcnen-template-subject-notification" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
               <div class="fcnen-input-wrap">
-                <input type="text" name="fcnen_template_subject_notification" id="fcnen-template-subject-notification" placeholder="<?php echo $subject_notification; ?>" value="<?php echo $subject_notification; ?>">
+                <input type="text" name="fcnen_template_subject_notification" id="fcnen-template-subject-notification" placeholder="<?php echo FCNEN_DEFAULTS['subject_notification']; ?>" value="<?php echo $subject_notification; ?>">
               </div>
             </div>
             <textarea name="fcnen_template_layout_notification" id="fcnen-template-layout-notification" class="fcnen-codemirror"><?php echo esc_textarea( $layout_notification ); ?></textarea>
