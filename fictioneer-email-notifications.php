@@ -635,6 +635,16 @@ function fcnen_update_subscriber( $email, $args = [] ) {
     ['%s']
   );
 
+  // Edit notification email
+  if ( $result ) {
+    fcnen_send_edit_email(
+      array(
+        'email' => $email,
+        'code' => $subscriber->code
+      )
+    );
+  }
+
   // Return result
   return ( $result !== false );
 }
@@ -823,7 +833,15 @@ function fcnen_send_transactional_email( $args, $subject, $body ) {
     '{{unsubscribe_link}}' => esc_url( fcnen_get_unsubscribe_link( $subscriber_email, $subscriber_code ) ),
     '{{edit_link}}' => esc_url( fcnen_get_edit_link( $subscriber_email, $subscriber_code ) ),
     '{{email}}' => $subscriber_email,
-    '{{code}}' => $subscriber_code
+    '{{code}}' => $subscriber_code,
+    '{{scope_everything}}' => ( $args['scope_everything'] ?? 0 ) ? 1 : 0,
+    '{{scope_post_types}}' => implode( ', ', $args['scope_post_types'] ?? [] ),
+    '{{scope_categories}}' => implode( ', ', $args['scope_categories'] ?? [] ),
+    '{{scope_tags}}' => implode( ', ', $args['scope_tags'] ?? [] ),
+    '{{scope_genres}}' => implode( ', ', $args['scope_genres'] ?? [] ),
+    '{{scope_fandoms}}' => implode( ', ', $args['scope_fandoms'] ?? [] ),
+    '{{scope_characters}}' => implode( ', ', $args['scope_characters'] ?? [] ),
+    '{{scope_warnings}}' => implode( ', ', $args['scope_warnings'] ?? [] )
   );
 
   // Headers
@@ -861,18 +879,23 @@ function fcnen_send_confirmation_email( $args ) {
   $body = FCNEN_DEFAULTS['layout_confirmation'];
 
   // Customized?
-  $body = get_option( 'fcnen_template_layout_confirmation' ) ?: $body;
+  $custom_body = get_option( 'fcnen_template_layout_confirmation' ) ?: $body;
+
+  // Check for {{code}} presence
+  if ( strpos( $custom_body, '{{code}}' ) !== false ) {
+    $body = $custom_body;
+  }
 
   // Send
   fcnen_send_transactional_email( $args, $subject, $body );
 }
 
 /**
- * Send the edit code to a subscriber
+ * Sends the edit code to a subscriber
  *
  * @since 0.1.0
  *
- * @param array  $args    {
+ * @param array $args {
  *   Array of arguments. Passed on to next function.
  *
  *   @type int $id  ID of the subscriber.
@@ -891,6 +914,45 @@ function fcnen_send_code_email( $args ) {
   if ( strpos( $custom_body, '{{code}}' ) !== false ) {
     $body = $custom_body;
   }
+
+  // Send
+  fcnen_send_transactional_email( $args, $subject, $body );
+}
+
+/**
+ * Sends the current subscription preferences to a subscriber
+ *
+ * @since 0.1.0
+ *
+ * @param array $args {
+ *   Array of arguments. Passed on to next function.
+ *
+ *   @type string $email  Email address of the subscriber.
+ *   @type string $code   Code of the subscriber.
+ * }
+ */
+
+function fcnen_send_edit_email( $args ) {
+  // Setup
+  $subject = fcnen_get_edit_email_subject();
+  $body = FCNEN_DEFAULTS['layout_edit'];
+  $updated_subscriber = fcnen_get_subscriber_by_email( $args['email'] );
+
+  // Subscriber valid??
+  if ( ! $updated_subscriber || $updated_subscriber->trashed ) {
+    return;
+  }
+
+  // Customized?
+  $custom_body = get_option( 'fcnen_template_layout_edit' ) ?: $body;
+
+  // Check for {{code}} presence
+  if ( strpos( $custom_body, '{{code}}' ) !== false ) {
+    $body = $custom_body;
+  }
+
+  // Prepare scopes
+  $args = array_merge( $args, fcnen_get_subscriber_scopes( $updated_subscriber ) );
 
   // Send
   fcnen_send_transactional_email( $args, $subject, $body );

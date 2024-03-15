@@ -430,6 +430,20 @@ function fcnen_get_subscriber_by_email_and_code( $email, $code ) {
   return $subscriber;
 }
 
+/**
+ * Get subscriber's scopes for the replacement tokens
+ *
+ * @since 0.1.0
+ *
+ * @param object $subscriber  The subscriber from the database.
+ *
+ * @return array The subscriber's scopes.
+ */
+
+function fcnen_get_subscriber_scopes( $subscriber ) {
+  return [];
+}
+
 // =======================================================================================
 // SANITIZATION
 // =======================================================================================
