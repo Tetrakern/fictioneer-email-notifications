@@ -58,15 +58,14 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     $this->uri = remove_query_arg( ['action', 'id', 'subscribers', 'fcnen-nonce'], $_SERVER['REQUEST_URI'] );
 
     // Initialize terms
-    $categories = get_categories( array( 'hide_empty' => 0 ) );
-    $tags = get_tags( array( 'hide_empty' => 0 ) ) ?: [];
-    $genres = get_terms( array( 'taxonomy' => 'fcn_genre', 'hide_empty' => 0 ) ) ?: [];
-    $fandoms = get_terms( array( 'taxonomy' => 'fcn_fandom', 'hide_empty' => 0 ) ) ?: [];
-    $characters = get_terms( array( 'taxonomy' => 'fcn_character', 'hide_empty' => 0 ) ) ?: [];
-    $warnings = get_terms( array( 'taxonomy' => 'fcn_content_warning', 'hide_empty' => 0 ) ) ?: [];
-    $merged_terms = array_merge( $categories, $tags, $genres, $fandoms, $characters, $warnings );
+    $terms = get_terms(
+      array(
+        'taxonomy' => ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],
+        'hide_empty' => 0
+      )
+    ) ?: [];
 
-    foreach ( $merged_terms as $term ) {
+    foreach ( $terms as $term ) {
       $this->term_names[ $term->term_id ] = $term->name;
     }
 
