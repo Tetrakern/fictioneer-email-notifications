@@ -431,7 +431,7 @@ function fcnen_get_subscriber_by_email_and_code( $email, $code ) {
 }
 
 /**
- * Get subscriber's scopes for the replacement tokens
+ * Get subscriber's scopes as token replacement values
  *
  * @since 0.1.0
  *
@@ -441,7 +441,101 @@ function fcnen_get_subscriber_by_email_and_code( $email, $code ) {
  */
 
 function fcnen_get_subscriber_scopes( $subscriber ) {
-  return [];
+  // Setup
+  $post_ids = maybe_unserialize( $subscriber->post_ids ?? 'a:0:{}' );
+  $post_types = maybe_unserialize( $subscriber->post_types ?? 'a:0:{}' );
+  $categories = maybe_unserialize( $subscriber->categories ?? 'a:0:{}' );
+  $tags = maybe_unserialize( $subscriber->tags ?? 'a:0:{}' );
+  $taxonomies = maybe_unserialize( $subscriber->taxonomies ?? 'a:0:{}' );
+
+  // Everything
+  $scope_everything = $subscriber->everything ? _x( 'Everything', 'Subscription scope.', 'fcnen' ) : '';
+
+  // Stories
+  $story_names = [];
+  $stories = get_posts(
+    array(
+      'post_type'=> 'fcn_story',
+      'post_status'=> ['publish', 'private', 'future'],
+      'posts_per_page' => -1,
+      'post__in' => $post_ids,
+      'orderby' => 'post__in',
+      'update_post_meta_cache' => false, // Improve performance
+      'update_post_term_cache' => true, // Improve performance
+      'no_found_rows' => true // Improve performance
+    )
+  );
+
+  foreach ( $stories as $story ) {
+    $story_names[] = fictioneer_get_safe_title( $story->ID, 'fcnen-edit-email' );
+  }
+
+  // Post types
+  $post_type_names = array(
+    'post' => _x( 'Blogs', 'Subscription scope.', 'fcnen' ),
+    'fcn_story' => _x( 'Stories', 'Subscription scope.', 'fcnen' ),
+    'fcn_chapter' => _x( 'Chapters', 'Subscription scope.', 'fcnen' ),
+  );
+  $scope_post_types = [];
+
+  foreach ( $post_type_names as $type => $name ) {
+    if ( in_array( $type, $post_types ) ) {
+      $scope_post_types[] = $name;
+    }
+  }
+
+  // Terms
+  $all_term_ids = array_merge( $categories, $tags, $taxonomies );
+  $category_names = [];
+  $tag_names = [];
+  $genre_names = [];
+  $fandom_names = [];
+  $character_names = [];
+  $warning_names = [];
+
+  $terms = get_terms(
+    array(
+      'taxonomy' => ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],
+      'include' => $all_term_ids,
+      'hide_empty' => false
+    )
+  );
+
+  foreach ( $terms as $term ) {
+    switch ( $term->taxonomy ) {
+      case 'category':
+        $category_names[] = $term->name;
+        break;
+      case 'post_tag':
+        $tag_names[] = $term->name;
+        break;
+      case 'fcn_genre':
+        $genre_names[] = $term->name;
+        break;
+      case 'fcn_fandom':
+        $fandom_names[] = $term->name;
+        break;
+      case 'fcn_character':
+        $character_names[] = $term->name;
+        break;
+      case 'fcn_content_warning':
+        $warning_names[] = $term->name;
+        break;
+    }
+  }
+
+  // Return replacement values
+  return array(
+    'scope_everything' => $scope_everything,
+    'scope_post_types' => $scope_post_types,
+    'scope_stories' => $story_names,
+    'scope_categories' => $category_names,
+    'scope_tags' => $tag_names,
+    'scope_genres' => $genre_names,
+    'scope_fandoms' => $fandom_names,
+    'scope_characters' => $character_names,
+    'scope_warnings' => $warning_names
+  );
 }
 
 // =======================================================================================

@@ -834,7 +834,8 @@ function fcnen_send_transactional_email( $args, $subject, $body ) {
     '{{edit_link}}' => esc_url( fcnen_get_edit_link( $subscriber_email, $subscriber_code ) ),
     '{{email}}' => $subscriber_email,
     '{{code}}' => $subscriber_code,
-    '{{scope_everything}}' => ( $args['scope_everything'] ?? 0 ) ? 1 : 0,
+    '{{scope_everything}}' => $args['scope_everything'] ?? 0,
+    '{{scope_stories}}' => implode( ', ', $args['scope_stories'] ?? [] ),
     '{{scope_post_types}}' => implode( ', ', $args['scope_post_types'] ?? [] ),
     '{{scope_categories}}' => implode( ', ', $args['scope_categories'] ?? [] ),
     '{{scope_tags}}' => implode( ', ', $args['scope_tags'] ?? [] ),
@@ -944,12 +945,7 @@ function fcnen_send_edit_email( $args ) {
   }
 
   // Customized?
-  $custom_body = get_option( 'fcnen_template_layout_edit' ) ?: $body;
-
-  // Check for {{code}} presence
-  if ( strpos( $custom_body, '{{code}}' ) !== false ) {
-    $body = $custom_body;
-  }
+  $body = get_option( 'fcnen_template_layout_edit' ) ?: $body;
 
   // Prepare scopes
   $args = array_merge( $args, fcnen_get_subscriber_scopes( $updated_subscriber ) );
