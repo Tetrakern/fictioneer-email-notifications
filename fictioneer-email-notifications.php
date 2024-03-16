@@ -948,20 +948,11 @@ function fcnen_send_transactional_email( $args, $subject, $body ) {
  */
 
 function fcnen_send_confirmation_email( $args ) {
-  // Setup
-  $subject = fcnen_get_confirmation_email_subject();
-  $body = FCNEN_DEFAULTS['layout_confirmation'];
-
-  // Customized?
-  $custom_body = get_option( 'fcnen_template_layout_confirmation' ) ?: $body;
-
-  // Check for {{code}} presence
-  if ( strpos( $custom_body, '{{code}}' ) !== false ) {
-    $body = $custom_body;
-  }
-
-  // Send
-  fcnen_send_transactional_email( $args, $subject, $body );
+  fcnen_send_transactional_email(
+    $args,
+    fcnen_get_confirmation_email_subject(),
+    fcnen_get_confirmation_email_body()
+  );
 }
 
 /**

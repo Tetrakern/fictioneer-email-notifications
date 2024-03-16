@@ -195,6 +195,27 @@ function fcnen_get_confirmation_email_subject() {
 }
 
 /**
+ * Get the HTML body for the confirmation email
+ *
+ * @since 0.1.0
+ *
+ * @return string The email HTML.
+ */
+
+function fcnen_get_confirmation_email_body() {
+  // Custom or default
+  $body = get_option( 'fcnen_template_layout_confirmation' ) ?: FCNEN_DEFAULTS['layout_confirmation'];
+
+  // Check for {{code}} presence
+  if ( strpos( $body, '{{code}}' ) !== false ) {
+    $body = FCNEN_DEFAULTS['layout_confirmation'];
+  }
+
+  // Return HTML
+  return $body;
+}
+
+/**
  * Get the subject for the code email
  *
  * @since 0.1.0
