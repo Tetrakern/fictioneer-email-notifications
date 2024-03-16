@@ -998,9 +998,7 @@ function fcnen_send_code_email( $args ) {
  */
 
 function fcnen_send_edit_email( $args ) {
-  // Setup
-  $subject = fcnen_get_edit_email_subject();
-  $body = FCNEN_DEFAULTS['layout_edit'];
+  // Subscriber
   $updated_subscriber = fcnen_get_subscriber_by_email( $args['email'] );
 
   // Subscriber valid??
@@ -1008,8 +1006,9 @@ function fcnen_send_edit_email( $args ) {
     return;
   }
 
-  // Customized?
-  $body = get_option( 'fcnen_template_layout_edit' ) ?: $body;
+  // Setup
+  $subject = fcnen_get_edit_email_subject();
+  $body = fcnen_get_edit_email_body();
 
   // Prepare scopes
   $args = array_merge( $args, fcnen_get_subscriber_scopes( $updated_subscriber ) );

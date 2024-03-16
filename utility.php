@@ -256,6 +256,19 @@ function fcnen_get_edit_email_subject() {
 }
 
 /**
+ * Get the HTML body for the edit email
+ *
+ * @since 0.1.0
+ *
+ * @return string The email HTML.
+ */
+
+function fcnen_get_edit_email_body() {
+  // Return custom or default
+  return get_option( 'fcnen_template_layout_edit' ) ?: FCNEN_DEFAULTS['layout_edit'];
+}
+
+/**
  * Get the subject for the edit email
  *
  * @since 0.1.0
