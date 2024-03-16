@@ -606,6 +606,7 @@ function fcnen_settings_page() {
 
   // Preview replacements
   $preview_replacements = array(
+    '{{updates}}' => $loop_part_post . "\n" . $loop_part_story . "\n" . $loop_part_chapter, // Do this first!
     '{{site_name}}' => get_bloginfo( 'name' ),
     '{{author}}' => _x( 'Author', 'Preview replacement string.', 'fcnen' ),
     '{{title}}' => _x( 'Preview Title', 'Preview replacement string.', 'fcnen' ),

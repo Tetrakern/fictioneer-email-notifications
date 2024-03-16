@@ -106,13 +106,20 @@ EOT,
 EOT,
     'layout_notification' =>
 <<<EOT
+<p>Hello,<br><br>There are new updates on <a href="{{site_link}}" target="_blank">{{site_name}}</a> matching your preferences. You are receiving this email because you subscribed to content updates. You can <a href="{{edit_link}}" target="_blank">edit</a> your subscription at any time. If you no longer want to receive updates, you can <a href="{{unsubscribe_link}}" target="_blank">unsubscribe</a>.</p>
+
+<div>{{updates}}</div>
+
+<hr style="border: 0; border-top: 1px solid #ccc;">
+
+<div style="font-size: 75%;">Your edit code is <strong>{{code}}</strong>.</div>
 EOT,
     'loop_part_post' =>
 <<<EOT
 <fieldset style="padding: 10px; margin: 20px 0; border: 1px solid #ccc;">
   <div>
     <div style="font-size: 14px;">
-      <strong>{{type}}: <a href="{{link}}" style="text-decoration: none;">{{title}}</a></strong>
+      <strong>Blog: <a href="{{link}}" style="text-decoration: none;">{{title}}</a></strong>
     </div>
     <div style="font-size: 11px; margin-top: 5px;">by {{author}}</div>
   </div>
@@ -124,7 +131,7 @@ EOT,
 <fieldset style="padding: 10px; margin: 20px 0; border: 1px solid #ccc;">
   <div>
     <div style="font-size: 14px;">
-      <strong>{{type}}: <a href="{{link}}" style="text-decoration: none;">{{title}}</a></strong>
+      <strong>Story: <a href="{{link}}" style="text-decoration: none;">{{title}}</a></strong>
     </div>
     <div style="font-size: 11px; margin-top: 5px;">by {{author}}</div>
   </div>
@@ -136,7 +143,7 @@ EOT,
 <fieldset style="padding: 10px; margin: 20px 0; border: 1px solid #ccc;">
   <div>
     <div style="font-size: 14px;">
-      <strong>{{type}}: <a href="{{link}}" style="text-decoration: none;">{{title}}</a></strong>
+      <strong>Chapter: <a href="{{link}}" style="text-decoration: none;">{{title}}</a></strong>
     </div>
     <div style="font-size: 11px; margin-top: 5px;">by {{author}} in <a href="{{story_link}}" style="text-decoration: none;">{{story_title}}</a></div>
   </div>
