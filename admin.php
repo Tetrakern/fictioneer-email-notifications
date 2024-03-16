@@ -628,7 +628,8 @@ function fcnen_settings_page() {
     '{{activation_link}}' => '#',
     '{{unsubscribe_link}}' => '#',
     '{{edit_link}}' => '#',
-    '{{story_link}}' => '#'
+    '{{story_link}}' => '#',
+    '{{thumbnail}}' => "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23333'/></svg>"
   );
 
   // Start HTML ---> ?>
