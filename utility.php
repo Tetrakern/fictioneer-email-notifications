@@ -215,6 +215,27 @@ function fcnen_get_code_email_subject() {
 }
 
 /**
+ * Get the HTML body for the code email
+ *
+ * @since 0.1.0
+ *
+ * @return string The email HTML.
+ */
+
+function fcnen_get_code_email_body() {
+  // Custom or default
+  $body = get_option( 'fcnen_template_layout_code' ) ?: FCNEN_DEFAULTS['layout_code'];
+
+  // Check for {{code}} presence
+  if ( strpos( $body, '{{code}}' ) !== false ) {
+    $body = FCNEN_DEFAULTS['layout_code'];
+  }
+
+  // Return HTML
+  return $body;
+}
+
+/**
  * Get the subject for the edit email
  *
  * @since 0.1.0
