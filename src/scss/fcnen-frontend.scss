@@ -116,10 +116,11 @@
     &-li {
       cursor: pointer;
       user-select: none;
+      position: relative;
       font-size: 12px;
       line-height: 1.3;
       overflow-wrap: break-word;
-      padding: 4px;
+      padding: 4px 18px 4px 4px;
 
       &:hover {
         background: var(--fcnen-li-background-hover, rgb(255 255 255 / 10%));
@@ -133,6 +134,19 @@
         &:hover {
           opacity: .7;
         }
+
+        .fcnen-icon {
+          display: none;
+        }
+      }
+
+      .fcnen-icon {
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        right: 4px;
+        color: var(--fg-900);
+        transform: translateY(-50%);
       }
     }
   }

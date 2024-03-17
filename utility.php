@@ -691,7 +691,7 @@ function fcnen_get_source_node( $args = [] ) {
   $label = $args['label'] ?? '';
   $title = $args['title'] ?? '';
 
-  return "<li class='fcnen-dialog-modal__advanced-li _taxonomy' data-click-action='fcnen-add' data-name='{$name}[]' data-type='{$type}' data-compare='{$type}-{$id}' data-id='{$id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$title}</span></li>";
+  return "<li class='fcnen-dialog-modal__advanced-li _taxonomy' data-click-action='fcnen-add' data-name='{$name}[]' data-type='{$type}' data-compare='{$type}-{$id}' data-id='{$id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$title}</span><i class='fa-solid fa-square-plus fcnen-icon'></i></li>";
 }
 
 /**
@@ -711,7 +711,7 @@ function fcnen_get_selection_node( $args = [] ) {
   $label = $args['label'] ?? '';
   $title = $args['title'] ?? '';
 
-  return "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='{$type}' data-compare='{$type}-{$id}' data-id='{$id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$title}</span><input type='hidden' name='{$name}[]' value='{$id}'></li>";
+  return "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='{$type}' data-compare='{$type}-{$id}' data-id='{$id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$title}</span><i class='fa-solid fa-square-minus fcnen-icon'></i><input type='hidden' name='{$name}[]' value='{$id}'></li>";
 }
 
 // =======================================================================================
