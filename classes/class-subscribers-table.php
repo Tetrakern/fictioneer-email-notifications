@@ -556,7 +556,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     // Build views HTML
     $views['all'] = sprintf(
       '<li class="all"><a href="%s" class="%s">%s</a></li>',
-      add_query_arg( ['view' => 'all'], $this->uri ),
+      add_query_arg( array( 'view' => 'all' ), $this->uri ),
       $current === 'all' ? 'current' : '',
       sprintf( __( 'All <span class="count">(%s)</span>', 'fcnen' ), $this->all_count )
     );
@@ -564,7 +564,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     if ( $this->confirmed_count > 0 ) {
       $views['confirmed'] = sprintf(
         '<li class="confirmed"><a href="%s" class="%s">%s</a></li>',
-        add_query_arg( ['view' => 'confirmed'], $this->uri ),
+        add_query_arg( array( 'view' => 'confirmed' ), $this->uri ),
         $current === 'confirmed' ? 'current' : '',
         sprintf( __( 'Confirmed <span class="count">(%s)</span>', 'fcnen' ), $this->confirmed_count )
       );
@@ -573,7 +573,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     if ( $this->pending_count > 0 ) {
       $views['pending'] = sprintf(
         '<li class="pending"><a href="%s" class="%s">%s</a></li>',
-        add_query_arg( ['view' => 'pending'], $this->uri ),
+        add_query_arg( array( 'view' => 'pending' ), $this->uri ),
         $current === 'pending' ? 'current' : '',
         sprintf( __( 'Pending <span class="count">(%s)</span>', 'fcnen' ), $this->pending_count )
       );
@@ -582,7 +582,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     if ( $this->trashed_count > 0 ) {
       $views['trash'] = sprintf(
         '<li class="trash"><a href="%s" class="%s">%s</a></li>',
-        add_query_arg( ['view' => 'trash'], $this->uri ),
+        add_query_arg( array( 'view' => 'trash' ), $this->uri ),
         $current === 'trash' ? 'current' : '',
         sprintf( __( 'Trash <span class="count">(%s)</span>', 'fcnen' ), $this->trashed_count )
       );
@@ -664,6 +664,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       if ( ! empty( $id ) && $_GET['action'] === 'confirm_subscriber' ) {
         if ( $wpdb->update( $table_name, array( 'confirmed' => 1 ), array( 'id' => $id ), ['%d'], ['%d'] ) ) {
           $query_args['fcnen-notice'] = 'confirm-subscriber-success';
+          fcnen_log( "Confirmed subscriber #{$id}." );
         } else {
           $query_args['fcnen-notice'] = 'confirm-subscriber-failure';
         }
@@ -675,6 +676,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       if ( ! empty( $id ) && $_GET['action'] === 'unconfirm_subscriber' ) {
         if ( $wpdb->update( $table_name, array( 'confirmed' => 0 ), array( 'id' => $id ), ['%d'], ['%d'] ) ) {
           $query_args['fcnen-notice'] = 'unconfirm-subscriber-success';
+          fcnen_log( "Unconfirmed subscriber #{$id}." );
         } else {
           $query_args['fcnen-notice'] = 'unconfirm-subscriber-failure';
         }
@@ -687,6 +689,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
         fcnen_send_confirmation_email( array( 'id' => $id ) );
         $query_args['fcnen-notice'] = 'confirmation-email-resent';
         $query_args['fcnen-message'] = $id;
+        fcnen_log( "Resent confirmation email to subscriber #{$id}." );
       }
 
       // Send code
@@ -694,12 +697,14 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
         fcnen_send_code_email( array( 'id' => $id ) );
         $query_args['fcnen-notice'] = 'code-email-sent';
         $query_args['fcnen-message'] = $id;
+        fcnen_log( "Sent code email to subscriber #{$id}." );
       }
 
       // Trash subscriber
       if ( ! empty( $id ) && $_GET['action'] === 'trash_subscriber' ) {
         if ( $wpdb->update( $table_name, array( 'trashed' => 1 ), array( 'id' => $id ), ['%d'], ['%d'] ) ) {
           $query_args['fcnen-notice'] = 'trash-subscriber-success';
+          fcnen_log( "Moved subscriber #{$id} to trash." );
         } else {
           $query_args['fcnen-notice'] = 'trash-subscriber-failure';
         }
@@ -711,6 +716,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       if ( ! empty( $id ) && $_GET['action'] === 'restore_subscriber' ) {
         if ( $wpdb->update( $table_name, array( 'trashed' => 0 ), array( 'id' => $id ), ['%d'], ['%d'] ) ) {
           $query_args['fcnen-notice'] = 'restore-subscriber-success';
+          fcnen_log( "Restored subscriber #{$id} from trash." );
         } else {
           $query_args['fcnen-notice'] = 'restore-subscriber-failure';
         }
@@ -722,6 +728,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       if ( ! empty( $id ) && $_GET['action'] === 'delete_subscriber' ) {
         if ( $wpdb->delete( $table_name, array( 'id' => $id ), ['%d'] ) ) {
           $query_args['fcnen-notice'] = 'delete-subscriber-success';
+          fcnen_log( "Deleted subscriber #{$id} permanently." );
         } else {
           $query_args['fcnen-notice'] = 'delete-subscriber-failure';
         }
@@ -738,8 +745,9 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     if ( isset( $_POST['action'] ) && empty( $_POST['s'] ?? 0 ) ) {
       $ids = array_map( 'absint', $_POST['subscribers'] ?? [] );
       $collection = implode( ',', $ids );
+      $log_ids = implode( ', ', array_map( function( $id ) { return "#{$id}"; }, $ids ) );
 
-      // Confirm all subscribers
+      // Bulk confirm subscribers
       if ( ! empty( $collection ) && $_POST['action'] === 'confirm_all_subscribers' ) {
         $query = "UPDATE $table_name SET confirmed = 1 WHERE id IN ($collection) AND trashed = 0";
         $result = $wpdb->query( $query );
@@ -747,12 +755,13 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
         if ( $result !== false ) {
           $query_args['fcnen-notice'] = 'bulk-confirm-subscribers-success';
           $query_args['fcnen-message'] = $result;
+          fcnen_log( "Confirmed set of subscribers: $log_ids." );
         } else {
           $query_args['fcnen-notice'] = 'bulk-confirm-subscribers-failure';
         }
       }
 
-      // Unconfirm all subscribers
+      // Bulk unconfirm subscribers
       if ( ! empty( $collection ) && $_POST['action'] === 'unconfirm_all_subscribers' ) {
         $query = "UPDATE $table_name SET confirmed = 0 WHERE id IN ($collection) AND trashed = 0";
         $result = $wpdb->query( $query );
@@ -760,12 +769,13 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
         if ( $result !== false ) {
           $query_args['fcnen-notice'] = 'bulk-unconfirm-subscribers-success';
           $query_args['fcnen-message'] = $result;
+          fcnen_log( "Unconfirmed set of subscribers: $log_ids." );
         } else {
           $query_args['fcnen-notice'] = 'bulk-unconfirm-subscribers-failure';
         }
       }
 
-      // Trash all subscribers
+      // Bulk trash subscribers
       if ( ! empty( $collection ) && $_POST['action'] === 'trash_all_subscribers' ) {
         $query = "UPDATE $table_name SET trashed = 1 WHERE id IN ($collection)";
         $result = $wpdb->query( $query );
@@ -773,12 +783,13 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
         if ( $result !== false ) {
           $query_args['fcnen-notice'] = 'bulk-trash-subscribers-success';
           $query_args['fcnen-message'] = $result;
+          fcnen_log( "Moved set of subscribers to trash: $log_ids." );
         } else {
           $query_args['fcnen-notice'] = 'bulk-trash-subscribers-failure';
         }
       }
 
-      // Restore all subscribers
+      // Bulk restore subscribers
       if ( ! empty( $collection ) && $_POST['action'] === 'restore_all_subscribers' ) {
         $query = "UPDATE $table_name SET trashed = 0 WHERE id IN ($collection)";
         $result = $wpdb->query( $query );
@@ -786,12 +797,13 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
         if ( $result !== false ) {
           $query_args['fcnen-notice'] = 'bulk-restore-subscribers-success';
           $query_args['fcnen-message'] = $result;
+          fcnen_log( "Restored set of subscribers from trash: $log_ids." );
         } else {
           $query_args['fcnen-notice'] = 'bulk-restore-subscribers-failure';
         }
       }
 
-      // Delete all subscribers
+      // Bulk delete subscribers
       if ( ! empty( $collection ) && $_POST['action'] === 'delete_all_subscribers' ) {
         $query = "DELETE FROM $table_name WHERE id IN ($collection) AND trashed = 1";
         $result = $wpdb->query( $query );
@@ -799,6 +811,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
         if ( $result !== false ) {
           $query_args['fcnen-notice'] = 'bulk-delete-subscribers-success';
           $query_args['fcnen-message'] = $result;
+          fcnen_log( "Deleted set of subscribers permanently: $log_ids." );
         } else {
           $query_args['fcnen-notice'] = 'bulk-delete-subscribers-failure';
         }

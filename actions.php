@@ -57,12 +57,15 @@ function fcnen_submit_subscriber() {
   // Failure?
   if ( empty( $result ) ) {
     wp_safe_redirect(
-    add_query_arg(
-      array( 'fcnen-notice' => 'subscriber-adding-failure', 'fcnen-message' => $email ),
-      $_POST['_wp_http_referer']
-    )
-  );
+      add_query_arg(
+        array( 'fcnen-notice' => 'subscriber-adding-failure', 'fcnen-message' => $email ),
+        $_POST['_wp_http_referer']
+      )
+    );
   }
+
+  // Log
+  fcnen_log( "Submitted {$email} as new subscriber with ID #{$result}." );
 
   // Success!
   wp_safe_redirect(
@@ -100,6 +103,9 @@ function fcnen_empty_trashed_subscribers() {
   // Setup
   $table_name = $wpdb->prefix . 'fcnen_subscribers';
   $wpdb->query( "DELETE FROM $table_name WHERE trashed = 1" );
+
+  // Log
+  fcnen_log( "Deleted all trashed subscribers permanently." );
 
   // Redirect
   wp_safe_redirect(
@@ -189,6 +195,9 @@ function fcnen_export_subscribers_csv() {
     header( 'Content-Disposition: attachment; filename="fcnen-subscribers_' . date( 'Y-m-d_H-i-s', time() ) . '.csv"' );
 
     echo $csv_content;
+
+    // Log
+    fcnen_log( "Started CSV export." );
 
     // Terminate
     exit();
@@ -329,6 +338,9 @@ function fcnen_import_subscribers_csv() {
       $count++;
     }
   }
+
+  // Log
+  fcnen_log( "Imported CSV." );
 
   // Success!
   wp_safe_redirect(

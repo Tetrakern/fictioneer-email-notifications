@@ -3,3 +3,4 @@
 *.codekit3
 .vscode
 /cache
+*.log

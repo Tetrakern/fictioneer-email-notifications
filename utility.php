@@ -713,3 +713,53 @@ function fcnen_get_selection_node( $args = [] ) {
 
   return "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='{$type}' data-compare='{$type}-{$id}' data-id='{$id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$title}</span><input type='hidden' name='{$name}[]' value='{$id}'></li>";
 }
+
+// =======================================================================================
+// LOG
+// =======================================================================================
+
+/**
+ * Logs a message to the plugin log file
+ *
+ * @param string $message  The message to log.
+ */
+
+function fcnen_log( $message ) {
+  // Setup
+  $current_user = wp_get_current_user();
+  $log_file = plugin_dir_path( __FILE__ ) . 'fcnen-log.log';
+  $log_limit = 5000;
+  $date = date( 'Y-m-d H:i:s' );
+
+  // Acting user?
+  $user_id = $current_user ? $current_user->ID : '0';
+  $username = $current_user ? $current_user->user_login : _x( 'Unknown', 'Log file.', 'fcnen' );
+
+  if ( empty( $current_user ) && wp_doing_cron() ) {
+    $username = _x( 'WP Cron', 'Log file.', 'fcnen' );
+  }
+
+  if ( empty( $current_user ) && wp_doing_ajax() ) {
+    $username = _x( 'AJAX', 'Log file.', 'fcnen' );
+  }
+
+  // Make sure the log file exists
+  if ( ! file_exists( $log_file ) ) {
+    file_put_contents( $log_file, '' );
+  }
+
+  // Read
+  $log_contents = file_get_contents( $log_file );
+
+  // Parse
+  $log_entries = explode( "\n", $log_contents );
+
+  // Limit (if too large)
+  $log_entries = array_slice( $log_entries, -( $log_limit + 1 ) );
+
+  // Add new entry
+  $log_entries[] = "[{$date}] [#{$user_id}|{$username}] $message";
+
+  // Concatenate and save
+  file_put_contents( $log_file, implode( "\n", $log_entries ) );
+}
