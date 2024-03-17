@@ -39,6 +39,7 @@ function fcnen_get_modal_content() {
   $default_filter = $allow_stories ? 'story' : 'taxonomies';
   $auth_email = $_POST['auth-email'] ?? 0;
   $auth_code = $_POST['auth-code'] ?? 0;
+  $story_id = $_POST['story'] ?? 0;
   $subscriber = fcnen_get_subscriber_by_email_and_code( $auth_email, $auth_code );
   $form_classes = ['fcnen-subscription-form'];
   $button_label = $subscriber ? __( 'Update', 'fcnen' ) : __( 'Subscribe', 'fcnen' );
@@ -53,6 +54,7 @@ function fcnen_get_modal_content() {
   $stories = null;
   $terms = null;
   $search_placeholder = __( 'Search for stories or taxonomies…', 'fcnen' );
+  $search_term = '';
 
   if ( ! $allow_stories ) {
     $search_placeholder = __( 'Search for taxonomies…', 'fcnen' );
@@ -106,6 +108,15 @@ function fcnen_get_modal_content() {
         'update_term_meta_cache' => false // Improve performance
       )
     );
+  }
+
+  // Get pre-set story
+  if ( $story_id ) {
+    $story = get_post( $story_id );
+
+    if ( $story && $story->post_type === 'fcn_story' ) {
+      $search_term = $story->post_title;
+    }
   }
 
   ob_start();
@@ -184,7 +195,7 @@ function fcnen_get_modal_content() {
 
         <div class="dialog-modal__row fcnen-dialog-modal__advanced">
           <div class="fcnen-dialog-modal__advanced-search">
-            <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__advanced-search-string" placeholder="<?php echo $search_placeholder; ?>" autocomplete="off" autocorrect="off" spellcheck="false" data-input-target="fcnen-search" data-default-filter="<?php echo $default_filter; ?>">
+            <input type="search" id="fcnen-modal-search" class="fcnen-dialog-modal__advanced-search-string" placeholder="<?php echo $search_placeholder; ?>" value="<?php echo $search_term; ?>" autocomplete="off" autocorrect="off" spellcheck="false" data-input-target="fcnen-search" data-default-filter="<?php echo $default_filter; ?>">
             <?php if ( $allow_stories && $allow_taxonomies ) : ?>
               <select class="fcnen-dialog-modal__advanced-search-select" id="fcnen-modal-search-select">
                 <option value="story" selected><?php _e( 'Stories', 'fcnen' ); ?></option>

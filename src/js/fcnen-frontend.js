@@ -9,8 +9,8 @@ const fcnen_url_params = Object.fromEntries(new URLSearchParams(window.location.
 if (fcnen_modal) {
   // Initial loading of modal content
   document.querySelectorAll('[data-click-action*="fcnen-load-modal-form"]').forEach(button => {
-    button.addEventListener('click', () => {
-      fcnen_getModalForm();
+    button.addEventListener('click', event => {
+      fcnen_getModalForm('new', { id: event.currentTarget.dataset.storyId });
     }, { once: true });
   });
 
@@ -86,6 +86,9 @@ function fcnen_addEventListeners() {
   if (fcnen_modal.querySelector('.fcnen-dialog-modal__advanced')) {
     fcnen_initializeSearch();
   }
+
+  // Search once if search field is not empty
+  fcnen_search();
 }
 
 /**
@@ -149,7 +152,7 @@ function fcnen_getPreparedFormData(form) {
  * @param {string} [context=] - The context in which the modal form is loaded. Default 'new'.
  */
 
-function fcnen_getModalForm(context = 'new') {
+function fcnen_getModalForm(context = 'new', args = {}) {
   // Already loaded?
   if (context == 'new' && document.getElementById('fcnen-subscription-form')) {
     return;
@@ -175,6 +178,10 @@ function fcnen_getModalForm(context = 'new') {
     'auth-email': email,
     'auth-code': code
   };
+
+  if (args.id) {
+    payload.story = args.id ?? 0;
+  }
 
   // Request
   fcn_ajaxPost(payload)
