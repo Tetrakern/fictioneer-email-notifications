@@ -207,7 +207,7 @@ function fcnen_get_confirmation_email_body() {
   $body = get_option( 'fcnen_template_layout_confirmation' ) ?: FCNEN_DEFAULTS['layout_confirmation'];
 
   // Check for {{code}} presence
-  if ( strpos( $body, '{{code}}' ) !== false ) {
+  if ( strpos( $body, '{{code}}' ) === false ) {
     $body = FCNEN_DEFAULTS['layout_confirmation'];
   }
 
@@ -248,7 +248,7 @@ function fcnen_get_code_email_body() {
   $body = get_option( 'fcnen_template_layout_code' ) ?: FCNEN_DEFAULTS['layout_code'];
 
   // Check for {{code}} presence
-  if ( strpos( $body, '{{code}}' ) !== false ) {
+  if ( strpos( $body, '{{code}}' ) === false ) {
     $body = FCNEN_DEFAULTS['layout_code'];
   }
 
