@@ -71,7 +71,7 @@ define(
 
 <p>Your edit code is <strong>{{code}}</strong>, which will also be included in any future emails. In case your code ever gets compromised, just delete your subscription and submit a new one.</p>
 
-<p>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24 hours. You can also immediately <a href="{{unsubscribe_link}}">delete it with this link</a>.</p>
+<p>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24 hours. You can also immediately <a href="{{unsubscribe_link}}" data-id="{{id}}">delete it with this link</a>.</p>
 EOT,
     'layout_code' =>
 <<<EOT
@@ -79,7 +79,7 @@ EOT,
 
 <p><strong>{{code}}</strong></p>
 
-<p>You can also directly edit your subscription with this <a href="{{edit_link}}" target="_blank">link</a>.</p>
+<p>You can also directly edit your subscription with this <a href="{{edit_link}}" target="_blank" data-id="{{id}}">link</a>.</p>
 EOT,
     'layout_edit' =>
 <<<EOT
@@ -102,11 +102,11 @@ EOT,
 
 </ul>
 
-<p>If that was not you, please <a href="{{unsubscribe_link}}" target="_blank">delete<a> and renew your subscription. Also make sure your email account is not compromised and never share your code.</p>
+<p>If that was not you, please <a href="{{unsubscribe_link}}" target="_blank" data-id="{{id}}">delete<a> and renew your subscription. Also make sure your email account is not compromised and never share your code.</p>
 EOT,
     'layout_notification' =>
 <<<EOT
-<p>Hello,<br><br>There are new updates on <a href="{{site_link}}" target="_blank">{{site_name}}</a> matching your preferences. You are receiving this email because you subscribed to content updates. You can <a href="{{edit_link}}" target="_blank">edit</a> your subscription at any time. If you no longer want to receive updates, you can <a href="{{unsubscribe_link}}" target="_blank">unsubscribe</a>.</p>
+<p>Hello,<br><br>There are new updates on <a href="{{site_link}}" target="_blank">{{site_name}}</a> matching your preferences. You are receiving this email because you subscribed to content updates. You can <a href="{{edit_link}}" target="_blank">edit</a> your subscription at any time. If you no longer want to receive updates, you can <a href="{{unsubscribe_link}}" target="_blank" data-id="{{id}}">unsubscribe</a>.</p>
 
 <div>{{updates}}</div>
 
@@ -595,7 +595,8 @@ function fcnen_add_subscriber( $email, $args = [] ) {
       fcnen_send_confirmation_email(
         array(
           'email' => $email,
-          'code' => $args['code']
+          'code' => $args['code'],
+          'id' => $subscriber_id
         )
       );
     }
@@ -720,7 +721,8 @@ function fcnen_update_subscriber( $email, $args = [] ) {
     fcnen_send_edit_email(
       array(
         'email' => $email,
-        'code' => $subscriber->code
+        'code' => $subscriber->code,
+        'id' => $subscriber->ID
       )
     );
   }
@@ -909,6 +911,7 @@ function fcnen_send_transactional_email( $args, $subject, $body ) {
 
   // Prepare replacements
   $extra_replacements = array(
+    '{{id}}' => $args['id'] ?? __( '####', 'fcnen' ),
     '{{activation_link}}' => esc_url( fcnen_get_activation_link( $subscriber_email, $subscriber_code ) ),
     '{{unsubscribe_link}}' => esc_url( fcnen_get_unsubscribe_link( $subscriber_email, $subscriber_code ) ),
     '{{edit_link}}' => esc_url( fcnen_get_edit_link( $subscriber_email, $subscriber_code ) ),

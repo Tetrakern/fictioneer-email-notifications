@@ -606,6 +606,7 @@ function fcnen_settings_page() {
 
   // Preview replacements
   $preview_replacements = array(
+    '{{id}}' => '####',
     '{{updates}}' => $loop_part_post . "\n" . $loop_part_story . "\n" . $loop_part_chapter, // Do this first!
     '{{site_name}}' => get_bloginfo( 'name' ),
     '{{author}}' => _x( 'Author', 'Preview replacement string.', 'fcnen' ),
@@ -777,6 +778,7 @@ function fcnen_settings_page() {
               <code>{{edit_link}}</code>
               <code>{{email}}</code>
               <code>{{code}}</code>
+              <code>{{id}}</code>
             </div>
             <details class="fcnen-default-code">
               <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
@@ -805,6 +807,7 @@ function fcnen_settings_page() {
               <code>{{edit_link}}</code>
               <code>{{email}}</code>
               <code>{{code}}</code>
+              <code>{{id}}</code>
             </div>
             <details class="fcnen-default-code">
               <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
@@ -833,6 +836,7 @@ function fcnen_settings_page() {
               <code>{{edit_link}}</code>
               <code>{{email}}</code>
               <code>{{code}}</code>
+              <code>{{id}}</code>
               <code>{{scope_everything}}</code>
               <code>{{scope_post_types}}</code>
               <code>{{scope_stories}}</code>
@@ -869,6 +873,7 @@ function fcnen_settings_page() {
               <code>{{edit_link}}</code>
               <code>{{email}}</code>
               <code>{{code}}</code>
+              <code>{{id}}</code>
               <code>{{updates}}</code>
             </div>
             <details class="fcnen-default-code">
