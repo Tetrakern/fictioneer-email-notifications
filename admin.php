@@ -728,7 +728,7 @@ function fcnen_settings_page() {
                 </div>
                 <div class="fcnen-action-wrap">
                   <?php submit_button( __( 'Save Changes', 'fcnes' ), 'primary', 'submit', false ); ?>
-                  <button type="subuttonbmit" id="fcnes-test-api" class="button"><?php _e( 'Test', 'fcnen' ); ?></button>
+                  <button type="button" id="fcnes-test-api" class="button"><?php _e( 'Test', 'fcnen' ); ?></button>
                 </div>
               </form>
             </div>
@@ -996,4 +996,49 @@ function fcnen_settings_page() {
     </div>
   </div>
   <?php // <--- End HTML
+}
+
+// =======================================================================================
+// ADMIN LOG PAGE
+// =======================================================================================
+
+/**
+ * Add log admin submenu page
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_add_log_menu_page() {
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) ) {
+    return;
+  }
+
+  // Add admin page
+  $fcnen_admin_page_logs = add_submenu_page(
+    'fcnen-notifications',
+    'Log',
+    'Log',
+    'manage_options',
+    'fcnen-log',
+    'fcnen_log_page'
+  );
+}
+add_action( 'admin_menu', 'fcnen_add_log_menu_page' );
+
+/**
+ * Callback for the log submenu page
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_log_page() {
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) ) {
+    wp_die( __( 'You do not have permission to access this page.', 'fcnen' ) );
+  }
+
+
+
+
 }
