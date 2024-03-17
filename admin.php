@@ -1038,7 +1038,29 @@ function fcnen_log_page() {
     wp_die( __( 'You do not have permission to access this page.', 'fcnen' ) );
   }
 
+  // Start HTML ---> ?>
+  <div id="fcnen-admin-page-log" class="wrap fcnen-settings _log">
+    <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Log', 'fcnen' ); ?></h1>
+    <hr class="wp-header-end">
 
+    <div class="fcnen-settings__content">
 
+      <div class="fcnen-box">
+        <div class="fcnen-box__header">
+          <h2><?php _e( 'Log', 'fcnen' ); ?></h2>
+        </div>
+        <div class="fcnen-box__body">
+          <div class="fcnen-box__row">
+            <p><?php _e( 'These are the most recent 500 log rows. Up to 5,000 rows are saved in the actual log file in the plugin directory. Note that due to privacy concerns, only administrative and system actions are logged and only with IDs instead of email addresses.', 'fcnen' ); ?></p>
+          </div>
+          <hr>
+          <div class="fcnen-box__row">
+            <?php echo fcnen_get_log(); ?>
+          </div>
+        </div>
+      </div>
 
+    </div>
+  </div>
+  <?php // <--- End HTML
 }

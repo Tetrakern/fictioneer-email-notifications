@@ -721,6 +721,8 @@ function fcnen_get_selection_node( $args = [] ) {
 /**
  * Logs a message to the plugin log file
  *
+ * @since 0.1.0
+ *
  * @param string $message  The message to log.
  */
 
@@ -762,4 +764,46 @@ function fcnen_log( $message ) {
 
   // Concatenate and save
   file_put_contents( $log_file, implode( "\n", $log_entries ) );
+}
+
+/**
+ * Retrieves the log entries and returns an HTML representation
+ *
+ * @since 0.1.0
+ *
+ * @return string The HTML representation of the log entries.
+ */
+
+function fcnen_get_log() {
+  // Setup
+  $log_file = plugin_dir_path( __FILE__ ) . 'fcnen-log.log';
+
+  // Check whether log file exists
+  if ( ! file_exists( $log_file ) ) {
+    return '<ul class="fcnen-log"><li>' . __( 'No log entries yet.', 'fcnen' ) . '</li></ul>';
+  }
+
+  // Read
+  $log_contents = file_get_contents( $log_file );
+
+  // Parse
+  $log_entries = explode( "\n", $log_contents );
+
+  // Limit display to 500
+  $log_entries = array_slice( $log_entries, -500 );
+
+  // Reverse
+  $log_entries = array_reverse( $log_entries );
+
+  // Build HTML
+  $output = '<ul class="fcnen-log">';
+
+  foreach ( $log_entries as $entry ) {
+    $output .= '<li class="fcnes-log__item">' . $entry . '</li>';
+  }
+
+  $output .= '</ul>';
+
+  // Return HTML
+  return $output;
 }
