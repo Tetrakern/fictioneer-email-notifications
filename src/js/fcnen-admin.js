@@ -83,7 +83,7 @@ function fcnen_templatePreview(html, height = null) {
   // Remove replacement tokens for preview
   const regex = /\{\{[#/^]?[^{}]+\}\}/g;
 
-  Object.entries(fcnes_preview_replacements).forEach(([token, replacement]) => {
+  Object.entries(fcnen_preview_replacements).forEach(([token, replacement]) => {
     html = html.replaceAll(token, replacement);
   });
 

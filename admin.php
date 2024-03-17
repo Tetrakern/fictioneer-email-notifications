@@ -113,7 +113,7 @@ add_action( 'admin_enqueue_scripts', 'fcnen_enqueue_codemirror' );
 function fcnen_admin_footer_text( $default ) {
   if ( strpos( $_GET['page'] ?? '', 'fcnen-' ) !== false ) {
     return sprintf(
-      _x( 'Fictioneer Email Notifications %s', 'Admin page footer text.', 'fcnes' ),
+      _x( 'Fictioneer Email Notifications %s', 'Admin page footer text.', 'fcnen' ),
       FCNEN_VERSION
     );
   }
@@ -162,7 +162,7 @@ function fcnen_admin_notices() {
     $class = 'notice-success';
   }
 
-  // FCNES notices
+  // FCNEN notices
   switch ( $_GET['fcnen-notice'] ?? 0 ) {
     case 'subscriber-already-exists':
       $notice = __( 'Error. Subscriber with that email address already exists.', 'fcnen' );
@@ -173,7 +173,7 @@ function fcnen_admin_notices() {
       $class = 'notice-success';
       break;
     case 'subscriber-adding-failure':
-      $notice = sprintf( __( 'Error. %s could not be added.', 'fcnes' ), $message ?: __( 'Subscriber', 'fcnen' ) );
+      $notice = sprintf( __( 'Error. %s could not be added.', 'fcnen' ), $message ?: __( 'Subscriber', 'fcnen' ) );
       $class = 'notice-error';
       break;
     case 'confirm-subscriber-success':
@@ -364,7 +364,7 @@ add_action( 'admin_menu', 'fcnen_add_notifications_menu_page' );
 function fcnen_notifications_page() {
   // Guard
   if ( ! current_user_can( 'administrator' ) ) {
-    wp_die( __( 'You do not have permission to access this page.', 'fcnes' ) );
+    wp_die( __( 'You do not have permission to access this page.', 'fcnen' ) );
   }
 
   // Start HTML ---> ?>
@@ -440,7 +440,7 @@ function fcnen_subscribers_page() {
 
   // Guard
   if ( ! current_user_can( 'manage_options' ) ) {
-    wp_die( __( 'You do not have permission to access this page.', 'fcnes' ) );
+    wp_die( __( 'You do not have permission to access this page.', 'fcnen' ) );
   }
 
   // Setup
@@ -577,7 +577,7 @@ add_action( 'admin_menu', 'fcnen_add_settings_menu_page' );
 function fcnen_settings_page() {
   // Guard
   if ( ! current_user_can( 'manage_options' ) ) {
-    wp_die( __( 'You do not have permission to access this page.', 'fcnes' ) );
+    wp_die( __( 'You do not have permission to access this page.', 'fcnen' ) );
   }
 
   // Setup
@@ -635,7 +635,7 @@ function fcnen_settings_page() {
   );
 
   // Start HTML ---> ?>
-  <script><?php echo 'var fcnes_preview_replacements = ' . json_encode( $preview_replacements ) . ';'; ?></script>
+  <script><?php echo 'var fcnen_preview_replacements = ' . json_encode( $preview_replacements ) . ';'; ?></script>
   <div id="fcnen-admin-page-subscribers" class="wrap fcnen-settings _settings">
     <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Settings', 'fcnen' ); ?></h1>
     <hr class="wp-header-end">
@@ -685,7 +685,7 @@ function fcnen_settings_page() {
                   </div>
                 </div>
                 <div class="fcnen-action-wrap">
-                  <?php submit_button( __( 'Save Changes', 'fcnes' ), 'primary', 'submit', false ); ?>
+                  <?php submit_button( __( 'Save Changes', 'fcnen' ), 'primary', 'submit', false ); ?>
                 </div>
               </form>
             </div>
@@ -727,8 +727,8 @@ function fcnen_settings_page() {
                   </div>
                 </div>
                 <div class="fcnen-action-wrap">
-                  <?php submit_button( __( 'Save Changes', 'fcnes' ), 'primary', 'submit', false ); ?>
-                  <button type="button" id="fcnes-test-api" class="button"><?php _e( 'Test', 'fcnen' ); ?></button>
+                  <?php submit_button( __( 'Save Changes', 'fcnen' ), 'primary', 'submit', false ); ?>
+                  <button type="button" id="fcnen-test-api" class="button"><?php _e( 'Test', 'fcnen' ); ?></button>
                 </div>
               </form>
             </div>
@@ -785,7 +785,7 @@ function fcnen_settings_page() {
               <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_confirmation'] ?? '' ); ?></code></pre>
             </details>
             <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnes' ), 'primary', 'submit', false ); ?>
+              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
@@ -814,7 +814,7 @@ function fcnen_settings_page() {
               <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_code'] ?? '' ); ?></code></pre>
             </details>
             <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnes' ), 'primary', 'submit', false ); ?>
+              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
@@ -851,7 +851,7 @@ function fcnen_settings_page() {
               <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_edit'] ?? '' ); ?></code></pre>
             </details>
             <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnes' ), 'primary', 'submit', false ); ?>
+              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
@@ -881,7 +881,7 @@ function fcnen_settings_page() {
               <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_notification'] ?? '' ); ?></code></pre>
             </details>
             <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnes' ), 'primary', 'submit', false ); ?>
+              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
@@ -908,7 +908,7 @@ function fcnen_settings_page() {
               <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['loop_part_post'] ?? '' ); ?></code></pre>
             </details>
             <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnes' ), 'primary', 'submit', false ); ?>
+              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
@@ -939,7 +939,7 @@ function fcnen_settings_page() {
               <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['loop_part_story'] ?? '' ); ?></code></pre>
             </details>
             <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnes' ), 'primary', 'submit', false ); ?>
+              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
@@ -972,7 +972,7 @@ function fcnen_settings_page() {
               <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['loop_part_chapter'] ?? '' ); ?></code></pre>
             </details>
             <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnes' ), 'primary', 'submit', false ); ?>
+              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
             </div>
           </div>
 
