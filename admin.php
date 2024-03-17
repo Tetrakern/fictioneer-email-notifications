@@ -636,7 +636,7 @@ function fcnen_settings_page() {
 
   // Start HTML ---> ?>
   <script><?php echo 'var fcnen_preview_replacements = ' . json_encode( $preview_replacements ) . ';'; ?></script>
-  <div id="fcnen-admin-page-subscribers" class="wrap fcnen-settings _settings">
+  <div id="fcnen-admin-page-settings" class="wrap fcnen-settings _settings">
     <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Settings', 'fcnen' ); ?></h1>
     <hr class="wp-header-end">
 
