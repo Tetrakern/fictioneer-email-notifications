@@ -722,7 +722,7 @@ function fcnen_update_subscriber( $email, $args = [] ) {
       array(
         'email' => $email,
         'code' => $subscriber->code,
-        'id' => $subscriber->ID
+        'id' => $subscriber->id
       )
     );
   }
