@@ -433,7 +433,8 @@ function fcnen_get_subscription_button( $post_id = null ) {
 
   // Story ID
   if ( $post_id && get_post_type( $post_id ) === 'fcn_story' ) {
-    $attributes = "data-story-id='{$post_id}'";
+    $attributes .= " data-story-id='{$post_id}'";
+    $attributes .= " data-story-title='" . esc_attr( get_the_title( $post_id ) ) . "'";
   }
 
   return '<button type="button" data-click-target="#fcnen-subscription-modal" data-click-action="open-dialog-modal fcnen-load-modal-form" class="_align-left" tabindex="0" ' . $attributes . '><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcnen' ) . '</span></button>';

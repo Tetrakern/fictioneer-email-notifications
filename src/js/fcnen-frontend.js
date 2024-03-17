@@ -85,10 +85,11 @@ function fcnen_addEventListeners() {
   // Search
   if (fcnen_modal.querySelector('.fcnen-dialog-modal__advanced')) {
     fcnen_initializeSearch();
-  }
 
-  // Search once if search field is not empty
-  fcnen_search();
+    // Search once if search field is not empty
+    fcnen_search();
+    fcnen_modal.querySelector('[data-input-target="fcnen-search"]').value = '';
+  }
 }
 
 /**
