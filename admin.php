@@ -19,6 +19,8 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_general_group', 'fcnen_from_email_name', 'sanitize_text_field' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_subscribe_to_stories', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_subscribe_to_taxonomies', 'absint' );
+  register_setting( 'fcnen_general_group', 'fcnen_flag_allow_passwords', 'absint' );
+  register_setting( 'fcnen_general_group', 'fcnen_flag_allow_hidden', 'absint' );
 
   // Provider
   register_setting( 'fcnen_provider_group', 'fcnen_service_provider', 'sanitize_text_field' );
@@ -677,10 +679,21 @@ function fcnen_settings_page() {
                       <input type="checkbox" name="fcnen_flag_subscribe_to_stories" id="fcnen-flag-stories" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_subscribe_to_stories' ), false ); ?>>
                       <label for="fcnen-flag-stories"><?php _e( 'Allow subscriptions to stories', 'fcnen' ); ?></label>
                     </div>
-                    <div class="fcnen-checkbox-wrap" style="margin-top: 14px;">
+                    <div class="fcnen-checkbox-wrap" style="margin-top: 8px;">
                       <input type="hidden" name="fcnen_flag_subscribe_to_taxonomies" value="0">
                       <input type="checkbox" name="fcnen_flag_subscribe_to_taxonomies" id="fcnen-flag-taxonomies" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_subscribe_to_taxonomies' ), false ); ?>>
                       <label for="fcnen-flag-taxonomies"><?php _e( 'Allow subscriptions to taxonomies', 'fcnen' ); ?></label>
+                    </div>
+                    <div class="fcnen-checkbox-wrap" style="margin-top: 8px;">
+                      <input type="hidden" name="fcnen_flag_allow_passwords" value="0">
+                      <input type="checkbox" name="fcnen_flag_allow_passwords" id="fcnen-flag-allow-passwords" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_allow_passwords' ), false ); ?>>
+                      <label for="fcnen-flag-allow-passwords"><?php _e( 'Allow notifications for protected posts', 'fcnen' ); ?></label>
+                    </div>
+
+                    <div class="fcnen-checkbox-wrap" style="margin-top: 8px;">
+                      <input type="hidden" name="fcnen_flag_allow_hidden" value="0">
+                      <input type="checkbox" name="fcnen_flag_allow_hidden" id="fcnen-flag-allow-hidden" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_allow_hidden' ), false ); ?>>
+                      <label for="fcnen-flag-allow-hidden"><?php _e( 'Allow notifications for hidden posts', 'fcnen' ); ?></label>
                     </div>
                   </div>
                 </div>
