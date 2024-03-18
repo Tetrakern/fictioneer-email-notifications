@@ -217,6 +217,42 @@ function fcnen_create_subscribers_table() {
 }
 register_activation_hook( __FILE__, 'fcnen_create_subscribers_table' );
 
+/**
+ * Create the notification database table
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ */
+
+function fcnen_create_notification_table() {
+  global $wpdb;
+
+  if ( ! function_exists( 'dbDelta' ) ) {
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+  }
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_notifications';
+  $charset_collate = $wpdb->get_charset_collate();
+
+  // Skip if the table already exists
+  if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
+    return;
+  }
+
+  // Table creation query
+  $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+    post_id INT UNSIGNED NOT NULL,
+    paused TINYINT(1) NOT NULL DEFAULT 0,
+    added_at DATETIME NOT NULL,
+    last_sent DATETIME DEFAULT NULL,
+    PRIMARY KEY (post_id)
+  ) $charset_collate;";
+
+  dbDelta( $sql );
+}
+register_activation_hook( __FILE__, 'fcnen_create_notification_table' );
+
 // =======================================================================================
 // CRON JOBS
 // =======================================================================================
