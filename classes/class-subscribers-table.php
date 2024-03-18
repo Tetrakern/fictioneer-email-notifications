@@ -143,24 +143,6 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     $this->table_data = $this->get_table_data();
     $this->_column_headers = [ $columns, $hidden, $sortable, $primary ];
 
-    // Reorder (must be done after the SQL query due to appended post data)
-    usort( $this->table_data, array( &$this, 'usort_reorder' ) );
-
-    // Paginate (must be done after the SQL query due to appended post data)
-    $per_page = $this->get_items_per_page( 'fcnen_subscribers_per_page', 25 );
-    $current_page = $this->get_pagenum();
-
-    $this->total_items = count( $this->table_data );
-    $this->table_data = array_slice( $this->table_data, ( ($current_page - 1) * $per_page ), $per_page );
-
-    $this->set_pagination_args(
-      array(
-        'total_items' => $this->total_items,
-        'per_page' => $per_page,
-        'total_pages' => ceil( $this->total_items / $per_page )
-      )
-    );
-
     // Prepare rows
     $this->items = $this->table_data;
   }
@@ -184,13 +166,24 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
 
     // Setup
     $table_name = $wpdb->prefix . 'fcnen_subscribers';
+    $per_page = $this->get_items_per_page( 'fcnen_subscribers_per_page', 25 );
+    $current_page = $this->get_pagenum();
+    $offset = ( $per_page * max( 0, absint( $current_page ) - 1 ) );
+    $orderby = sanitize_text_field( $_GET['orderby'] ?? 'id' );
+    $order = strtolower( $_GET['order'] ?? 'desc' ) === 'desc' ? 'DESC' : 'ASC';
+
+    // Sanitize orderby
+    $orderby = in_array( $orderby, ['id', 'email', 'confirmed', 'created_at'] ) ? $orderby : 'id';
+
+    // Total items
+    $this->total_items = $wpdb->get_var( "SELECT COUNT(id) FROM {$table_name}" );
 
     // Search?
     if ( ! empty( $_POST['s'] ?? '' ) ) {
       $search = sanitize_text_field( $_POST['s'] );
-      $query = "SELECT * FROM $table_name WHERE email LIKE '%$search%'";
+      $query = "SELECT * FROM {$table_name} WHERE email LIKE '%" . $wpdb->esc_like( $search ) . "%'";
     } else {
-      $query = "SELECT * FROM $table_name";
+      $query = "SELECT * FROM {$table_name}";
     }
 
     // Prepare for extension
@@ -215,8 +208,23 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
         $query .= "trashed = 0";
     }
 
+    // Order
+    $query .= " ORDER BY {$orderby} {$order}";
+
+    // Paginate
+    $query .= $wpdb->prepare( " LIMIT %d OFFSET %d", $per_page, $offset );
+
     // Query
     $subscribers = $wpdb->get_results( $query, ARRAY_A );
+
+    // Pagination
+    $this->set_pagination_args(
+      array(
+        'total_items' => $this->total_items,
+        'per_page' => $per_page,
+        'total_pages' => ceil( $this->total_items / $per_page )
+      )
+    );
 
     // Return results
     return $subscribers;
@@ -597,32 +605,6 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
 
     // Output final HTML
     echo '<ul class="subsubsub">' . implode( ' | ', $views ) . '</ul>';
-  }
-
-  /**
-   * Reorder the table rows based on the specified column and order
-   *
-   * @since 0.1.0
-   *
-   * @param array $a  The first row to compare.
-   * @param array $b  The second row to compare.
-   *
-   * @return int Returns a negative, zero, or positive number indicating the order of $a
-   *             relative to $b. If $a should come before $b, a negative number is returned.
-   *             If $a and $b are equal, zero is returned. If $a should come after $b, a
-   *             positive number is returned.
-   */
-
-  function usort_reorder( $a, $b ) {
-    // Setup
-    $orderby = $_GET['orderby'] ?? 'created_at';
-    $order = $_GET['order'] ?? 'dsc';
-
-    // Compare
-    $result = strcmp( $a[ $orderby ], $b[ $orderby ] );
-
-    // Return to usort
-    return $order === 'asc' ? $result : -$result;
   }
 
   /**
