@@ -48,6 +48,13 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       }
     }
 
+    // Validate POST actions
+    if ( isset( $_POST['action'] ) ) {
+      if ( ! isset( $_POST['_wpnonce'] ) || ! check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
+        wp_die( __( 'Nonce verification failed. Please try again.', 'fcnen' ) );
+      }
+    }
+
     // Initialize
     $table_name = $wpdb->prefix . 'fcnen_subscribers';
     $this->confirmed_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE confirmed = 1 AND trashed = 0" );
