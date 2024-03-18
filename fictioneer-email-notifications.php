@@ -194,8 +194,8 @@ function fcnen_create_subscribers_table() {
   }
 
   // Table creation query
-  $sql = "CREATE TABLE $table_name (
-    id INT NOT NULL AUTO_INCREMENT,
+  $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     email VARCHAR(191) NOT NULL,
     code VARCHAR(32) NOT NULL,
     everything TINYINT(1) NOT NULL DEFAULT 1,
