@@ -807,3 +807,94 @@ function fcnen_get_log() {
   // Return HTML
   return $output;
 }
+
+// =======================================================================================
+// NOTIFICATIONS
+// =======================================================================================
+
+/**
+ * Returns whether a post can be sent as notification
+ *
+ * @since 0.1.0
+ *
+ * @param WP_Post|int $post          Post or post ID.
+ * @param bool        $with_message  Whether to return the cause of failure.
+ *
+ * @return bool|array True or false, or an array with the result and message.
+ */
+
+function fcnen_post_sendable( $post, $with_message = false ) {
+  // Resolve post ID
+  if ( is_numeric( $post ) ) {
+    $post = get_post( $post );
+  }
+
+  // Post not found?
+  if ( ! ( $post instanceof WP_Post ) ) {
+    if ( $with_message ) {
+      return array( 'sendable' => false, 'message' => 'post-not-found' );
+    } else {
+      return false;
+    }
+  }
+
+  // Setup
+  $allowed_types = ['post', 'fcn_story', 'fcn_chapter'];
+  $allow_password = get_option( 'fcnen_flag_allow_passwords' );
+  $allow_hidden = get_option( 'fcnen_flag_allow_hidden' );
+
+  // Reject non-published posts
+  if ( $post->post_status !== 'publish' ) {
+    if ( $with_message ) {
+      return array( 'sendable' => false, 'message' => 'post-unpublished' );
+    } else {
+      return false;
+    }
+  }
+
+  // Maybe reject password-protected posts
+  if ( ! empty( $post->post_password ) && ! $allow_password ) {
+    if ( $with_message ) {
+      return array( 'sendable' => false, 'message' => 'post-protected' );
+    } else {
+      return false;
+    }
+  }
+
+  // Reject invalid post types
+  if ( ! in_array( $post->post_type, $allowed_types ) ) {
+    if ( $with_message ) {
+      return array( 'sendable' => false, 'message' => 'post-invalid-type' );
+    } else {
+      return false;
+    }
+  }
+
+  // Reject excluded posts
+  if ( get_post_meta( $post->ID, 'fcnen_exclude_from_notifications', true ) ) {
+    if ( $with_message ) {
+      return array( 'sendable' => false, 'message' => 'post-excluded' );
+    } else {
+      return false;
+    }
+  }
+
+  // Maybe reject hidden posts
+  $story_hidden = get_post_meta( $post->ID, 'fictioneer_story_hidden', true );
+  $chapter_hidden = get_post_meta( $post->ID, 'fictioneer_chapter_hidden', true );
+
+  if ( ! $allow_hidden && ( $story_hidden || $chapter_hidden ) ) {
+    if ( $with_message ) {
+      return array( 'sendable' => false, 'message' => 'post-hidden' );
+    } else {
+      return false;
+    }
+  }
+
+  // All good
+  if ( $with_message ) {
+    return array( 'sendable' => true, 'message' => 'post-sendable' );
+  } else {
+    return true;
+  }
+}
