@@ -308,7 +308,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     $title = sprintf(
       _x( '<a href="%1$s">%2$s</a> %3$s %4$s', 'Notification list table title column.', 'fcnen' ),
       $item['post_link'],
-      mb_strimwidth( trim( $item['post_title'] ), 0, 33, '…' ), // Truncate to max 32 characters
+      mb_strimwidth( trim( $item['post_title'] ), 0, 41, '…' ), // Truncate to max 40 characters
       $suffix,
       empty( $notes ) ? '' : '(' . implode( ', ', $notes ) . ')'
     );
