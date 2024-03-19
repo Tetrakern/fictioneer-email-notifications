@@ -211,11 +211,8 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     // Order
     $query .= " ORDER BY {$orderby} {$order}";
 
-    // Paginate
-    $query .= $wpdb->prepare( " LIMIT %d OFFSET %d", $per_page, $offset );
-
     // Query
-    $subscribers = $wpdb->get_results( $query, ARRAY_A );
+    $subscribers = $wpdb->get_results( $wpdb->prepare( "{$query} LIMIT %d OFFSET %d", $per_page, $offset ), ARRAY_A );
 
     // Pagination
     $this->set_pagination_args(
@@ -550,6 +547,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     // Setup
     $views = [];
     $current = 'all';
+    $uri = remove_query_arg( ['paged'], $this->uri );
 
     // Current
     if ( ! empty( $this->view ) ) {
@@ -571,7 +569,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     // Build views HTML
     $views['all'] = sprintf(
       '<li class="all"><a href="%s" class="%s">%s</a></li>',
-      add_query_arg( array( 'view' => 'all' ), $this->uri ),
+      add_query_arg( array( 'view' => 'all' ), $uri ),
       $current === 'all' ? 'current' : '',
       sprintf( __( 'All <span class="count">(%s)</span>', 'fcnen' ), $this->all_count )
     );
@@ -579,7 +577,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     if ( $this->confirmed_count > 0 ) {
       $views['confirmed'] = sprintf(
         '<li class="confirmed"><a href="%s" class="%s">%s</a></li>',
-        add_query_arg( array( 'view' => 'confirmed' ), $this->uri ),
+        add_query_arg( array( 'view' => 'confirmed' ), $uri ),
         $current === 'confirmed' ? 'current' : '',
         sprintf( __( 'Confirmed <span class="count">(%s)</span>', 'fcnen' ), $this->confirmed_count )
       );
@@ -588,7 +586,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     if ( $this->pending_count > 0 ) {
       $views['pending'] = sprintf(
         '<li class="pending"><a href="%s" class="%s">%s</a></li>',
-        add_query_arg( array( 'view' => 'pending' ), $this->uri ),
+        add_query_arg( array( 'view' => 'pending' ), $uri ),
         $current === 'pending' ? 'current' : '',
         sprintf( __( 'Pending <span class="count">(%s)</span>', 'fcnen' ), $this->pending_count )
       );
@@ -597,7 +595,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     if ( $this->trashed_count > 0 ) {
       $views['trash'] = sprintf(
         '<li class="trash"><a href="%s" class="%s">%s</a></li>',
-        add_query_arg( array( 'view' => 'trash' ), $this->uri ),
+        add_query_arg( array( 'view' => 'trash' ), $uri ),
         $current === 'trash' ? 'current' : '',
         sprintf( __( 'Trash <span class="count">(%s)</span>', 'fcnen' ), $this->trashed_count )
       );
