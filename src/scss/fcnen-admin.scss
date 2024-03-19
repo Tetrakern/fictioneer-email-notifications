@@ -26,7 +26,7 @@
 }
 
 /* =============================================================================
- * TABLE
+ * TABLES
  * ========================================================================== */
 
 .fcnen-subscribers-table-wrapper .column-id {
@@ -51,6 +51,22 @@
 
 .fcnen-subscribers-table-wrapper .column-date {
   width: 172px;
+}
+
+.fcnen-notifications-table-wrapper .column-post_author {
+  width: 128px;
+}
+
+.fcnen-notifications-table-wrapper :is(.column-post_id, .column-post_type) {
+  width: 72px;
+}
+
+.fcnen-notifications-table-wrapper .column-status {
+  width: 88px;
+}
+
+.fcnen-notifications-table-wrapper :is(.column-added_at, .column-last_sent) {
+  width: 160px;
 }
 
 /* =============================================================================

@@ -52,6 +52,7 @@ add_action( 'admin_init', 'fcnen_register_settings' );
 
 require_once( plugin_dir_path( __FILE__ ) . 'actions.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'classes/class-subscribers-table.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'classes/class-notifications-table.php' );
 
 // =======================================================================================
 // SETUP
@@ -346,7 +347,7 @@ function fcnen_add_notifications_menu_page() {
   }
 
   // Add admin page
-  $notifications = add_menu_page(
+  $hook = add_menu_page(
     'Email Notifications',
     'Notifications',
     'manage_options',
@@ -354,8 +355,38 @@ function fcnen_add_notifications_menu_page() {
     'fcnen_notifications_page',
     'dashicons-email-alt'
   );
+
+  // Add screen options
+  if ( $hook ) {
+    add_action( "load-{$hook}", 'fcnen_notifications_table_screen_options' );
+  }
 }
 add_action( 'admin_menu', 'fcnen_add_notifications_menu_page' );
+
+/**
+ * Configure the screen options for the notifications page
+ *
+ * @since 0.1.0
+ * @global WP_List_Table $notifications_table  The notifications table instance.
+ */
+
+function fcnen_notifications_table_screen_options() {
+  global $notifications_table;
+
+  // Add pagination option
+	$args = array(
+		'label' => __( 'Notifications per page', 'fcnen' ),
+		'default' => 25,
+		'option' => 'fcnen_notifications_per_page'
+	);
+	add_screen_option( 'per_page', $args );
+
+  // Setup table
+  $notifications_table = new FCNEN_Notifications_Table();
+
+  // Perform table actions
+  $notifications_table->perform_actions();
+}
 
 /**
  * Callback for the notifications menu page
@@ -364,12 +395,33 @@ add_action( 'admin_menu', 'fcnen_add_notifications_menu_page' );
  */
 
 function fcnen_notifications_page() {
+  global $notifications_table;
+
   // Guard
-  if ( ! current_user_can( 'administrator' ) ) {
+  if ( ! current_user_can( 'manage_options' ) ) {
     wp_die( __( 'You do not have permission to access this page.', 'fcnen' ) );
   }
 
+  // Setup
+  $notifications_table->prepare_items();
+
   // Start HTML ---> ?>
+  <div id="fcnen-admin-page-notifications" class="wrap fcnen-settings _notifications">
+    <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Notifications', 'fcnen' ); ?></h1>
+    <hr class="wp-header-end">
+
+    <div class="fcnen-settings__content">
+
+      <div class="fcnen-settings__table fcnen-notifications-table-wrapper">
+        <?php $notifications_table->display_views(); ?>
+        <form method="post"><?php
+          $notifications_table->search_box( 'Search Notifications', 'search-notifications' );
+          $notifications_table->display();
+        ?></form>
+      </div>
+
+    </div>
+  </div>
   <?php // <--- End HTML
 }
 
@@ -390,7 +442,7 @@ function fcnen_add_subscribers_menu_page() {
   }
 
   // Add admin page
-  $fcnen_admin_page_subscribers = add_submenu_page(
+  $hook = add_submenu_page(
     'fcnen-notifications',
     'Subscribers',
     'Subscribers',
@@ -400,8 +452,8 @@ function fcnen_add_subscribers_menu_page() {
   );
 
   // Add screen options
-  if ( $fcnen_admin_page_subscribers ) {
-    add_action( "load-{$fcnen_admin_page_subscribers}", 'fcnen_subscribers_table_screen_options' );
+  if ( $hook ) {
+    add_action( "load-{$hook}", 'fcnen_subscribers_table_screen_options' );
   }
 }
 add_action( 'admin_menu', 'fcnen_add_subscribers_menu_page' );
