@@ -351,6 +351,21 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     );
   }
 
+
+  /**
+   * Render the content of the "added_at" column
+   *
+   * @since 0.1.0
+   *
+   * @param array $item  The data for the current row item.
+   *
+   * @return string The "added_at" column content.
+   */
+
+  function column_added_at( $item ) {
+    return __( 'Enqueued', 'fcnen' ) . '<br>' . $item['added_at'];
+  }
+
   /**
    * Render the content of the "last_sent" column
    *
