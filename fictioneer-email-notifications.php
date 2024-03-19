@@ -195,7 +195,7 @@ function fcnen_create_subscribers_table() {
 
   // Table creation query
   $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     email VARCHAR(191) NOT NULL,
     code VARCHAR(32) NOT NULL,
     everything TINYINT(1) NOT NULL DEFAULT 1,
@@ -246,12 +246,11 @@ function fcnen_create_notification_table() {
     post_id BIGINT UNSIGNED NOT NULL,
     post_title TEXT NOT NULL,
     post_type varchar(20) NOT NULL,
-    post_author VARCHAR(60) NOT NULL,
+    post_author BIGINT UNSIGNED NOT NULL DEFAULT 0,
     paused TINYINT(1) NOT NULL DEFAULT 0,
     added_at DATETIME NOT NULL,
     last_sent DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
-    UNIQUE (post_id),
     INDEX post_id_index (post_id)
   ) $charset_collate;";
 
