@@ -49,7 +49,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
     // Initialize
     $this->uri = remove_query_arg(
-      ['action', 'post_id', 'notifications', 'fcnen-nonce', 'fcnen-notice', 'fcnen-message'],
+      ['action', 'id', 'notifications', 'fcnen-nonce', 'fcnen-notice', 'fcnen-message'],
       $_SERVER['REQUEST_URI']
     );
   }
@@ -103,8 +103,9 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
     $posts = get_posts(
       array(
-        'include' => $post_ids,
-        'posts_per_page' => -1,
+        'post_type' => ['post', 'fcn_story', 'fcn_chapter'],
+        'post__in' => $post_ids ?: [0],
+        'numberposts' => -1,
         'update_post_meta_cache' => false,
         'update_post_term_cache' => false,
         'no_found_rows' => true
@@ -133,7 +134,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       $notification['status'] = 'foo';
 
       $notification['last_sent'] = ! empty( $notification['last_sent'] ) ?
-        __( 'Mailed', 'fcnen' ) . '<br>' . $notification['last_sent'] : '&mdash;';
+        __( 'Mailed', 'fcnen' ) . '<br>' . $notification['last_sent'] : '';
 
       $this->table_data[ $key ] = $notification;
     }
@@ -264,15 +265,91 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   /**
    * Render the content of the "post_title" column
    *
-   * @since Fictioneer Email Subscriptions 1.0.0
+   * @since 0.1.0
    *
    * @param array $item  The data for the current row item.
    *
    * @return string The "post_title" column content.
    */
 
-  // function column_post_title( $item ) {
-  // }
+  function column_post_title( $item ) {
+    // Setup
+    $actions = [];
+    $notes = [];
+    $title = '';
+    $suffix = '';
+
+    // Chapter?
+    if ( $item['post_type'] === 'fcn_chapter' ) {
+      $story_id = get_post_meta( $item['post_id'], 'fictioneer_chapter_story', true );
+      $story_title = get_the_title( $story_id ) ?: '';
+
+      // Story title as suffix
+      if ( ! empty( $story_title ) ) {
+        $story_title = mb_strimwidth( $story_title, 0, 25, '…' ); // Truncate to max 24 characters
+        $suffix = " &mdash; {$story_title}";
+      }
+
+      // Hidden?
+      if ( ! empty( get_post_meta( $item['post_id'], 'fictioneer_chapter_hidden', true ) ) ) {
+        $notes[] = __( 'Hidden', 'fcnen' );
+      }
+    }
+
+    // Story?
+    if ( $item['post_type'] === 'fcn_story' ) {
+      // Hidden?
+      if ( ! empty( get_post_meta( $item['post_id'], 'fictioneer_story_hidden', true ) ) ) {
+        $notes[] = __( 'Hidden', 'fcnen' );
+      }
+    }
+
+    // Build title
+    $title = sprintf(
+      _x( '<a href="%1$s">%2$s</a> %3$s %4$s', 'Notification list table title column.', 'fcnen' ),
+      $item['post_link'],
+      mb_strimwidth( trim( $item['post_title'] ), 0, 33, '…' ), // Truncate to max 32 characters
+      $suffix,
+      empty( $notes ) ? '' : '(' . implode( ', ', $notes ) . ')'
+    );
+
+    // Unsent action
+    if ( ! empty( $item['last_sent'] ) ) {
+      $actions['unsent'] = sprintf(
+        '<a href="%s">%s</a>',
+        wp_nonce_url(
+          add_query_arg(
+            array( 'action' => 'unsent_notification', 'id' => $item['post_id'] ),
+            $this->uri
+          ),
+          'fcnen-table-action',
+          'fcnen-nonce'
+        ),
+        __( 'Unsent', 'fcnen' )
+      );
+    }
+
+    // Delete action
+    $actions['delete'] = sprintf(
+      '<a href="%s">%s</a>',
+      wp_nonce_url(
+        add_query_arg(
+          array( 'action' => 'delete_notification', 'id' => $item['post_id'] ),
+          $this->uri
+        ),
+        'fcnen-table-action',
+        'fcnen-nonce'
+      ),
+      __( 'Remove', 'fcnen' )
+    );
+
+    // Return the final output
+    return sprintf(
+      '<span>%s</span> %s',
+      trim( $title ),
+      $this->row_actions( $actions )
+    );
+  }
 
   /**
    * Retrieve the bulk actions available for the table
