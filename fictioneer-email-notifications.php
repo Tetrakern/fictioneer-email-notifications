@@ -908,6 +908,65 @@ function fcnen_handle_unsubscribe_link() {
 add_action( 'template_redirect', 'fcnen_handle_unsubscribe_link' );
 
 // =======================================================================================
+// NOTIFICATIONS
+// =======================================================================================
+
+/**
+ * Adds a notification
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param int $post_id  The ID of the post to add as notification.
+ *
+ * @return int|false The ID of the inserted notification, false on failure.
+ */
+
+function fcnen_add_notification( $post_id ) {
+  global $wpdb;
+
+  // Check for unsent duplicate
+  if ( fcnen_unsent_notification_exists( $post_id ) ) {
+    return false;
+  }
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_notifications';
+  $post = get_post( $post_id );
+  $allowed_types = ['post', 'fcn_story', 'fcn_chapter'];
+
+  // Post not found
+  if ( ! $post ) {
+    return false;
+  }
+
+  // Wrong post type
+  if ( ! in_array( $post->post_type, $allowed_types ) ) {
+    return false;
+  }
+
+  // Insert into table
+  $result = $wpdb->insert(
+    $table_name,
+    array(
+      'post_id' => $post->ID,
+      'post_title' => $post->post_title,
+      'post_type' => $post->post_type,
+      'post_author' => $post->post_author,
+      'added_at' => current_time( 'mysql' )
+    ),
+    array( '%d', '%s', '%s', '%d', '%s' )
+  );
+
+  // Return ID of the notification or false
+  if ( $result ) {
+    return $wpdb->insert_id;
+  } else {
+    return false;
+  }
+}
+
+// =======================================================================================
 // EMAILS
 // =======================================================================================
 

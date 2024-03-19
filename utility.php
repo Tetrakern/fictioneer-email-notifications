@@ -898,3 +898,31 @@ function fcnen_post_sendable( $post, $with_message = false ) {
     return true;
   }
 }
+
+/**
+ * Checks whether a post is already enqueued as unset notification
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param string $post_id  The post ID to check.
+ *
+ * @return bool Unsent notification exists (true) or not (false).
+ */
+
+function fcnen_unsent_notification_exists( $post_id ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_notifications';
+
+  // Query
+  $query = $wpdb->prepare(
+    "SELECT COUNT(*) FROM {$table_name} WHERE post_id = %d AND last_sent IS NULL",
+    $post_id
+  );
+  $result = $wpdb->get_var( $query );
+
+  // Result
+  return (int) $result > 0;
+}
