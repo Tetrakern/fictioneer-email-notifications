@@ -352,6 +352,21 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   }
 
   /**
+   * Render the content of the "last_sent" column
+   *
+   * @since 0.1.0
+   *
+   * @param array $item  The data for the current row item.
+   *
+   * @return string The "last_sent" column content.
+   */
+
+  function column_last_sent( $item ) {
+    return empty( $item['last_sent'] ) ?
+      '&mdash;' : __( 'Mailed', 'fcnen' ) . '<br>' . $item['last_sent'];
+  }
+
+  /**
    * Retrieve the bulk actions available for the table
    *
    * @since Fictioneer Email Subscriptions 1.0.0
