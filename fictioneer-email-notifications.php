@@ -244,6 +244,7 @@ function fcnen_create_notification_table() {
   $sql = "CREATE TABLE IF NOT EXISTS $table_name (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     post_id BIGINT UNSIGNED NOT NULL,
+    story_id BIGINT UNSIGNED DEFAULT NULL,
     post_title TEXT NOT NULL,
     post_type varchar(20) NOT NULL,
     post_author BIGINT UNSIGNED NOT NULL DEFAULT 0,
@@ -934,6 +935,7 @@ function fcnen_add_notification( $post_id ) {
   $table_name = $wpdb->prefix . 'fcnen_notifications';
   $post = get_post( $post_id );
   $allowed_types = ['post', 'fcn_story', 'fcn_chapter'];
+  $story_id = null;
 
   // Post not found
   if ( ! $post ) {
@@ -945,17 +947,23 @@ function fcnen_add_notification( $post_id ) {
     return false;
   }
 
+  // Chapter?
+  if ( $post->post_type === 'fcn_chapter' ) {
+    $story_id = get_post_meta( $post->ID, 'fictioneer_chapter_story', true ) ?: null;
+  }
+
   // Insert into table
   $result = $wpdb->insert(
     $table_name,
     array(
       'post_id' => $post->ID,
+      'story_id' => $story_id,
       'post_title' => $post->post_title,
       'post_type' => $post->post_type,
       'post_author' => $post->post_author,
       'added_at' => current_time( 'mysql' )
     ),
-    array( '%d', '%s', '%s', '%d', '%s' )
+    array( '%d', '%s', '%s', '%s', '%d', '%s' )
   );
 
   // Return ID of the notification or false
