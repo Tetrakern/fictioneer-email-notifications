@@ -123,6 +123,11 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       );
     }
 
+    // Prime author cache
+    if ( function_exists( 'update_post_author_caches' ) ) {
+      update_post_author_caches( $posts );
+    }
+
     // Merge datasets
     foreach ( $this->table_data as $key => $notification ) {
       $post_id = $notification['post_id'];
@@ -207,45 +212,6 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
     // Return results
     return $notifications;
-  }
-
-  /**
-   * Get the count of sent updates
-   *
-   * @since 0.1.0
-   * @global wpdb $wpdb  The WordPress database object.
-   *
-   * @return int The count of sent updates.
-   */
-
-  public function get_sent_count() {
-  }
-
-  /**
-   * Renders the default column value
-   *
-   * @since 0.1.0
-   *
-   * @param array  $item         The current row's data.
-   * @param string $column_name  The name of the column being rendered.
-   *
-   * @return string The rendered column value.
-   */
-
-  function column_default( $item, $column_name ) {
-    // switch ( $column_name ) {
-    //   case 'post_status':
-    //     $status = $item['post_status'];
-    //     $color = $status === 'publish' ? 'currentColor' : '#a52727';
-    //     return "<span style='color: $color;'>$status</span>";
-    //   case 'post_type':
-    //     $type_object = get_post_type_object( $item['post_type'] );
-    //     return $type_object->labels->singular_name;
-    //   case 'added_at':
-    //     return __( 'Enqueued', 'fcnen' ) . '<br>' . $item[ $column_name ];
-    //   default:
-    //     return $item[ $column_name ];
-    // }
   }
 
   /**
@@ -349,6 +315,20 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       trim( $title ),
       $this->row_actions( $actions )
     );
+  }
+
+  /**
+   * Render the content of the "post_author" column
+   *
+   * @since 0.1.0
+   *
+   * @param array $item  The data for the current row item.
+   *
+   * @return string The "post_author" column content.
+   */
+
+  function column_post_author( $item ) {
+    return empty( $item['post_author'] ) ? '&mdash;' : get_the_author_meta( 'display_name', $item['post_author'] ) ;
   }
 
   /**
