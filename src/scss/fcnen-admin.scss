@@ -54,10 +54,14 @@
 }
 
 .fcnen-notifications-table-wrapper .column-post_author {
-  width: 128px;
+  width: 120px;
 }
 
-.fcnen-notifications-table-wrapper :is(.column-post_id, .column-post_type) {
+.fcnen-notifications-table-wrapper .column-post_id {
+  width: 64px;
+}
+
+.fcnen-notifications-table-wrapper .column-post_type {
   width: 72px;
 }
 
@@ -66,7 +70,7 @@
 }
 
 .fcnen-notifications-table-wrapper :is(.column-added_at, .column-last_sent) {
-  width: 160px;
+  width: 144px;
 }
 
 /* =============================================================================
