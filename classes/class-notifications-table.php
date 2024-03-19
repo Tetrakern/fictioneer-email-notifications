@@ -392,6 +392,20 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   }
 
   /**
+   * Render the content of the "post_id" column
+   *
+   * @since 0.1.0
+   *
+   * @param array $item  The data for the current row item.
+   *
+   * @return string The "post_id" column content.
+   */
+
+  function column_post_id( $item ) {
+    return $item['post_id'];
+  }
+
+  /**
    * Render the content of the "added_at" column
    *
    * @since 0.1.0
