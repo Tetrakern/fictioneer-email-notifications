@@ -242,14 +242,17 @@ function fcnen_create_notification_table() {
 
   // Table creation query
   $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-    post_id INT UNSIGNED NOT NULL,
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    post_id BIGINT UNSIGNED NOT NULL,
     post_title TEXT NOT NULL,
     post_type varchar(20) NOT NULL,
-    user_login VARCHAR(60) NOT NULL,
+    post_author VARCHAR(60) NOT NULL,
     paused TINYINT(1) NOT NULL DEFAULT 0,
     added_at DATETIME NOT NULL,
     last_sent DATETIME DEFAULT NULL,
-    PRIMARY KEY (post_id)
+    PRIMARY KEY (id),
+    UNIQUE (post_id),
+    INDEX post_id_index (post_id)
   ) $charset_collate;";
 
   dbDelta( $sql );
