@@ -131,7 +131,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
         $notification = array_merge( $notification, $post_data[ $post_id ] );
       }
 
-      $notification['status'] = 'foo';
+      $notification['status'] = fcnen_post_sendable( $post_id, true );
 
       $notification['last_sent'] = ! empty( $notification['last_sent'] ) ?
         __( 'Mailed', 'fcnen' ) . '<br>' . $notification['last_sent'] : '';
@@ -351,6 +351,45 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     );
   }
 
+  /**
+   * Render the content of the "status" column
+   *
+   * @since 0.1.0
+   *
+   * @param array $item  The data for the current row item.
+   *
+   * @return string The "status" column content.
+   */
+
+  function column_status( $item ) {
+    if ( $item['status']['sendable'] ?? 0 ) {
+      return _x( 'Ready', 'Notification list table status column.', 'fcnen' );
+    }
+
+    $status = '';
+
+    switch ( $item['status']['message'] ) {
+      case 'post-unpublished':
+        $status = _x( 'Blocked:<br>Unpublished', 'Notification list table status column.', 'fcnen' );
+        break;
+      case 'post-protected':
+        $status = _x( 'Blocked:<br>Protected', 'Notification list table status column.', 'fcnen' );
+        break;
+      case 'post-invalid-type':
+        $status = _x( 'Blocked:<br>Invalid', 'Notification list table status column.', 'fcnen' );
+        break;
+      case 'post-excluded':
+        $status = _x( 'Blocked:<br>Excluded', 'Notification list table status column.', 'fcnen' );
+        break;
+      case 'post-hidden':
+        $status = _x( 'Blocked:<br>Hidden', 'Notification list table status column.', 'fcnen' );
+        break;
+      default:
+        $status = _x( 'Blocked', 'Notification list table status column.', 'fcnen' );
+    }
+
+    return $status;
+  }
 
   /**
    * Render the content of the "added_at" column
