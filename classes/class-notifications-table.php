@@ -406,6 +406,22 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   }
 
   /**
+   * Render the content of the "post_type" column
+   *
+   * @since 0.1.0
+   *
+   * @param array $item  The data for the current row item.
+   *
+   * @return string The "post_type" column content.
+   */
+
+  function column_post_type( $item ) {
+    $type_object = get_post_type_object( $item['post_type'] );
+
+    return $type_object->labels->singular_name;
+  }
+
+  /**
    * Render the content of the "added_at" column
    *
    * @since 0.1.0
