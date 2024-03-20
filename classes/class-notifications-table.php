@@ -16,9 +16,11 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 class FCNEN_Notifications_Table extends WP_List_Table {
   private $table_data;
+  private $view = '';
   private $uri = '';
 
   public $total_items;
+  public $paused_count = 0;
 
   /**
    * Constructor for the WP_List_Table subclass.
@@ -27,6 +29,8 @@ class FCNEN_Notifications_Table extends WP_List_Table {
    */
 
   function __construct() {
+    global $wpdb;
+
     parent::__construct([
       'singular' => 'notification',
       'plural' => 'notifications',
@@ -48,10 +52,24 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     }
 
     // Initialize
-    $this->uri = remove_query_arg(
-      ['action', 'id', 'notifications', 'fcnen-nonce', 'fcnen-notice', 'fcnen-message'],
-      $_SERVER['REQUEST_URI']
-    );
+    $table_name = $wpdb->prefix . 'fcnen_notifications';
+    $this->view = $_GET['view'] ?? 'all';
+    $this->total_items = $wpdb->get_var( "SELECT COUNT(post_id) FROM {$table_name}" );
+    $this->paused_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE paused = 1" );
+    $this->uri = remove_query_arg( ['action', 'id', 'notifications', 'fcnen-nonce'], $_SERVER['REQUEST_URI'] );
+
+    // Redirect from empty views
+    switch ( $this->view ) {
+      case 'paused':
+        if ( $this->paused_count < 1 ) {
+          wp_safe_redirect( remove_query_arg( 'view', $this->uri  ) );
+          exit();
+        }
+        break;
+    }
+
+    // Finishing cleaning up URI
+    $this->uri = remove_query_arg( ['fcnen-notice', 'fcnen-message'], $this->uri );
   }
 
   /**
@@ -167,6 +185,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
     // Setup
     $table_name = $wpdb->prefix . 'fcnen_notifications';
+    $view_total_items = $this->total_items;
     $per_page = $this->get_items_per_page( 'fcnen_notifications_per_page', 25 );
     $current_page = $this->get_pagenum();
     $offset = ( $per_page * max( 0, absint( $current_page ) - 1 ) );
@@ -177,9 +196,6 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     $orderby = in_array( $orderby, ['post_id', 'post_title', 'post_type', 'post_author', 'added_at', 'last_sent'] ) ?
       $orderby : 'added_at';
 
-    // Total items
-    $this->total_items = $wpdb->get_var( "SELECT COUNT(post_id) FROM {$table_name}" );
-
     // Search?
     if ( ! empty( $_POST['s'] ?? '' ) ) {
       $search = sanitize_text_field( $_POST['s'] );
@@ -189,11 +205,21 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     }
 
     // Prepare for extension
-    // if ( ! strpos( $query, 'WHERE' ) ) {
-    //   $query .= ' WHERE ';
-    // } else {
-    //   $query .= ' AND ';
-    // }
+    if ( $this->view !== 'all' ) {
+      if ( ! strpos( $query, 'WHERE' ) ) {
+        $query .= ' WHERE ';
+      } else {
+        $query .= ' AND ';
+      }
+    }
+
+    // View
+    switch ( $this->view ) {
+      case 'paused':
+        $query .= "paused = 1";
+        $view_total_items = $this->paused_count;
+        break;
+    }
 
     // Order
     $query .= " ORDER BY {$orderby} {$order}";
@@ -204,9 +230,9 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     // Pagination
     $this->set_pagination_args(
       array(
-        'total_items' => $this->total_items,
+        'total_items' => $view_total_items,
         'per_page' => $per_page,
-        'total_pages' => ceil( $this->total_items / $per_page )
+        'total_pages' => ceil( $view_total_items / $per_page )
       )
     );
 
@@ -489,6 +515,56 @@ class FCNEN_Notifications_Table extends WP_List_Table {
    */
 
   function extra_tablenav( $which ) {
+  }
+
+  /**
+   * Display the views for filtering the table
+   *
+   * @since 0.1.0
+   */
+
+  function display_views() {
+    // Guard
+    if ( ! current_user_can( 'manage_options' ) ) {
+      echo '';
+      return;
+    }
+
+    // Setup
+    $views = [];
+    $current = 'all';
+    $uri = remove_query_arg( ['paged'], $this->uri );
+
+    // Current
+    if ( ! empty( $this->view ) ) {
+      switch ( $this->view ) {
+        case 'paused':
+          $current = 'paused';
+          break;
+        default:
+          $current = 'all';
+      }
+    }
+
+    // Build views HTML
+    $views['all'] = sprintf(
+      '<li class="all"><a href="%s" class="%s">%s</a></li>',
+      add_query_arg( array( 'view' => 'all' ), $uri ),
+      $current === 'all' ? 'current' : '',
+      sprintf( __( 'All <span class="count">(%s)</span>', 'fcnen' ), $this->total_items )
+    );
+
+    if ( $this->paused_count > 0 ) {
+      $views['paused'] = sprintf(
+        '<li class="paused"><a href="%s" class="%s">%s</a></li>',
+        add_query_arg( array( 'view' => 'paused' ), $uri ),
+        $current === 'paused' ? 'current' : '',
+        sprintf( __( 'Paused <span class="count">(%s)</span>', 'fcnen' ), $this->paused_count )
+      );
+    }
+
+    // Output final HTML
+    echo '<ul class="subsubsub">' . implode( ' | ', $views ) . '</ul>';
   }
 
   /**
