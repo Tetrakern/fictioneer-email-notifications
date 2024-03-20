@@ -57,20 +57,12 @@
   width: 144px;
 }
 
-.fcnen-notifications-table-wrapper .column-post_id {
-  width: 64px;
-}
-
-.fcnen-notifications-table-wrapper .column-post_type {
-  width: 72px;
-}
-
-.fcnen-notifications-table-wrapper .column-status {
+.fcnen-notifications-table-wrapper :is(.column-post_id, .column-post_type, .column-status) {
   width: 88px;
 }
 
 .fcnen-notifications-table-wrapper :is(.column-added_at, .column-last_sent) {
-  width: 144px;
+  width: 168px;
 }
 
 /* =============================================================================

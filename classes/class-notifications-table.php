@@ -174,7 +174,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     $order = strtolower( $_GET['order'] ?? 'desc' ) === 'desc' ? 'DESC' : 'ASC';
 
     // Sanitize orderby
-    $orderby = in_array( $orderby, ['post_id', 'post_title', 'post_type', 'user_login', 'added_at', 'last_sent'] ) ?
+    $orderby = in_array( $orderby, ['post_id', 'post_title', 'post_type', 'post_author', 'added_at', 'last_sent'] ) ?
       $orderby : 'added_at';
 
     // Total items
@@ -481,9 +481,9 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   /**
    * Render extra content in the table navigation section
    *
-   * @since Fictioneer Email Subscriptions 1.0.0
+   * @since 0.1.0
    *
-   * @param string $which The position of the navigation, either "top" or "bottom".
+   * @param string $which  The position of the navigation, either "top" or "bottom".
    */
 
   function extra_tablenav( $which ) {
@@ -549,20 +549,20 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   /**
    * Retrieve the sortable columns for the table
    *
-   * @since Fictioneer Email Subscriptions 1.0.0
+   * @since 0.1.0
    *
    * @return array An associative array of sortable columns and their sort parameters.
    *               The keys represent the column names, and the values are arrays
    *               with the column key and sort order (true for ascending, false for descending).
    */
 
-  // protected function get_sortable_columns() {
-  //   return array(
-  //     'post_title' => ['post_title', false],
-  //     'post_id' => ['post_id', false],
-  //     'post_type' => ['post_type', false],
-  //     'added_at' => ['added_at', false],
-  //     'last_sent' => ['last_sent', false]
-  //   );
-  // }
+  protected function get_sortable_columns() {
+    return array(
+      'post_title' => ['post_title', false],
+      'post_id' => ['post_id', false],
+      'post_type' => ['post_type', false],
+      'added_at' => ['added_at', false],
+      'last_sent' => ['last_sent', false]
+    );
+  }
 }
