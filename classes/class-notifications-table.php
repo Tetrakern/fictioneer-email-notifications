@@ -473,8 +473,10 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
   function get_bulk_actions() {
     return array(
-      'remove_all' => __( 'Remove', 'fcnen' ),
-      'unsent_all' => __( 'Unsent', 'fcnen' )
+      'bulk_delete' => __( 'Remove', 'fcnen' ),
+      'bulk_unsent' => __( 'Unsent', 'fcnen' ),
+      'bulk_pause' => __( 'Pause', 'fcnen' ),
+      'bulk_unpause' => __( 'Unpause', 'fcnen' )
     );
   }
 
@@ -539,6 +541,29 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
     // POST actions
     if ( isset( $_POST['action'] ) && empty( $_POST['s'] ?? 0 ) ) {
+      $ids = array_map( 'absint', $_POST['notifications'] ?? [] );
+      $collection = implode( ',', $ids );
+      $log_ids = implode( ', ', array_map( function( $id ) { return "#{$id}"; }, $ids ) );
+
+      // Bulk delete notifications
+      if ( ! empty( $collection ) && $_POST['action'] === 'bulk_delete' ) {
+
+      }
+
+      // Bulk unsent notifications
+      if ( ! empty( $collection ) && $_POST['action'] === 'bulk_unsent' ) {
+
+      }
+
+      // Bulk pause notifications
+      if ( ! empty( $collection ) && $_POST['action'] === 'bulk_pause' ) {
+
+      }
+
+      // Bulk unpause notifications
+      if ( ! empty( $collection ) && $_POST['action'] === 'bulk_unpause' ) {
+
+      }
 
       // Redirect with notice (prevents multi-submit)
       wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
