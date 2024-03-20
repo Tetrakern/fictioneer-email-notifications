@@ -601,7 +601,14 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
       // Delete notifications
       if ( $_GET['action'] === 'delete_notification' ) {
+        if ( $wpdb->delete( $table_name, array( 'post_id' => $post_id ), ['%d'] ) ) {
+          $query_args['fcnen-notice'] = 'delete-notification-success';
+          fcnen_log( "Deleted notification for \"{$post->post_title}\" (#{$post_id})." );
+        } else {
+          $query_args['fcnen-notice'] = 'delete-notification-failure';
+        }
 
+        $query_args['fcnen-message'] = $post_id;
       }
 
       // Pause notifications
