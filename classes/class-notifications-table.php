@@ -21,6 +21,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
   public $total_items;
   public $paused_count = 0;
+  public $sent_count = 0;
 
   /**
    * Constructor for the WP_List_Table subclass.
@@ -56,12 +57,19 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     $this->view = $_GET['view'] ?? 'all';
     $this->total_items = $wpdb->get_var( "SELECT COUNT(post_id) FROM {$table_name}" );
     $this->paused_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE paused = 1" );
+    $this->sent_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE last_sent IS NOT NULL" );
     $this->uri = remove_query_arg( ['action', 'id', 'notifications', 'fcnen-nonce'], $_SERVER['REQUEST_URI'] );
 
     // Redirect from empty views
     switch ( $this->view ) {
       case 'paused':
         if ( $this->paused_count < 1 ) {
+          wp_safe_redirect( remove_query_arg( 'view', $this->uri  ) );
+          exit();
+        }
+        break;
+      case 'sent':
+        if ( $this->sent_count < 1 ) {
           wp_safe_redirect( remove_query_arg( 'view', $this->uri  ) );
           exit();
         }
@@ -215,6 +223,10 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       case 'paused':
         $query .= "paused = 1";
         $view_total_items = $this->paused_count;
+        break;
+      case 'sent':
+        $query .= "last_sent IS NOT NULL";
+        $view_total_items = $this->sent_count;
         break;
     }
 
@@ -542,6 +554,9 @@ class FCNEN_Notifications_Table extends WP_List_Table {
         case 'paused':
           $current = 'paused';
           break;
+        case 'sent':
+          $current = 'sent';
+          break;
         default:
           $current = 'all';
       }
@@ -561,6 +576,15 @@ class FCNEN_Notifications_Table extends WP_List_Table {
         add_query_arg( array( 'view' => 'paused' ), $uri ),
         $current === 'paused' ? 'current' : '',
         sprintf( __( 'Paused <span class="count">(%s)</span>', 'fcnen' ), $this->paused_count )
+      );
+    }
+
+    if ( $this->sent_count > 0 ) {
+      $views['sent'] = sprintf(
+        '<li class="sent"><a href="%s" class="%s">%s</a></li>',
+        add_query_arg( array( 'view' => 'sent' ), $uri ),
+        $current === 'sent' ? 'current' : '',
+        sprintf( __( 'Sent <span class="count">(%s)</span>', 'fcnen' ), $this->sent_count )
       );
     }
 
