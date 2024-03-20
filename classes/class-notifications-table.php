@@ -559,7 +559,6 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   protected function get_sortable_columns() {
     return array(
       'post_title' => ['post_title', false],
-      'post_id' => ['post_id', false],
       'post_type' => ['post_type', false],
       'added_at' => ['added_at', false],
       'last_sent' => ['last_sent', false]

@@ -57,7 +57,11 @@
   width: 144px;
 }
 
-.fcnen-notifications-table-wrapper :is(.column-post_id, .column-post_type, .column-status) {
+.fcnen-notifications-table-wrapper .column-post_id {
+  width: 64px;
+}
+
+.fcnen-notifications-table-wrapper :is(.column-post_type, .column-status) {
   width: 88px;
 }
 
