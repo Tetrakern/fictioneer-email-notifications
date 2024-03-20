@@ -57,6 +57,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
 
     // Initialize
     $table_name = $wpdb->prefix . 'fcnen_subscribers';
+    $this->total_items = $wpdb->get_var( "SELECT COUNT(id) FROM {$table_name}" );
     $this->confirmed_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE confirmed = 1 AND trashed = 0" );
     $this->pending_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE confirmed = 0 AND trashed = 0" );
     $this->trashed_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE trashed = 1" );
@@ -166,6 +167,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
 
     // Setup
     $table_name = $wpdb->prefix . 'fcnen_subscribers';
+    $view_total_items = $this->all_count;
     $per_page = $this->get_items_per_page( 'fcnen_subscribers_per_page', 25 );
     $current_page = $this->get_pagenum();
     $offset = ( $per_page * max( 0, absint( $current_page ) - 1 ) );
@@ -174,9 +176,6 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
 
     // Sanitize orderby
     $orderby = in_array( $orderby, ['id', 'email', 'confirmed', 'created_at'] ) ? $orderby : 'id';
-
-    // Total items
-    $this->total_items = $wpdb->get_var( "SELECT COUNT(id) FROM {$table_name}" );
 
     // Search?
     if ( ! empty( $_POST['s'] ?? '' ) ) {
@@ -197,12 +196,15 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     switch ( $this->view ) {
       case 'confirmed':
         $query .= "confirmed = 1 AND trashed = 0";
+        $view_total_items = $this->confirmed_count;
         break;
       case 'pending':
         $query .= "confirmed = 0 AND trashed = 0";
+        $view_total_items = $this->pending_count;
         break;
       case 'trash':
         $query .= "trashed = 1";
+        $view_total_items = $this->trashed_count;
         break;
       default:
         $query .= "trashed = 0";
@@ -217,9 +219,9 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     // Pagination
     $this->set_pagination_args(
       array(
-        'total_items' => $this->total_items,
+        'total_items' => $view_total_items,
         'per_page' => $per_page,
-        'total_pages' => ceil( $this->total_items / $per_page )
+        'total_pages' => ceil( $view_total_items / $per_page )
       )
     );
 
@@ -534,7 +536,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
   /**
    * Display the views for filtering the table
    *
-   * @since Fictioneer Email Subscriptions 1.0.0
+   * @since 0.1.0
    */
 
   function display_views() {
