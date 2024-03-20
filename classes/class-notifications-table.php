@@ -154,8 +154,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
       $notification['status'] = fcnen_post_sendable( $post_id, true );
 
-      $notification['last_sent'] = ! empty( $notification['last_sent'] ) ?
-        __( 'Mailed', 'fcnen' ) . '<br>' . $notification['last_sent'] : '';
+      $notification['last_sent'] = ! empty( $notification['last_sent'] ) ? $notification['last_sent'] : '';
 
       $this->table_data[ $key ] = $notification;
     }
@@ -637,7 +636,14 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
       // Unsent notifications
       if ( $_GET['action'] === 'unsent_notification' ) {
+        if ( $wpdb->update( $table_name, array( 'last_sent' => null ), array( 'post_id' => $post_id ) ) ) {
+          $query_args['fcnen-notice'] = 'unsent-notification-success';
+          fcnen_log( "Marked notification for \"{$post->post_title}\" (#{$post_id}) as unsent." );
+        } else {
+          $query_args['fcnen-notice'] = 'unsent-notification-success';
+        }
 
+        $query_args['fcnen-message'] = $post_id;
       }
 
       // Redirect with notice (prevents multi-submit)

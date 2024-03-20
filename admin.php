@@ -316,6 +316,14 @@ function fcnen_admin_notices() {
       $notice = sprintf( __( 'Error. Could not unpause notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
       $class = 'notice-error';
       break;
+    case 'unsent-notification-success':
+      $notice = sprintf( __( 'Notification for "%s" (#%s) marked as unsent.', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-success';
+      break;
+    case 'unsent-notification-failure':
+      $notice = sprintf( __( 'Error. Could not mark notification for "%s" (#%s) as unsent.', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-error';
+      break;
   }
 
   // Render notice
