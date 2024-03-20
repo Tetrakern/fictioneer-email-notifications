@@ -813,6 +813,30 @@ function fcnen_get_log() {
 // =======================================================================================
 
 /**
+ * Returns whether a notification is paused
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param int $post_id  Post ID of the notification.
+ *
+ * @return bool True if paused, false if not.
+ */
+
+function fcnen_notification_paused( $post_id ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_notifications';
+
+  // Query
+  $query = $wpdb->prepare( "SELECT COUNT(*) FROM {$table_name} WHERE post_id = %d AND paused = 1", $post_id );
+
+  // Result
+  return $wpdb->get_var( $query ) > 0;
+}
+
+/**
  * Returns whether a post can be sent as notification
  *
  * @since 0.1.0
