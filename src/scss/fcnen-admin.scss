@@ -61,7 +61,11 @@
   width: 64px;
 }
 
-.fcnen-notifications-table-wrapper :is(.column-post_type, .column-status) {
+.fcnen-notifications-table-wrapper .column-post_type {
+  width: 72px;
+}
+
+.fcnen-notifications-table-wrapper .column-status {
   width: 88px;
 }
 
