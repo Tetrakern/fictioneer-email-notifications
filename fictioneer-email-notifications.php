@@ -21,7 +21,7 @@ define( 'FCNEN_VERSION', '0.1.0' );
 // =======================================================================================
 
 /**
- * Stubs for theme functions to make editor shut up
+ * Stubs for functions to make editor shut up
  *
  * @since 0.1.0
  */
@@ -37,6 +37,10 @@ function fcnen_load_stubs() {
 
   if ( ! function_exists( 'fictioneer_get_safe_title' ) ) {
     function fictioneer_get_safe_title( $post, $content = null ) {}
+  }
+
+  if ( ! function_exists( 'update_post_author_caches' ) ) {
+    function update_post_author_caches( $posts ) {}
   }
 }
 add_action( 'wp_loaded', 'fcnen_load_stubs' );
