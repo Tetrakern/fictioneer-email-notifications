@@ -158,6 +158,8 @@ function fcnen_admin_notices() {
   $notice = '';
   $class = '';
   $message = sanitize_text_field( $_GET['fcnen-message'] ?? '' );
+  $maybe_id = is_numeric( $message ) ? absint( $message ) : 0;
+  $maybe_post = get_post( $maybe_id );
 
   // Default notices
   if ( ( $_GET['settings-updated'] ?? 0 ) === 'true' ) {
@@ -289,6 +291,30 @@ function fcnen_admin_notices() {
     case 'csv-imported':
       $notice = sprintf( __( '%s subscriber(s) imported from CSV.', 'fcnen' ), $message ?: 0 );
       $class = 'notice-success';
+      break;
+    case 'delete-notification-success':
+      $notice = sprintf( __( 'Deleted notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-success';
+      break;
+    case 'delete-notification-failure':
+      $notice = sprintf( __( 'Error. Could not delete notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-error';
+      break;
+    case 'paused-notification-success':
+      $notice = sprintf( __( 'Paused notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-success';
+      break;
+    case 'paused-notification-failure':
+      $notice = sprintf( __( 'Error. Could not pause notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-error';
+      break;
+    case 'unpaused-notification-success':
+      $notice = sprintf( __( 'Unpaused notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-success';
+      break;
+    case 'unpaused-notification-failure':
+      $notice = sprintf( __( 'Error. Could not unpause notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-error';
       break;
   }
 
