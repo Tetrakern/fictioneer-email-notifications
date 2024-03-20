@@ -295,6 +295,22 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       );
     }
 
+    // Pause action
+    if ( empty( $item['last_sent'] ) ) {
+      $actions['pause'] = sprintf(
+        '<a href="%s">%s</a>',
+        wp_nonce_url(
+          add_query_arg(
+            array( 'action' => 'pause_notification', 'id' => $item['post_id'] ),
+            $this->uri
+          ),
+          'fcnen-table-action',
+          'fcnen-nonce'
+        ),
+        __( 'Pause', 'fcnen' )
+      );
+    }
+
     // Delete action
     $actions['delete'] = sprintf(
       '<a href="%s">%s</a>',

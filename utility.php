@@ -799,7 +799,7 @@ function fcnen_get_log() {
   $output = '<ul class="fcnen-log">';
 
   foreach ( $log_entries as $entry ) {
-    $output .= '<li class="fcnes-log__item">' . $entry . '</li>';
+    $output .= '<li class="fcnen-log__item">' . $entry . '</li>';
   }
 
   $output .= '</ul>';
