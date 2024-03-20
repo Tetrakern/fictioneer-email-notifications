@@ -102,14 +102,12 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   function prepare_items() {
     // Setup
     $columns = $this->get_columns();
-    $hidden = [];
     $sortable = $this->get_sortable_columns();
     $primary = 'post_title';
 
     // Hidden columns?
-    // if ( is_array( get_user_meta( get_current_user_id(), 'managenotifications_page_fcnen-subscriberscolumnshidden', true ) ) ) {
-    //   $hidden = get_user_meta( get_current_user_id(), 'managenotifications_page_fcnen-subscriberscolumnshidden', true );
-    // }
+    $hidden_columns = get_user_meta( get_current_user_id(), 'managetoplevel_page_fcnen-notificationscolumnshidden', true );
+    $hidden = is_array( $hidden_columns ) ? $hidden_columns : [];
 
     // Data
     $this->table_data = $this->get_table_data();
