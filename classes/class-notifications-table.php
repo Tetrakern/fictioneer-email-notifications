@@ -322,7 +322,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     }
 
     // Pause action
-    if ( empty( $item['last_sent'] ) ) {
+    if ( empty( $item['last_sent'] ) && ! $item['paused'] ) {
       $actions['pause'] = sprintf(
         '<a href="%s">%s</a>',
         wp_nonce_url(
@@ -400,6 +400,10 @@ class FCNEN_Notifications_Table extends WP_List_Table {
    */
 
   function column_status( $item ) {
+    if ( $item['paused'] ) {
+      return _x( 'Paused', 'Notification list table status column.', 'fcnen' );
+    }
+
     if ( $item['status']['sendable'] ?? 0 ) {
       return _x( 'Ready', 'Notification list table status column.', 'fcnen' );
     }
@@ -588,25 +592,46 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
     // GET actions
     if ( isset( $_GET['action'] ) ) {
-      $id = absint( $_GET['id'] ?? 0 );
+      $post_id = absint( $_GET['id'] ?? 0 );
+      $post = get_post( $post_id );
+
+      // Abort if...
+      if ( empty( $post_id ) || ! $post ) {
+        wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
+        exit();
+      }
 
       // Delete notifications
-      if ( ! empty( $id ) && $_GET['action'] === 'delete_notification' ) {
+      if ( $_GET['action'] === 'delete_notification' ) {
 
       }
 
       // Pause notifications
-      if ( ! empty( $id ) && $_GET['action'] === 'pause_notification' ) {
+      if ( $_GET['action'] === 'pause_notification' ) {
+        if ( $wpdb->update( $table_name, array( 'paused' => 1 ), array( 'post_id' => $post_id ), ['%d'], ['%d'] ) ) {
+          $query_args['fcnen-notice'] = 'paused-notification-success';
+          fcnen_log( "Paused notification for \"{$post->post_title}\" (#{$post_id})." );
+        } else {
+          $query_args['fcnen-notice'] = 'paused-notification-failure';
+        }
 
+        $query_args['fcnen-message'] = $post_id;
       }
 
       // Unpause notifications
-      if ( ! empty( $id ) && $_GET['action'] === 'unpause_notification' ) {
+      if ( $_GET['action'] === 'unpause_notification' ) {
+        if ( $wpdb->update( $table_name, array( 'paused' => 0 ), array( 'post_id' => $post_id ), ['%d'], ['%d'] ) ) {
+          $query_args['fcnen-notice'] = 'unpaused-notification-success';
+          fcnen_log( "Unpaused notification for \"{$post->post_title}\" (#{$post_id})." );
+        } else {
+          $query_args['fcnen-notice'] = 'unpaused-notification-failure';
+        }
 
+        $query_args['fcnen-message'] = $post_id;
       }
 
       // Unsent notifications
-      if ( ! empty( $id ) && $_GET['action'] === 'unsent_notification' ) {
+      if ( $_GET['action'] === 'unsent_notification' ) {
 
       }
 
