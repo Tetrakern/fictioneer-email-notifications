@@ -730,7 +730,6 @@ function fcnen_log( $message ) {
   // Setup
   $current_user = wp_get_current_user();
   $log_file = plugin_dir_path( __FILE__ ) . 'fcnen-log.log';
-  $log_limit = 5000;
   $date = date( 'Y-m-d H:i:s' );
 
   // Acting user?
@@ -757,7 +756,7 @@ function fcnen_log( $message ) {
   $log_entries = explode( "\n", $log_contents );
 
   // Limit (if too large)
-  $log_entries = array_slice( $log_entries, -( $log_limit + 1 ) );
+  $log_entries = array_slice( $log_entries, -( FCNEN_LOG_LIMIT + 1 ) );
 
   // Add new entry
   $log_entries[] = "[{$date}] [#{$user_id}|{$username}] $message";

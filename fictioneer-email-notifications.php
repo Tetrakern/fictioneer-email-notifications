@@ -46,8 +46,12 @@ function fcnen_load_stubs() {
 add_action( 'wp_loaded', 'fcnen_load_stubs' );
 
 // =======================================================================================
-// DEFAULTS
+// CONSTANTS & DEFAULTS
 // =======================================================================================
+
+if ( ! defined( 'FCNEN_LOG_LIMIT' ) ) {
+  define( 'FCNEN_LOG_LIMIT', 2000 );
+}
 
 define(
   'FCNEN_API',

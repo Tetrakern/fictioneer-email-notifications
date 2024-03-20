@@ -1116,7 +1116,12 @@ function fcnen_log_page() {
         </div>
         <div class="fcnen-box__body">
           <div class="fcnen-box__row">
-            <p><?php _e( 'These are the most recent 500 log rows. Up to 5,000 rows are saved in the actual log file in the plugin directory. Note that due to privacy concerns, only administrative and system actions are logged and only with IDs instead of email addresses.', 'fcnen' ); ?></p>
+            <p><?php
+              printf(
+                __( 'These are the most recent 500 log items. Up to %s items are saved in the actual log file in the plugin directory. Note that due to privacy concerns, only administrative and system actions are logged and only with IDs instead of email addresses.', 'fcnen' ),
+                FCNEN_LOG_LIMIT
+              );
+            ?></p>
           </div>
           <hr>
           <div class="fcnen-box__row">
