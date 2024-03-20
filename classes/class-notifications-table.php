@@ -66,10 +66,10 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     return array(
       'cb' => '<input type="checkbox" />',
       'post_title' => __( 'Title', 'fcnen' ),
+      'status' => __( 'Status', 'fcnen' ),
       'post_author' => __( 'Author', 'fcnen' ),
       'post_id' => __( 'Post ID', 'fcnen' ),
       'post_type' => __( 'Type', 'fcnen' ),
-      'status' => __( 'Status', 'fcnen' ),
       'added_at' => __( 'Date', 'fcnen' ),
       'last_sent' => __( 'Last Sent', 'fcnen' )
     );
