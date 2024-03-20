@@ -788,8 +788,8 @@ function fcnen_get_log() {
   // Parse
   $log_entries = explode( "\n", $log_contents );
 
-  // Limit display to 500
-  $log_entries = array_slice( $log_entries, -500 );
+  // Limit display to 200
+  $log_entries = array_slice( $log_entries, -200 );
 
   // Reverse
   $log_entries = array_reverse( $log_entries );
