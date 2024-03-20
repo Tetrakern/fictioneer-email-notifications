@@ -360,63 +360,44 @@ add_action( 'admin_post_fcnen_import_subscribers_csv', 'fcnen_import_subscribers
 // =======================================================================================
 
 /**
- * Submits a notification
+ * Submit new notification to the database
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
  *
- * @param int $post_id  The ID of the post to add.
+ * @param int $post_id  The ID of the notification post.
  */
 
-// function fcnen_submit_notification( $post_id ) {
-//   global $wpdb;
+function fcnen_submit_notification( $post_id ) {
+  global $wpdb;
 
-//   // Verify request
-//   if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-add-notification', 'fcnen-nonce' ) ) {
-//     wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
-//   }
+  // Verify request
+  if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-add-notification', 'fcnen-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
+  }
 
-//   // Guard
-//   if ( ! current_user_can( 'manage_options' ) || ! is_admin() ) {
-//     wp_die( __( 'Insufficient permissions.', 'fcnen' ) );
-//   }
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) || ! is_admin() ) {
+    wp_die( __( 'Insufficient permissions.', 'fcnen' ) );
+  }
 
-//   // Setup
-//   $table_name = $wpdb->prefix . 'fcnen_notifications';
-//   $post_id = absint( $_POST['post_id'] ?? 0 );
-//   $post = get_post( $post_id );
-//   $redirect_url = admin_url( 'admin.php?page=fcnen-notifications' );
-//   $query_args = [];
+  // Setup
+  $post_id = absint( $_POST['post_id'] ?? 0 );
+  $redirect_url = admin_url( 'admin.php?page=fcnen-notifications' );
+  $query_args = [];
 
-//   // Sendable?
-//   $sendable = fcnen_post_sendable( $post_id, true );
+  // Sendable?
+  $sendable = fcnen_post_sendable( $post_id, true );
 
-//   if ( ! $sendable['sendable'] ) {
-//     wp_safe_redirect( add_query_arg( 'fcnen-notice', $sendable['message'], $redirect_url ) );
-//     exit();
-//   }
+  if ( ! $sendable['sendable'] ) {
+    wp_safe_redirect( add_query_arg( 'fcnen-notice', $sendable['message'], $redirect_url ) );
+    exit();
+  }
 
-//   // Add to table
-//   $result = $wpdb->insert(
-//     $table_name,
-//     array(
-//       'post_id' => $post->ID,
-//       'added_at' => current_time( 'mysql' )
-//     ),
-//     array( '%d', '%s' )
-//   );
+  // Add to table
 
-//   // Result?
-//   $query_args['fcnen-message'] = $post->post_title;
-
-//   if ( empty( $result ) ) {
-//     $query_args['fcnen-notice'] = 'post-not-enqueued';
-//   } else {
-//     $query_args['fcnen-notice'] = 'post-enqueued';
-//   }
-
-//   // Redirect and terminate
-//   wp_safe_redirect( add_query_arg( $query_args, $redirect_url ) );
-//   exit();
-// }
-// add_action( 'admin_post_fcnen_submit_notification', 'fcnen_submit_notification' );
+  // Redirect and terminate
+  wp_safe_redirect( add_query_arg( $query_args, $redirect_url ) );
+  exit();
+}
+add_action( 'admin_post_fcnen_submit_notification', 'fcnen_submit_notification' );

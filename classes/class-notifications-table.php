@@ -311,6 +311,22 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       );
     }
 
+    // Unpause action
+    if ( $item['paused'] ) {
+      $actions['unpause'] = sprintf(
+        '<a href="%s">%s</a>',
+        wp_nonce_url(
+          add_query_arg(
+            array( 'action' => 'unpause_notification', 'id' => $item['post_id'] ),
+            $this->uri
+          ),
+          'fcnen-table-action',
+          'fcnen-nonce'
+        ),
+        __( 'Unpause', 'fcnen' )
+      );
+    }
+
     // Delete action
     $actions['delete'] = sprintf(
       '<a href="%s">%s</a>',
@@ -449,18 +465,18 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   /**
    * Retrieve the bulk actions available for the table
    *
-   * @since Fictioneer Email Subscriptions 1.0.0
+   * @since 0.1.0
    *
    * @return array An associative array of bulk actions. The keys represent the action identifiers,
    *               and the values represent the action labels.
    */
 
-  // function get_bulk_actions() {
-  //   return array(
-  //     'remove_all' => __( 'Remove', 'fcnen' ),
-  //     'unsent_all' => __( 'Unsent', 'fcnen' )
-  //   );
-  // }
+  function get_bulk_actions() {
+    return array(
+      'remove_all' => __( 'Remove', 'fcnen' ),
+      'unsent_all' => __( 'Unsent', 'fcnen' )
+    );
+  }
 
   /**
    * Render extra content in the table navigation section
@@ -476,12 +492,58 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   /**
    * Perform actions based on the GET and POST requests
    *
-   * @since Fictioneer Email Subscriptions 1.0.0
-   * @global wpdb $wpdb The WordPress database object.
+   * @since 0.1.0
+   * @global wpdb $wpdb  The WordPress database object.
    */
 
   function perform_actions() {
     global $wpdb;
+
+    // Guard
+    if ( ! current_user_can( 'manage_options' ) ) {
+      return;
+    }
+
+    // Setup
+    $table_name = $wpdb->prefix . 'fcnen_notifications';
+    $query_args = [];
+
+    // GET actions
+    if ( isset( $_GET['action'] ) ) {
+      $id = absint( $_GET['id'] ?? 0 );
+
+      // Delete notifications
+      if ( ! empty( $id ) && $_GET['action'] === 'delete_notification' ) {
+
+      }
+
+      // Pause notifications
+      if ( ! empty( $id ) && $_GET['action'] === 'pause_notification' ) {
+
+      }
+
+      // Unpause notifications
+      if ( ! empty( $id ) && $_GET['action'] === 'unpause_notification' ) {
+
+      }
+
+      // Unsent notifications
+      if ( ! empty( $id ) && $_GET['action'] === 'unsent_notification' ) {
+
+      }
+
+      // Redirect with notice (prevents multi-submit)
+      wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
+      exit();
+    }
+
+    // POST actions
+    if ( isset( $_POST['action'] ) && empty( $_POST['s'] ?? 0 ) ) {
+
+      // Redirect with notice (prevents multi-submit)
+      wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
+      exit();
+    }
   }
 
   /**
