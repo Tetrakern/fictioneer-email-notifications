@@ -157,12 +157,6 @@
     }
   }
 
-  &__horizontal {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px 20px;
-  }
-
   &__vertical {
     display: flex;
     flex-direction: column;
@@ -197,6 +191,12 @@ details {
   pre {
     margin-top: 6px;
   }
+}
+
+.fcnen-horizontal-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
 }
 
 .fcnen-placeholders {

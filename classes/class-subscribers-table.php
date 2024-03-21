@@ -525,6 +525,14 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       );
     }
 
+    // CSV import
+    if ( $this->view !== 'trash' ) {
+      $actions[] = sprintf(
+        '<a class="button action" data-fcnen-open-modal="fcnen-modal-import-csv">%s</a>',
+        __( 'Import CSV', 'fcnen' )
+      );
+    }
+
     // Output
     if ( ! empty( $actions ) ) {
       // Start HTML ---> ?>

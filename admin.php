@@ -512,9 +512,7 @@ function fcnen_notifications_page() {
     <h1 class="wp-heading-inline"><?php _e( 'Notifications', 'fcnen' ); ?></h1>
     <button class="page-title-action" data-fcnen-open-modal="fcnen-modal-add-notification"><?php _e( 'Add Notification', 'fcnen' ); ?></button>
     <hr class="wp-header-end">
-
     <div class="fcnen-settings__content">
-
       <div class="fcnen-settings__table fcnen-notifications-table-wrapper">
         <?php $notifications_table->display_views(); ?>
         <form method="post"><?php
@@ -522,17 +520,18 @@ function fcnen_notifications_page() {
           $notifications_table->display();
         ?></form>
       </div>
-
     </div>
   </div>
 
   <dialog class="fcnen-modal" id="fcnen-modal-add-notification">
     <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_submit_notification' ); ?>" class="fcnen-modal__wrapper">
-      <?php wp_nonce_field( 'fcnen-submit-notification', 'fcnen-nonce' ); ?>
+      <?php wp_nonce_field( 'submit-notification', 'fcnen-nonce' ); ?>
       <div class="fcnen-modal__header"><?php _e( 'Add Notification', 'fcnen' ); ?></div>
       <div class="fcnen-modal__content">
         <p><?php _e( 'You can add blog posts, stories, and chapters by ID (you can find that in the URL). Make sure the post is not excluded, private, duplicate, and so forth.', 'fcnen' ); ?></p>
-        <input type="text" name="post_id" id="fcnen-add-notification-post-id" placeholder="<?php _ex( 'Post ID', 'Add notification input placeholder.', 'fcnen' ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore required>
+        <div class="fcnen-input-wrap">
+          <input type="text" name="post_id" id="fcnen-add-notification-post-id" placeholder="<?php echo esc_attr_x( 'Post ID', 'Add notification input placeholder.', 'fcnen' ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore required>
+        </div>
       </div>
       <div class="fcnen-modal__actions">
         <button value="cancel" formmethod="dialog" class="button" formnovalidate><?php _e( 'Cancel', 'fcnen' ); ?></button>
@@ -620,85 +619,10 @@ function fcnen_subscribers_page() {
 
   // Start HTML ---> ?>
   <div id="fcnen-admin-page-subscribers" class="wrap fcnen-settings _subscribers">
-    <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Subscribers', 'fcnen' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php _e( 'Subscribers', 'fcnen' ); ?></h1>
+    <button class="page-title-action" data-fcnen-open-modal="fcnen-modal-add-subscriber"><?php _e( 'Add Subscriber', 'fcnen' ); ?></button>
     <hr class="wp-header-end">
-
     <div class="fcnen-settings__content">
-
-      <div class="fcnen-settings__columns _stretch">
-
-        <div class="fcnen-box">
-          <div class="fcnen-box__header">
-            <h2><?php _e( 'Add Subscriber', 'fcnen' ); ?></h2>
-          </div>
-          <div class="fcnen-box__body">
-            <div class="fcnen-box__row"><p class="fcnen-box__description"><?php _e( 'Add a subscriber, optionally without confirmation. Duplicate emails will be ignored.', 'fcnen' ); ?></p></div>
-            <div class="fcnen-box__row">
-              <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_submit_subscriber' ); ?>" class="fcnen-box__vertical">
-                <?php wp_nonce_field( 'submit_subscriber', 'fcnen-nonce' ); ?>
-                <div class="fcnen-input-wrap">
-                  <input type="email" name="email" id="fcnen-submit-subscriber-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcnen' ); ?>" required>
-                </div>
-                <div class="fcnen-box__horizontal">
-                  <div class="fcnen-checkbox-wrap">
-                    <input type="checkbox" name="confirmed" id="fcnen-submit-subscriber-confirm" value="1">
-                    <label for="fcnen-submit-subscriber-confirm"><?php _e( 'Confirmed', 'fcnen' ); ?></label>
-                  </div>
-                  <div class="fcnen-checkbox-wrap">
-                    <input type="checkbox" name="everything" id="fcnen-submit-subscriber-everything" value="1" checked>
-                    <label for="fcnen-submit-subscriber-everything"><?php _e( 'Everything', 'fcnen' ); ?></label>
-                  </div>
-                  <div class="fcnen-checkbox-wrap">
-                    <input type="checkbox" name="posts" id="fcnen-submit-subscriber-posts" value="1">
-                    <label for="fcnen-submit-subscriber-posts"><?php _e( 'Blogs', 'fcnen' ); ?></label>
-                  </div>
-                  <div class="fcnen-checkbox-wrap">
-                    <input type="checkbox" name="stories" id="fcnen-submit-subscriber-stories" value="1">
-                    <label for="fcnen-submit-subscriber-stories"><?php _e( 'Stories', 'fcnen' ); ?></label>
-                  </div>
-                  <div class="fcnen-checkbox-wrap">
-                    <input type="checkbox" name="chapters" id="fcnen-submit-subscriber-chapters" value="1">
-                    <label for="fcnen-submit-subscriber-chapters"><?php _e( 'Chapters', 'fcnen' ); ?></label>
-                  </div>
-                </div>
-                <div class="fcnen-action-wrap">
-                  <button type="submit" class="button button-primary"><?php _e( 'Add Subscriber', 'fcnen' ); ?></button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <div class="fcnen-box">
-          <div class="fcnen-box__header">
-            <h2><?php _e( 'Import CSV', 'fcnen' ); ?></h2>
-          </div>
-          <div class="fcnen-box__body">
-            <div class="fcnen-box__row"><p class="fcnen-box__description"><?php _e( 'Import subscribers from a CSV file. Duplicate emails will be ignored. Keep in mind that scopes are saved as IDs and may not match if the associated terms have changed.', 'fcnen' ); ?></p></div>
-            <div class="fcnen-box__row">
-              <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_import_subscribers_csv' ); ?>" enctype="multipart/form-data" class="fcnen-box__vertical">
-                <?php wp_nonce_field( 'fcnen-import-csv', 'fcnen-nonce' ); ?>
-                <div class="fcnen-box__horizontal">
-                  <div class="fcnen-input-wrap _file">
-                    <input type="file" name="csv-file" id="fcnen-import-csv-file" hidden required>
-                    <label for="fcnen-import-csv-file" class="fcnen-input-wrap__file-button"><?php _e( 'Choose File', 'fcnen' ); ?></label>
-                    <label for="fcnen-import-csv-file" class="fcnen-input-wrap__file-field"><?php _e( 'No file chosen', 'fcnen' ); ?></label>
-                  </div>
-                  <div class="fcnen-checkbox-wrap">
-                    <input type="checkbox" name="reset-scopes" id="fcnen-import-csv-reset-scopes" value="1">
-                    <label for="fcnen-import-csv-reset-scopes"><?php _e( 'Reset Scopes', 'fcnen' ); ?></label>
-                  </div>
-                </div>
-                <div class="fcnen-action-wrap">
-                  <button type="submit" class="button button-primary"><?php _e( 'Import CSV', 'fcnen' ); ?></button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
       <div class="fcnen-settings__table fcnen-subscribers-table-wrapper">
         <?php $subscribers_table->display_views(); ?>
         <form method="post"><?php
@@ -706,9 +630,70 @@ function fcnen_subscribers_page() {
           $subscribers_table->display();
         ?></form>
       </div>
-
     </div>
   </div>
+
+  <dialog class="fcnen-modal" id="fcnen-modal-add-subscriber">
+    <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_submit_subscriber' ); ?>" class="fcnen-modal__wrapper">
+      <?php wp_nonce_field( 'submit-subscriber', 'fcnen-nonce' ); ?>
+      <div class="fcnen-modal__header"><?php _e( 'Add Subscriber', 'fcnen' ); ?></div>
+      <div class="fcnen-modal__content">
+        <p><?php _e( 'Add a subscriber, optionally already confirmed.', 'fcnen' ); ?></p>
+        <div class="fcnen-input-wrap">
+          <input type="email" name="email" id="fcnen-submit-subscriber-email" placeholder="<?php esc_attr_e( 'Email Address', 'fcnen' ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore required>
+        </div>
+        <div class="fcnen-horizontal-wrap">
+          <div class="fcnen-checkbox-wrap">
+            <input type="checkbox" name="confirmed" id="fcnen-submit-subscriber-confirm" value="1">
+            <label for="fcnen-submit-subscriber-confirm"><?php _e( 'Confirmed', 'fcnen' ); ?></label>
+          </div>
+          <div class="fcnen-checkbox-wrap">
+            <input type="checkbox" name="everything" id="fcnen-submit-subscriber-everything" value="1" checked>
+            <label for="fcnen-submit-subscriber-everything"><?php _e( 'Everything', 'fcnen' ); ?></label>
+          </div>
+          <div class="fcnen-checkbox-wrap">
+            <input type="checkbox" name="posts" id="fcnen-submit-subscriber-posts" value="1">
+            <label for="fcnen-submit-subscriber-posts"><?php _e( 'Blogs', 'fcnen' ); ?></label>
+          </div>
+          <div class="fcnen-checkbox-wrap">
+            <input type="checkbox" name="stories" id="fcnen-submit-subscriber-stories" value="1">
+            <label for="fcnen-submit-subscriber-stories"><?php _e( 'Stories', 'fcnen' ); ?></label>
+          </div>
+          <div class="fcnen-checkbox-wrap">
+            <input type="checkbox" name="chapters" id="fcnen-submit-subscriber-chapters" value="1">
+            <label for="fcnen-submit-subscriber-chapters"><?php _e( 'Chapters', 'fcnen' ); ?></label>
+          </div>
+        </div>
+      </div>
+      <div class="fcnen-modal__actions">
+        <button value="cancel" formmethod="dialog" class="button" formnovalidate><?php _e( 'Cancel', 'fcnen' ); ?></button>
+        <button type="submit" class="button button-primary"><?php _e( 'Add', 'fcnen' ); ?></button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="fcnen-modal" id="fcnen-modal-import-csv">
+    <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_import_subscribers_csv' ); ?>" enctype="multipart/form-data" class="fcnen-modal__wrapper">
+      <?php wp_nonce_field( 'fcnen-import-csv', 'fcnen-nonce' ); ?>
+      <div class="fcnen-modal__header"><?php _e( 'Import CSV', 'fcnen' ); ?></div>
+      <div class="fcnen-modal__content">
+        <p><?php _e( 'Import subscribers from a CSV file. Keep in mind that scopes are saved as IDs and may not match if the associated terms have changed.', 'fcnen' ); ?></p>
+        <div class="fcnen-input-wrap _file">
+          <input type="file" name="csv-file" id="fcnen-import-csv-file" hidden required>
+          <label for="fcnen-import-csv-file" class="fcnen-input-wrap__file-button"><?php _e( 'Choose File', 'fcnen' ); ?></label>
+          <label for="fcnen-import-csv-file" class="fcnen-input-wrap__file-field"><?php _e( 'No file chosen', 'fcnen' ); ?></label>
+        </div>
+        <div class="fcnen-checkbox-wrap">
+          <input type="checkbox" name="reset-scopes" id="fcnen-import-csv-reset-scopes" value="1">
+          <label for="fcnen-import-csv-reset-scopes"><?php _e( 'Reset Scopes', 'fcnen' ); ?></label>
+        </div>
+      </div>
+      <div class="fcnen-modal__actions">
+        <button value="cancel" formmethod="dialog" class="button" formnovalidate><?php _e( 'Cancel', 'fcnen' ); ?></button>
+        <button type="submit" class="button button-primary"><?php _e( 'Import', 'fcnen' ); ?></button>
+      </div>
+    </form>
+  </dialog>
   <?php // <--- End HTML
 }
 
@@ -809,7 +794,7 @@ function fcnen_settings_page() {
   // Start HTML ---> ?>
   <script><?php echo 'var fcnen_preview_replacements = ' . json_encode( $preview_replacements ) . ';'; ?></script>
   <div id="fcnen-admin-page-settings" class="wrap fcnen-settings _settings">
-    <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Settings', 'fcnen' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php _e( 'Settings', 'fcnen' ); ?></h1>
     <hr class="wp-header-end">
 
     <div class="fcnen-settings__content">
@@ -1223,7 +1208,7 @@ function fcnen_log_page() {
 
   // Start HTML ---> ?>
   <div id="fcnen-admin-page-log" class="wrap fcnen-settings _log">
-    <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Log', 'fcnen' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php _e( 'Log', 'fcnen' ); ?></h1>
     <hr class="wp-header-end">
 
     <div class="fcnen-settings__content">

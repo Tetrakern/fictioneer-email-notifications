@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) OR exit;
 
 function fcnen_submit_subscriber() {
   // Verify request
-  if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'submit_subscriber', 'fcnen-nonce' ) ) {
+  if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'submit-subscriber', 'fcnen-nonce' ) ) {
     wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
   }
 
@@ -369,7 +369,7 @@ add_action( 'admin_post_fcnen_import_subscribers_csv', 'fcnen_import_subscribers
 
 function fcnen_submit_notification( $post_id ) {
   // Verify request
-  if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-submit-notification', 'fcnen-nonce' ) ) {
+  if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'submit-notification', 'fcnen-nonce' ) ) {
     wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
   }
 
