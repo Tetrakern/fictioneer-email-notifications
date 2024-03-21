@@ -324,6 +324,38 @@ function fcnen_admin_notices() {
       $notice = sprintf( __( 'Error. Could not mark notification for "%s" (#%s) as unsent.', 'fcnen' ), $maybe_post->post_title, $maybe_id );
       $class = 'notice-error';
       break;
+    case 'bulk-delete-notifications-success':
+      $notice = sprintf( __( 'Deleted %s notifications.', 'fcnen' ), $message ?: '0' );
+      $class = 'notice-success';
+      break;
+    case 'bulk-delete-notifications-failure':
+      $notice = __( 'Error. Could not delete notifications.', 'fcnen' );
+      $class = 'notice-error';
+      break;
+    case 'bulk-unsent-notifications-success':
+      $notice = sprintf( __( 'Marked %s notifications as unsent.', 'fcnen' ), $message ?: '0' );
+      $class = 'notice-success';
+      break;
+    case 'bulk-unsent-notifications-failure':
+      $notice = __( 'Error. Could not mark notifications as unsent.', 'fcnen' );
+      $class = 'notice-error';
+      break;
+    case 'bulk-pause-notifications-success':
+      $notice = sprintf( __( 'Paused %s notifications.', 'fcnen' ), $message ?: '0' );
+      $class = 'notice-success';
+      break;
+    case 'bulk-pause-notifications-failure':
+      $notice = __( 'Error. Could not pause notifications.', 'fcnen' );
+      $class = 'notice-error';
+      break;
+    case 'bulk-unpause-notifications-success':
+      $notice = sprintf( __( 'Unpaused %s notifications.', 'fcnen' ), $message ?: '0' );
+      $class = 'notice-success';
+      break;
+    case 'bulk-unpause-notifications-failure':
+      $notice = __( 'Error. Could not unpause notifications.', 'fcnen' );
+      $class = 'notice-error';
+      break;
   }
 
   // Render notice

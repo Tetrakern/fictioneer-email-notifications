@@ -512,10 +512,10 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
   function get_bulk_actions() {
     return array(
-      'bulk_delete' => __( 'Remove', 'fcnen' ),
-      'bulk_unsent' => __( 'Unsent', 'fcnen' ),
       'bulk_pause' => __( 'Pause', 'fcnen' ),
-      'bulk_unpause' => __( 'Unpause', 'fcnen' )
+      'bulk_unpause' => __( 'Unpause', 'fcnen' ),
+      'bulk_unsent' => __( 'Unsent', 'fcnen' ),
+      'bulk_delete' => __( 'Remove', 'fcnen' )
     );
   }
 
@@ -681,24 +681,66 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       $collection = implode( ',', $ids );
       $log_ids = implode( ', ', array_map( function( $id ) { return "#{$id}"; }, $ids ) );
 
-      // Bulk delete notifications
-      if ( ! empty( $collection ) && $_POST['action'] === 'bulk_delete' ) {
+      // Abort if...
+      if ( empty( $collection ) ) {
+        wp_safe_redirect( add_query_arg( $query_args, $this->uri ) );
+        exit();
+      }
 
+      // Bulk delete notifications
+      if ( $_POST['action'] === 'bulk_delete' ) {
+        $query = "DELETE FROM $table_name WHERE post_id IN ($collection)";
+        $result = $wpdb->query( $query );
+
+        if ( $result !== false ) {
+          $query_args['fcnen-notice'] = 'bulk-delete-notifications-success';
+          $query_args['fcnen-message'] = $result;
+          fcnen_log( "Deleted set of notifications: $log_ids." );
+        } else {
+          $query_args['fcnen-notice'] = 'bulk-delete-notifications-failure';
+        }
       }
 
       // Bulk unsent notifications
-      if ( ! empty( $collection ) && $_POST['action'] === 'bulk_unsent' ) {
+      if ( $_POST['action'] === 'bulk_unsent' ) {
+        $query = "UPDATE $table_name SET last_sent = NULL WHERE post_id IN ($collection)";
+        $result = $wpdb->query( $query );
 
+        if ( $result !== false ) {
+          $query_args['fcnen-notice'] = 'bulk-unsent-notifications-success';
+          $query_args['fcnen-message'] = $result;
+          fcnen_log( "Marked set of notifications as unsent: $log_ids." );
+        } else {
+          $query_args['fcnen-notice'] = 'bulk-unsent-notifications-failure';
+        }
       }
 
       // Bulk pause notifications
-      if ( ! empty( $collection ) && $_POST['action'] === 'bulk_pause' ) {
+      if ( $_POST['action'] === 'bulk_pause' ) {
+        $query = "UPDATE $table_name SET paused = 1 WHERE post_id IN ($collection)";
+        $result = $wpdb->query( $query );
 
+        if ( $result !== false ) {
+          $query_args['fcnen-notice'] = 'bulk-pause-notifications-success';
+          $query_args['fcnen-message'] = $result;
+          fcnen_log( "Paused set of notifications: $log_ids." );
+        } else {
+          $query_args['fcnen-notice'] = 'bulk-pause-notifications-failure';
+        }
       }
 
       // Bulk unpause notifications
-      if ( ! empty( $collection ) && $_POST['action'] === 'bulk_unpause' ) {
+      if ( $_POST['action'] === 'bulk_unpause' ) {
+        $query = "UPDATE $table_name SET paused = 0 WHERE post_id IN ($collection)";
+        $result = $wpdb->query( $query );
 
+        if ( $result !== false ) {
+          $query_args['fcnen-notice'] = 'bulk-unpause-notifications-success';
+          $query_args['fcnen-message'] = $result;
+          fcnen_log( "Unpaused set of notifications: $log_ids." );
+        } else {
+          $query_args['fcnen-notice'] = 'bulk-unpause-notifications-failure';
+        }
       }
 
       // Redirect with notice (prevents multi-submit)
