@@ -20,6 +20,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
   private $uri = '';
 
   public $total_items;
+  public $ready_count = 0;
   public $paused_count = 0;
   public $sent_count = 0;
 
@@ -56,6 +57,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     $table_name = $wpdb->prefix . 'fcnen_notifications';
     $this->view = $_GET['view'] ?? 'all';
     $this->total_items = $wpdb->get_var( "SELECT COUNT(post_id) FROM {$table_name}" );
+    $this->ready_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE paused = 0 AND last_sent IS NULL" );
     $this->paused_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE paused = 1" );
     $this->sent_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE last_sent IS NOT NULL" );
     $this->uri = remove_query_arg( ['action', 'id', 'notifications', 'fcnen-nonce'], $_SERVER['REQUEST_URI'] );
@@ -70,6 +72,12 @@ class FCNEN_Notifications_Table extends WP_List_Table {
         break;
       case 'sent':
         if ( $this->sent_count < 1 ) {
+          wp_safe_redirect( remove_query_arg( 'view', $this->uri  ) );
+          exit();
+        }
+        break;
+      case 'ready':
+        if ( $this->ready_count < 1 ) {
           wp_safe_redirect( remove_query_arg( 'view', $this->uri  ) );
           exit();
         }
@@ -227,6 +235,10 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       case 'sent':
         $query .= "last_sent IS NOT NULL";
         $view_total_items = $this->sent_count;
+        break;
+      case 'ready':
+        $query .= "paused = 0 AND last_sent IS NULL";
+        $view_total_items = $this->ready_count;
         break;
     }
 
@@ -557,6 +569,9 @@ class FCNEN_Notifications_Table extends WP_List_Table {
         case 'sent':
           $current = 'sent';
           break;
+        case 'ready':
+          $current = 'ready';
+          break;
         default:
           $current = 'all';
       }
@@ -569,6 +584,15 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       $current === 'all' ? 'current' : '',
       sprintf( __( 'All <span class="count">(%s)</span>', 'fcnen' ), $this->total_items )
     );
+
+    if ( $this->ready_count > 0 ) {
+      $views['ready'] = sprintf(
+        '<li class="ready"><a href="%s" class="%s">%s</a></li>',
+        add_query_arg( array( 'view' => 'ready' ), $uri ),
+        $current === 'ready' ? 'current' : '',
+        sprintf( __( 'Ready <span class="count">(%s)</span>', 'fcnen' ), $this->ready_count )
+      );
+    }
 
     if ( $this->paused_count > 0 ) {
       $views['paused'] = sprintf(
