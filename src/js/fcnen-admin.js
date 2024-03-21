@@ -1,4 +1,24 @@
 // =============================================================================
+// MODALS
+// =============================================================================
+
+document.querySelectorAll('[data-fcnen-open-modal]').forEach(button => {
+  button.addEventListener('click', event => {
+    document.getElementById(event.currentTarget.dataset.fcnenOpenModal)?.showModal();
+  });
+});
+
+// Close dialog modal on click outside
+document.querySelectorAll('.fcnen-modal').forEach(element => {
+  element.addEventListener('mousedown', event => {
+    if (event.target.tagName.toLowerCase() === 'dialog') {
+      event.preventDefault();
+      event.target.close();
+    }
+  });
+});
+
+// =============================================================================
 // IMPORT CSV
 // =============================================================================
 

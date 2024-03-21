@@ -6,7 +6,6 @@
   &__content {
     display: grid;
     grid-gap: 40px;
-    margin-top: 16px;
   }
 
   &__columns {
@@ -22,6 +21,53 @@
 
   .hidden {
     display: none !important;
+  }
+}
+
+/* =============================================================================
+ * MODALS
+ * ========================================================================== */
+
+.fcnen-modal {
+  font-size: 13px;
+  padding: 0;
+  border: none;
+  width: min(calc(100vw - 40px), 500px);
+
+  &::backdrop {
+    background: rgb(0 0 0 / 70%);
+  }
+
+  &__wrapper {
+    display: grid;
+    gap: 20px;
+    padding: 12px;
+  }
+
+  &__header {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  &__content {
+    display: grid;
+    gap: 12px;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  input:is([type="text"]) {
+    margin: 0;
+    width: 100%;
+  }
+
+  button {
+    margin: 0 !important;
   }
 }
 
