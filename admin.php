@@ -356,6 +356,42 @@ function fcnen_admin_notices() {
       $notice = __( 'Error. Could not unpause notifications.', 'fcnen' );
       $class = 'notice-error';
       break;
+    case 'submit-notification-successful':
+      $notice = sprintf( __( 'Added notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-success';
+      break;
+    case 'submit-notification-failure':
+      $notice = sprintf( __( 'Error. Could not add notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-error';
+      break;
+    case 'submit-notification-duplicate':
+      $notice = sprintf( __( 'Error. There is already an unsent notification enqueued for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $class = 'notice-error';
+      break;
+    case 'submit-notification-post-not-found':
+      $notice = sprintf( __( 'Error. Post #%s not found.', 'fcnen' ), $maybe_id );
+      $class = 'notice-error';
+      break;
+    case 'submit-notification-post-unpublished':
+      $notice = sprintf( __( 'Error. Post #%s is not published.', 'fcnen' ), $maybe_id );
+      $class = 'notice-error';
+      break;
+    case 'submit-notification-post-protected':
+      $notice = sprintf( __( 'Error. Post #%s is protected.', 'fcnen' ), $maybe_id );
+      $class = 'notice-error';
+      break;
+    case 'submit-notification-post-invalid-type':
+      $notice = sprintf( __( 'Error. Post #%s is of an invalid type.', 'fcnen' ), $maybe_id );
+      $class = 'notice-error';
+      break;
+    case 'submit-notification-post-excluded':
+      $notice = sprintf( __( 'Error. Post #%s is excluded from email notifications.', 'fcnen' ), $maybe_id );
+      $class = 'notice-error';
+      break;
+    case 'submit-notification-post-hidden':
+      $notice = sprintf( __( 'Error. Post #%s is hidden.', 'fcnen' ), $maybe_id );
+      $class = 'notice-error';
+      break;
   }
 
   // Render notice
@@ -473,7 +509,8 @@ function fcnen_notifications_page() {
 
   // Start HTML ---> ?>
   <div id="fcnen-admin-page-notifications" class="wrap fcnen-settings _notifications">
-    <h1 class="fcnen-settings__header"><?php echo esc_html__( 'Notifications', 'fcnen' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php _e( 'Notifications', 'fcnen' ); ?></h1>
+    <button class="page-title-action" data-fcnen-open-modal="fcnen-modal-add-notification"><?php _e( 'Add Notification', 'fcnen' ); ?></button>
     <hr class="wp-header-end">
 
     <div class="fcnen-settings__content">
@@ -488,6 +525,21 @@ function fcnen_notifications_page() {
 
     </div>
   </div>
+
+  <dialog class="fcnen-modal" id="fcnen-modal-add-notification">
+    <form method="POST" action="<?php echo admin_url( 'admin-post.php?action=fcnen_submit_notification' ); ?>" class="fcnen-modal__wrapper">
+      <?php wp_nonce_field( 'fcnen-submit-notification', 'fcnen-nonce' ); ?>
+      <div class="fcnen-modal__header"><?php _e( 'Add Notification', 'fcnen' ); ?></div>
+      <div class="fcnen-modal__content">
+        <p><?php _e( 'You can add blog posts, stories, and chapters by ID (you can find that in the URL). Make sure the post is not excluded, private, duplicate, and so forth.', 'fcnen' ); ?></p>
+        <input type="text" name="post_id" id="fcnen-add-notification-post-id" placeholder="<?php _ex( 'Post ID', 'Add notification input placeholder.', 'fcnen' ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore required>
+      </div>
+      <div class="fcnen-modal__actions">
+        <button value="cancel" formmethod="dialog" class="button" formnovalidate><?php _e( 'Cancel', 'fcnen' ); ?></button>
+        <button type="submit" class="button button-primary"><?php _e( 'Add', 'fcnen' ); ?></button>
+      </div>
+    </form>
+  </dialog>
   <?php // <--- End HTML
 }
 

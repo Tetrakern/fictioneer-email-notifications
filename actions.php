@@ -363,16 +363,13 @@ add_action( 'admin_post_fcnen_import_subscribers_csv', 'fcnen_import_subscribers
  * Submit new notification to the database
  *
  * @since 0.1.0
- * @global wpdb $wpdb  The WordPress database object.
  *
  * @param int $post_id  The ID of the notification post.
  */
 
 function fcnen_submit_notification( $post_id ) {
-  global $wpdb;
-
   // Verify request
-  if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-add-notification', 'fcnen-nonce' ) ) {
+  if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-submit-notification', 'fcnen-nonce' ) ) {
     wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
   }
 
@@ -384,17 +381,35 @@ function fcnen_submit_notification( $post_id ) {
   // Setup
   $post_id = absint( $_POST['post_id'] ?? 0 );
   $redirect_url = admin_url( 'admin.php?page=fcnen-notifications' );
-  $query_args = [];
+  $query_args = array( 'fcnen-message' => $post_id );
+
+  // Check for unsent duplicate
+  if ( fcnen_unsent_notification_exists( $post_id ) ) {
+    $query_args['fcnen-notice'] = 'submit-notification-duplicate';
+
+    wp_safe_redirect( add_query_arg( $query_args, $redirect_url ) );
+    exit();
+  }
 
   // Sendable?
   $sendable = fcnen_post_sendable( $post_id, true );
 
   if ( ! $sendable['sendable'] ) {
-    wp_safe_redirect( add_query_arg( 'fcnen-notice', $sendable['message'], $redirect_url ) );
+    $query_args['fcnen-notice'] = 'submit-notification-' . $sendable['message'];
+
+    wp_safe_redirect( add_query_arg( $query_args, $redirect_url ) );
     exit();
   }
 
   // Add to table
+  if ( fcnen_add_notification( $post_id ) ) {
+    $post = get_post( $post_id );
+    $query_args['fcnen-notice'] = 'submit-notification-successful';
+
+    fcnen_log( "Added notification for \"{$post->post_title}\" (#{$post_id})." );
+  } else {
+    $query_args['fcnen-notice'] = 'submit-notification-failure';
+  }
 
   // Redirect and terminate
   wp_safe_redirect( add_query_arg( $query_args, $redirect_url ) );
