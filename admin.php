@@ -21,11 +21,9 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_general_group', 'fcnen_flag_subscribe_to_taxonomies', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_allow_passwords', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_allow_hidden', 'absint' );
-
-  // Provider
-  register_setting( 'fcnen_provider_group', 'fcnen_service_provider', 'sanitize_text_field' );
-  register_setting( 'fcnen_provider_group', 'fcnen_api_key', 'sanitize_text_field' );
-  register_setting( 'fcnen_provider_group', 'fcnen_api_bulk_limit', 'absint' );
+  register_setting( 'fcnen_general_group', 'fcnen_service_provider', 'sanitize_text_field' );
+  register_setting( 'fcnen_general_group', 'fcnen_api_key', 'sanitize_text_field' );
+  register_setting( 'fcnen_general_group', 'fcnen_api_bulk_limit', 'absint' );
 
   // Templates
   register_setting( 'fcnen_template_group', 'fcnen_template_layout_confirmation', 'wp_kses_post' );
@@ -698,7 +696,7 @@ function fcnen_subscribers_page() {
 }
 
 // =======================================================================================
-// ADMIN SETTINGS PAGE
+// TEMPLATES PAGE
 // =======================================================================================
 
 /**
@@ -707,44 +705,37 @@ function fcnen_subscribers_page() {
  * @since 0.1.0
  */
 
-function fcnen_add_settings_menu_page() {
+function fcnen_add_templates_menu_page() {
   // Guard
   if ( ! current_user_can( 'manage_options' ) ) {
     return;
   }
 
   // Add admin page
-  $fcnen_admin_page_settings = add_submenu_page(
+  add_submenu_page(
     'fcnen-notifications',
-    'Settings',
-    'Settings',
+    'Templates',
+    'Templates',
     'manage_options',
-    'fcnen-settings',
-    'fcnen_settings_page'
+    'fcnen-templates',
+    'fcnen_templates_page'
   );
 }
-add_action( 'admin_menu', 'fcnen_add_settings_menu_page' );
+add_action( 'admin_menu', 'fcnen_add_templates_menu_page' );
 
 /**
- * Callback for the settings submenu page
+ * Callback for the templates submenu page
  *
  * @since 0.1.0
  */
 
-function fcnen_settings_page() {
+function fcnen_templates_page() {
   // Guard
   if ( ! current_user_can( 'manage_options' ) ) {
     wp_die( __( 'You do not have permission to access this page.', 'fcnen' ) );
   }
 
   // Setup
-  $from = fcnen_get_from_email_address();
-  $name = fcnen_get_from_email_name();
-
-  // $provider = get_option( 'fcnen_service_provider' );
-  $api_key = get_option( 'fcnen_api_key' );
-  $api_bulk_limit = get_option( 'fcnen_api_bulk_limit', 400 );
-
   $layout_confirmation = get_option( 'fcnen_template_layout_confirmation', FCNEN_DEFAULTS['layout_confirmation'] ?? '' );
   $subject_confirmation = get_option( 'fcnen_template_subject_confirmation' );
 
@@ -794,373 +785,396 @@ function fcnen_settings_page() {
   // Start HTML ---> ?>
   <script><?php echo 'var fcnen_preview_replacements = ' . json_encode( $preview_replacements ) . ';'; ?></script>
   <div id="fcnen-admin-page-settings" class="wrap fcnen-settings _settings">
+    <h1 class="wp-heading-inline"><?php _e( 'Templates', 'fcnen' ); ?></h1>
+    <hr class="wp-header-end">
+    <p class="fcnen-replacement-tokens"><?php _e( 'You can edit the subject, layout, and style of emails. Make sure to always include the necessary replacement tokens. Use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the token is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the token <em>is empty.</em>', 'fcnen' ); ?></p>
+    <div class="fcnen-settings__content">
+      <form method="POST" action="options.php">
+        <?php
+          settings_fields( 'fcnen_template_group' );
+          do_settings_sections( 'fcnen_template_group' );
+        ?>
+        <table class="form-table" role="presentation">
+          <tbody>
+            <tr>
+              <td class="td-full">
+                <select id="fcnen-select-template">
+                  <option value=""><?php _e( '— Select a template to edit —', 'fcnen' ); ?></option>
+                  <option value="layout-confirmation"><?php _e( 'Confirmation Layout', 'fcnen' ); ?></option>
+                  <option value="layout-code"><?php _e( 'Code Layout', 'fcnen' ); ?></option>
+                  <option value="layout-edit"><?php _e( 'Edit Layout', 'fcnen' ); ?></option>
+                  <option value="layout-notification"><?php _e( 'Notification Layout', 'fcnen' ); ?></option>
+                  <option value="loop-part-post"><?php _e( 'Post Loop Partial', 'fcnen' ); ?></option>
+                  <option value="loop-part-story"><?php _e( 'Story Loop Partial', 'fcnen' ); ?></option>
+                  <option value="loop-part-chapter"><?php _e( 'Chapter Loop Partial', 'fcnen' ); ?></option>
+                </select>
+                <div class="fcnen-template-wrapper hidden" id="layout-confirmation">
+                  <p class="fcnen-replacement-tokens"><?php _e( 'This email is sent when a new subscription is submitted, prompting the subscriber to confirm as security measure against fraudulent submissions. Anyone could enter anyone’s email address, after all. If not confirmed within 24 hours, the subscription and all data will be deleted once the cleanup cron job runs (every 12 hours).', 'fcnen' ); ?></p>
+                  <div class="fcnen-left-right-wrap">
+                    <label for="fcnen-template-subject-confirmation" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
+                    <div class="fcnen-input-wrap">
+                      <input type="text" name="fcnen_template_subject_confirmation" id="fcnen-template-subject-confirmation" placeholder="<?php echo FCNEN_DEFAULTS['subject_confirmation']; ?>" value="<?php echo $subject_confirmation; ?>">
+                    </div>
+                  </div>
+                  <textarea name="fcnen_template_layout_confirmation" id="fcnen-template-layout-confirmation" class="fcnen-codemirror"><?php echo esc_textarea( $layout_confirmation ); ?></textarea>
+                  <p class="fcnen-replacement-tokens">
+                    <code>{{site_name}}</code>
+                    <code>{{site_link}}</code>
+                    <code>{{activation_link}}</code>
+                    <code>{{unsubscribe_link}}</code>
+                    <code>{{edit_link}}</code>
+                    <code>{{email}}</code>
+                    <code>{{code}}</code>
+                    <code>{{id}}</code>
+                  </p>
+                  <details class="fcnen-default-code">
+                    <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
+                    <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_confirmation'] ?? '' ); ?></code></pre>
+                  </details>
+                  <div class="fcnen-action-wrap">
+                    <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
+                  </div>
+                </div>
+                <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-code">
+                  <p class="fcnen-replacement-tokens"><?php _e( 'This email can be manually triggered in the subscriber list, sending the edit code to a confirmed subscriber along with an edit link for convenience. This should normally not be required since the code should be included in all other emails anyway, but people are people.', 'fcnen' ); ?></p>
+                  <div class="fcnen-left-right-wrap">
+                    <label for="fcnen-template-subject-code" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
+                    <div class="fcnen-input-wrap">
+                      <input type="text" name="fcnen_template_subject_code" id="fcnen-template-subject-code" placeholder="<?php echo FCNEN_DEFAULTS['subject_code']; ?>" value="<?php echo $subject_code; ?>">
+                    </div>
+                  </div>
+                  <textarea name="fcnen_template_layout_code" id="fcnen-template-layout-code" class="fcnen-codemirror"><?php echo esc_textarea( $layout_code ); ?></textarea>
+                  <p class="fcnen-replacement-tokens">
+                    <code>{{site_name}}</code>
+                    <code>{{site_link}}</code>
+                    <code>{{activation_link}}</code>
+                    <code>{{unsubscribe_link}}</code>
+                    <code>{{edit_link}}</code>
+                    <code>{{email}}</code>
+                    <code>{{code}}</code>
+                    <code>{{id}}</code>
+                  </p>
+                  <details class="fcnen-default-code">
+                    <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
+                    <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_code'] ?? '' ); ?></code></pre>
+                  </details>
+                  <div class="fcnen-action-wrap">
+                    <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
+                  </div>
+                </div>
+                <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-edit">
+                  <p class="fcnen-replacement-tokens"><?php _e( 'This email is sent whenever a subscriber updates their preferences, both as confirmation and security notification about the change. Just in case a malicious actor managed to acquire both their email address and code.', 'fcnen' ); ?></p>
+                  <div class="fcnen-left-right-wrap">
+                    <label for="fcnen-template-subject-edit" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
+                    <div class="fcnen-input-wrap">
+                      <input type="text" name="fcnen_template_subject_edit" id="fcnen-template-subject-edit" placeholder="<?php echo FCNEN_DEFAULTS['subject_edit']; ?>" value="<?php echo $subject_edit; ?>">
+                    </div>
+                  </div>
+                  <textarea name="fcnen_template_layout_edit" id="fcnen-template-layout-edit" class="fcnen-codemirror"><?php echo esc_textarea( $layout_edit ); ?></textarea>
+                  <p class="fcnen-replacement-tokens">
+                    <code>{{site_name}}</code>
+                    <code>{{site_link}}</code>
+                    <code>{{activation_link}}</code>
+                    <code>{{unsubscribe_link}}</code>
+                    <code>{{edit_link}}</code>
+                    <code>{{email}}</code>
+                    <code>{{code}}</code>
+                    <code>{{id}}</code>
+                    <code>{{scope_everything}}</code>
+                    <code>{{scope_post_types}}</code>
+                    <code>{{scope_stories}}</code>
+                    <code>{{scope_categories}}</code>
+                    <code>{{scope_tags}}</code>
+                    <code>{{scope_fandoms}}</code>
+                    <code>{{scope_characters}}</code>
+                    <code>{{scope_warnings}}</code>
+                  </p>
+                  <details class="fcnen-default-code">
+                    <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
+                    <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_edit'] ?? '' ); ?></code></pre>
+                  </details>
+                  <div class="fcnen-action-wrap">
+                    <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
+                  </div>
+                </div>
+                <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-notification">
+                  <p class="fcnen-replacement-tokens"><?php _e( 'This email is sent for actual update notifications and consists of multiple parts: layout and loop partials. While this layout provides the surrounding body with some nice text of your choice (and the code, really important), the loop partials render the individual content matching the subscriber’s preferences.', 'fcnen' ); ?></p>
+                  <div class="fcnen-left-right-wrap">
+                    <label for="fcnen-template-subject-notification" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
+                    <div class="fcnen-input-wrap">
+                      <input type="text" name="fcnen_template_subject_notification" id="fcnen-template-subject-notification" placeholder="<?php echo FCNEN_DEFAULTS['subject_notification']; ?>" value="<?php echo $subject_notification; ?>">
+                    </div>
+                  </div>
+                  <textarea name="fcnen_template_layout_notification" id="fcnen-template-layout-notification" class="fcnen-codemirror"><?php echo esc_textarea( $layout_notification ); ?></textarea>
+                  <p class="fcnen-replacement-tokens">
+                    <code>{{site_name}}</code>
+                    <code>{{site_link}}</code>
+                    <code>{{activation_link}}</code>
+                    <code>{{unsubscribe_link}}</code>
+                    <code>{{edit_link}}</code>
+                    <code>{{email}}</code>
+                    <code>{{code}}</code>
+                    <code>{{id}}</code>
+                    <code>{{updates}}</code>
+                  </p>
+                  <details class="fcnen-default-code">
+                    <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
+                    <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_notification'] ?? '' ); ?></code></pre>
+                  </details>
+                  <div class="fcnen-action-wrap">
+                    <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
+                  </div>
+                </div>
+                <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-post">
+                  <p class="fcnen-replacement-tokens"><?php _e( 'This partial renders post updates in notification emails inside the <code>{{updates}}</code> replacement token.', 'fcnen' ); ?></p>
+                  <textarea name="fcnen_template_loop_part_post" id="fcnen-template-loop-part-post" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_post ); ?></textarea>
+                  <p class="fcnen-replacement-tokens">
+                    <code>{{type}}</code>
+                    <code>{{title}}</code>
+                    <code>{{link}}</code>
+                    <code>{{author}}</code>
+                    <code>{{excerpt}}</code>
+                    <code>{{date}}</code>
+                    <code>{{time}}</code>
+                    <code>{{thumbnail}}</code>
+                    <code>{{categories}}</code>
+                    <code>{{tags}}</code>
+                    <code>{{site_name}}</code>
+                    <code>{{site_link}}</code>
+                  </p>
+                  <details class="fcnen-default-code">
+                    <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
+                    <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['loop_part_post'] ?? '' ); ?></code></pre>
+                  </details>
+                  <div class="fcnen-action-wrap">
+                    <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
+                  </div>
+                </div>
+                <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-story">
+                  <p class="fcnen-replacement-tokens"><?php _e( 'This partial renders story updates in notification emails inside the <code>{{updates}}</code> replacement token.', 'fcnen' ); ?></p>
+                  <textarea name="fcnen_template_loop_part_story" id="fcnen-template-loop-part-story" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_story ); ?></textarea>
+                  <p class="fcnen-replacement-tokens">
+                    <code>{{type}}</code>
+                    <code>{{title}}</code>
+                    <code>{{link}}</code>
+                    <code>{{author}}</code>
+                    <code>{{excerpt}}</code>
+                    <code>{{date}}</code>
+                    <code>{{time}}</code>
+                    <code>{{thumbnail}}</code>
+                    <code>{{categories}}</code>
+                    <code>{{tags}}</code>
+                    <code>{{genres}}</code>
+                    <code>{{fandoms}}</code>
+                    <code>{{characters}}</code>
+                    <code>{{warnings}}</code>
+                    <code>{{site_name}}</code>
+                    <code>{{site_link}}</code>
+                  </p>
+                  <details class="fcnen-default-code">
+                    <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
+                    <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['loop_part_story'] ?? '' ); ?></code></pre>
+                  </details>
+                  <div class="fcnen-action-wrap">
+                    <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
+                  </div>
+                </div>
+                <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-chapter">
+                  <p class="fcnen-replacement-tokens"><?php _e( 'This partial renders chapter updates in notification emails inside the <code>{{updates}}</code> replacement token.', 'fcnen' ); ?></p>
+                  <textarea name="fcnen_template_loop_part_chapter" id="fcnen-template-loop-part-chapter" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_chapter ); ?></textarea>
+                  <p class="fcnen-replacement-tokens">
+                    <code>{{type}}</code>
+                    <code>{{title}}</code>
+                    <code>{{link}}</code>
+                    <code>{{author}}</code>
+                    <code>{{excerpt}}</code>
+                    <code>{{date}}</code>
+                    <code>{{time}}</code>
+                    <code>{{thumbnail}}</code>
+                    <code>{{categories}}</code>
+                    <code>{{tags}}</code>
+                    <code>{{genres}}</code>
+                    <code>{{fandoms}}</code>
+                    <code>{{characters}}</code>
+                    <code>{{warnings}}</code>
+                    <code>{{story_title}}</code>
+                    <code>{{story_link}}</code>
+                    <code>{{site_name}}</code>
+                    <code>{{site_link}}</code>
+                  </p>
+                  <details class="fcnen-default-code">
+                    <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
+                    <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['loop_part_chapter'] ?? '' ); ?></code></pre>
+                  </details>
+                  <div class="fcnen-action-wrap">
+                    <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="td-full fcnen-template-preview-wrapper hidden" id="fcnen-preview">
+                <h2 class="title"><?php _e( 'Preview', 'fcnen' ); ?></h2>
+                <div>
+                  <iframe id="fcnen-preview-iframe"></iframe>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </div>
+  <?php // <--- End HTML
+}
+
+// =======================================================================================
+// ADMIN SETTINGS PAGE
+// =======================================================================================
+
+/**
+ * Add settings admin submenu page
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_add_settings_menu_page() {
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) ) {
+    return;
+  }
+
+  // Add admin page
+  add_submenu_page(
+    'fcnen-notifications',
+    'Settings',
+    'Settings',
+    'manage_options',
+    'fcnen-settings',
+    'fcnen_settings_page'
+  );
+}
+add_action( 'admin_menu', 'fcnen_add_settings_menu_page' );
+
+/**
+ * Callback for the settings submenu page
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_settings_page() {
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) ) {
+    wp_die( __( 'You do not have permission to access this page.', 'fcnen' ) );
+  }
+
+  // Setup
+  $from = fcnen_get_from_email_address();
+  $name = fcnen_get_from_email_name();
+
+  // $provider = get_option( 'fcnen_service_provider' );
+  $api_key = get_option( 'fcnen_api_key' );
+  $api_bulk_limit = get_option( 'fcnen_api_bulk_limit', 400 );
+
+  // Start HTML ---> ?>
+  <div id="fcnen-admin-page-settings" class="wrap fcnen-settings _settings">
     <h1 class="wp-heading-inline"><?php _e( 'Settings', 'fcnen' ); ?></h1>
     <hr class="wp-header-end">
-
     <div class="fcnen-settings__content">
-
-      <div class="fcnen-settings__columns _stretch">
-
-        <div class="fcnen-box">
-          <div class="fcnen-box__header">
-            <h2><?php _e( 'General', 'fcnen' ); ?></h2>
-          </div>
-          <div class="fcnen-box__body">
-            <div class="fcnen-box__row">
-              <form method="POST" action="options.php" class="fcnen-box__vertical">
-                <?php
-                  settings_fields( 'fcnen_general_group' );
-                  do_settings_sections( 'fcnen_general_group' );
-                ?>
-                <div class="fcnen-left-right-wrap">
-                  <label for="fcnen-from-email-address" class="offset-top"><?php _e( 'From', 'fcnen' ); ?></label>
-                  <div class="fcnen-input-wrap">
-                    <input type="email" name="fcnen_from_email_address" id="fcnen-from-email-address" placeholder="<?php _ex( 'noreply@your-site.com', 'From email address placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $from ); ?>" required>
-                    <p class="fcnen-input-wrap__sub-label"><?php _e( 'Defaults to noreply@* or admin email address.', 'fcnen' ); ?></p>
-                  </div>
-                </div>
-                <div class="fcnen-left-right-wrap">
-                  <label for="fcnen-from-email-name" class="offset-top"><?php _e( 'Name', 'fcnen' ); ?></label>
-                  <div class="fcnen-input-wrap">
-                    <input type="text" name="fcnen_from_email_name" id="fcnen-from-email-name" placeholder="<?php _ex( 'Your Site', 'From email name placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $name ); ?>" required>
-                    <p class="fcnen-input-wrap__sub-label"><?php _e( 'Defaults to site name.', 'fcnen' ); ?></p>
-                  </div>
-                </div>
-                <div class="fcnen-left-right-wrap">
-                  <span><?php _e( 'Flags', 'fcnen' ); ?></span>
-                  <div>
-                    <div class="fcnen-checkbox-wrap">
-                      <input type="hidden" name="fcnen_flag_subscribe_to_stories" value="0">
-                      <input type="checkbox" name="fcnen_flag_subscribe_to_stories" id="fcnen-flag-stories" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_subscribe_to_stories' ), false ); ?>>
-                      <label for="fcnen-flag-stories"><?php _e( 'Allow subscriptions to stories', 'fcnen' ); ?></label>
-                    </div>
-                    <div class="fcnen-checkbox-wrap" style="margin-top: 8px;">
-                      <input type="hidden" name="fcnen_flag_subscribe_to_taxonomies" value="0">
-                      <input type="checkbox" name="fcnen_flag_subscribe_to_taxonomies" id="fcnen-flag-taxonomies" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_subscribe_to_taxonomies' ), false ); ?>>
-                      <label for="fcnen-flag-taxonomies"><?php _e( 'Allow subscriptions to taxonomies', 'fcnen' ); ?></label>
-                    </div>
-                    <div class="fcnen-checkbox-wrap" style="margin-top: 8px;">
-                      <input type="hidden" name="fcnen_flag_allow_passwords" value="0">
-                      <input type="checkbox" name="fcnen_flag_allow_passwords" id="fcnen-flag-allow-passwords" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_allow_passwords' ), false ); ?>>
-                      <label for="fcnen-flag-allow-passwords"><?php _e( 'Allow notifications for protected posts', 'fcnen' ); ?></label>
-                    </div>
-
-                    <div class="fcnen-checkbox-wrap" style="margin-top: 8px;">
-                      <input type="hidden" name="fcnen_flag_allow_hidden" value="0">
-                      <input type="checkbox" name="fcnen_flag_allow_hidden" id="fcnen-flag-allow-hidden" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_allow_hidden' ), false ); ?>>
-                      <label for="fcnen-flag-allow-hidden"><?php _e( 'Allow notifications for hidden posts', 'fcnen' ); ?></label>
-                    </div>
-                  </div>
-                </div>
-                <div class="fcnen-action-wrap">
-                  <?php submit_button( __( 'Save Changes', 'fcnen' ), 'primary', 'submit', false ); ?>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <div class="fcnen-box">
-          <div class="fcnen-box__header">
-            <h2><?php _e( 'Service Provider API', 'fcnen' ); ?></h2>
-          </div>
-          <div class="fcnen-box__body">
-            <div class="fcnen-box__row">
-              <form method="POST" action="options.php" class="fcnen-box__vertical">
-                <?php
-                  settings_fields( 'fcnen_provider_group' );
-                  do_settings_sections( 'fcnen_provider_group' );
-                ?>
-                <div class="fcnen-left-right-wrap">
-                  <label for="fcnen-select-service-provider" class="offset-top"><?php _e( 'Provider', 'fcnen' ); ?></label>
-                  <div class="fcnen-input-wrap">
-                    <select name="fcnen_service_provider" id="fcnen-select-service-provider">
-                      <option value="mailersend" disabled selected><?php _e( 'MailerSend', 'fcnen' ); ?></option>
-                    </select>
-                    <p class="fcnen-input-wrap__sub-label"><?php _e( 'Currently, only MailerSend is available.', 'fcnen' ); ?></p>
-                  </div>
-                </div>
-                <div class="fcnen-left-right-wrap">
-                  <label for="fcnen-api-key" class="offset-top"><?php _e( 'API Key', 'fcnen' ); ?></label>
-                  <div class="fcnen-input-wrap">
-                    <input type="text" name="fcnen_api_key" id="fcnen-api-key" value="<?php echo esc_attr( $api_key ); ?>" required>
-                    <p class="fcnen-input-wrap__sub-label"><?php _e( 'You can get that from your provider account.', 'fcnen' ); ?></p>
-                  </div>
-                </div>
-                <div class="fcnen-left-right-wrap">
-                  <label for="fcnen-api-bulk-limit" class="offset-top"><?php _e( 'Limit', 'fcnen' ); ?></label>
-                  <div class="fcnen-input-wrap">
-                    <input type="text" name="fcnen_api_bulk_limit" id="fcnen-api-bulk-limit" value="<?php echo esc_attr( $api_bulk_limit ); ?>" style="max-width: 100px;" required>
-                    <p class="fcnen-input-wrap__sub-label"><?php _e( 'Emails per request.', 'fcnen' ); ?></p>
-                  </div>
-                </div>
-                <div class="fcnen-action-wrap">
-                  <?php submit_button( __( 'Save Changes', 'fcnen' ), 'primary', 'submit', false ); ?>
-                  <button type="button" id="fcnen-test-api" class="button"><?php _e( 'Test', 'fcnen' ); ?></button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="fcnen-box">
-        <div class="fcnen-box__header">
-          <h2><?php _e( 'Email Templates', 'fcnen' ); ?></h2>
-        </div>
-        <form method="POST" action="options.php" class="fcnen-box__body">
-          <?php
-            settings_fields( 'fcnen_template_group' );
-            do_settings_sections( 'fcnen_template_group' );
-          ?>
-
-          <div class="fcnen-box__row">
-            <select id="fcnen-select-template">
-              <option value=""><?php _e( '— Select a template to edit —', 'fcnen' ); ?></option>
-              <option value="layout-confirmation"><?php _e( 'Confirmation Layout', 'fcnen' ); ?></option>
-              <option value="layout-code"><?php _e( 'Code Layout', 'fcnen' ); ?></option>
-              <option value="layout-edit"><?php _e( 'Edit Layout', 'fcnen' ); ?></option>
-              <option value="layout-notification"><?php _e( 'Notification Layout', 'fcnen' ); ?></option>
-              <option value="loop-part-post"><?php _e( 'Post Loop Partial', 'fcnen' ); ?></option>
-              <option value="loop-part-story"><?php _e( 'Story Loop Partial', 'fcnen' ); ?></option>
-              <option value="loop-part-chapter"><?php _e( 'Chapter Loop Partial', 'fcnen' ); ?></option>
-            </select>
-          </div>
-
-          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-confirmation">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This email is sent when a new subscription is submitted, prompting the subscriber to confirm it as security measure against fraudulent submissions. Anyone could enter anyone’s email address, after all. If not confirmed within 24 hours, the subscription and all data will be deleted once the cron job runs (every 12 hours). Make sure to always include the necessary replacement tokens. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
-            <div class="fcnen-spacer"></div>
-            <div class="fcnen-left-right-wrap">
-              <label for="fcnen-template-subject-confirmation" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
-              <div class="fcnen-input-wrap">
-                <input type="text" name="fcnen_template_subject_confirmation" id="fcnen-template-subject-confirmation" placeholder="<?php echo FCNEN_DEFAULTS['subject_confirmation']; ?>" value="<?php echo $subject_confirmation; ?>">
-              </div>
-            </div>
-            <textarea name="fcnen_template_layout_confirmation" id="fcnen-template-layout-confirmation" class="fcnen-codemirror"><?php echo esc_textarea( $layout_confirmation ); ?></textarea>
-            <div class="fcnen-placeholders">
-              <code>{{site_name}}</code>
-              <code>{{site_link}}</code>
-              <code>{{activation_link}}</code>
-              <code>{{unsubscribe_link}}</code>
-              <code>{{edit_link}}</code>
-              <code>{{email}}</code>
-              <code>{{code}}</code>
-              <code>{{id}}</code>
-            </div>
-            <details class="fcnen-default-code">
-              <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
-              <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_confirmation'] ?? '' ); ?></code></pre>
-            </details>
-            <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
-            </div>
-          </div>
-
-          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-code">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This email can be manually triggered in the subscriber list, sending the edit code to a confirmed subscriber along with an edit link for convenience. This should normally not be required since the code should be included in all other emails anyway, but people are people. Make sure to always include the necessary replacement tokens. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
-            <div class="fcnen-spacer"></div>
-            <div class="fcnen-left-right-wrap">
-              <label for="fcnen-template-subject-code" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
-              <div class="fcnen-input-wrap">
-                <input type="text" name="fcnen_template_subject_code" id="fcnen-template-subject-code" placeholder="<?php echo FCNEN_DEFAULTS['subject_code']; ?>" value="<?php echo $subject_code; ?>">
-              </div>
-            </div>
-            <textarea name="fcnen_template_layout_code" id="fcnen-template-layout-code" class="fcnen-codemirror"><?php echo esc_textarea( $layout_code ); ?></textarea>
-            <div class="fcnen-placeholders">
-              <code>{{site_name}}</code>
-              <code>{{site_link}}</code>
-              <code>{{activation_link}}</code>
-              <code>{{unsubscribe_link}}</code>
-              <code>{{edit_link}}</code>
-              <code>{{email}}</code>
-              <code>{{code}}</code>
-              <code>{{id}}</code>
-            </div>
-            <details class="fcnen-default-code">
-              <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
-              <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_code'] ?? '' ); ?></code></pre>
-            </details>
-            <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
-            </div>
-          </div>
-
-          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-edit">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This email is sent whenever a subscriber updates their preferences, both as confirmation and security notification about the change. Just in case a malicious actor managed to acquire both their email address and code. Make sure to always include the necessary replacement tokens. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
-            <div class="fcnen-spacer"></div>
-            <div class="fcnen-left-right-wrap">
-              <label for="fcnen-template-subject-edit" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
-              <div class="fcnen-input-wrap">
-                <input type="text" name="fcnen_template_subject_edit" id="fcnen-template-subject-edit" placeholder="<?php echo FCNEN_DEFAULTS['subject_edit']; ?>" value="<?php echo $subject_edit; ?>">
-              </div>
-            </div>
-            <textarea name="fcnen_template_layout_edit" id="fcnen-template-layout-edit" class="fcnen-codemirror"><?php echo esc_textarea( $layout_edit ); ?></textarea>
-            <div class="fcnen-placeholders">
-              <code>{{site_name}}</code>
-              <code>{{site_link}}</code>
-              <code>{{activation_link}}</code>
-              <code>{{unsubscribe_link}}</code>
-              <code>{{edit_link}}</code>
-              <code>{{email}}</code>
-              <code>{{code}}</code>
-              <code>{{id}}</code>
-              <code>{{scope_everything}}</code>
-              <code>{{scope_post_types}}</code>
-              <code>{{scope_stories}}</code>
-              <code>{{scope_categories}}</code>
-              <code>{{scope_tags}}</code>
-              <code>{{scope_fandoms}}</code>
-              <code>{{scope_characters}}</code>
-              <code>{{scope_warnings}}</code>
-            </div>
-            <details class="fcnen-default-code">
-              <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
-              <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_edit'] ?? '' ); ?></code></pre>
-            </details>
-            <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
-            </div>
-          </div>
-
-          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="layout-notification">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This email is sent for actual update notifications and consists of multiple parts: layout and loop partials. While this layout provides the surrounding body with some nice text of your choice (and the code, really important), the loop partials render the individual content matching the subscriber’s preferences. Make sure to always include the necessary replacement tokens. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
-            <div class="fcnen-spacer"></div>
-            <div class="fcnen-left-right-wrap">
-              <label for="fcnen-template-subject-notification" class="offset-top"><?php _e( 'Subject', 'fcnen' ); ?></label>
-              <div class="fcnen-input-wrap">
-                <input type="text" name="fcnen_template_subject_notification" id="fcnen-template-subject-notification" placeholder="<?php echo FCNEN_DEFAULTS['subject_notification']; ?>" value="<?php echo $subject_notification; ?>">
-              </div>
-            </div>
-            <textarea name="fcnen_template_layout_notification" id="fcnen-template-layout-notification" class="fcnen-codemirror"><?php echo esc_textarea( $layout_notification ); ?></textarea>
-            <div class="fcnen-placeholders">
-              <code>{{site_name}}</code>
-              <code>{{site_link}}</code>
-              <code>{{activation_link}}</code>
-              <code>{{unsubscribe_link}}</code>
-              <code>{{edit_link}}</code>
-              <code>{{email}}</code>
-              <code>{{code}}</code>
-              <code>{{id}}</code>
-              <code>{{updates}}</code>
-            </div>
-            <details class="fcnen-default-code">
-              <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
-              <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['layout_notification'] ?? '' ); ?></code></pre>
-            </details>
-            <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
-            </div>
-          </div>
-
-          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-post">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders post updates in notification emails inside the <code>{{updates}}</code> replacement token. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
-            <div class="fcnen-spacer"></div>
-            <textarea name="fcnen_template_loop_part_post" id="fcnen-template-loop-part-post" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_post ); ?></textarea>
-            <div class="fcnen-placeholders">
-              <code>{{type}}</code>
-              <code>{{title}}</code>
-              <code>{{link}}</code>
-              <code>{{author}}</code>
-              <code>{{excerpt}}</code>
-              <code>{{date}}</code>
-              <code>{{time}}</code>
-              <code>{{thumbnail}}</code>
-              <code>{{categories}}</code>
-              <code>{{tags}}</code>
-              <code>{{site_name}}</code>
-              <code>{{site_link}}</code>
-            </div>
-            <details class="fcnen-default-code">
-              <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
-              <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['loop_part_post'] ?? '' ); ?></code></pre>
-            </details>
-            <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
-            </div>
-          </div>
-
-          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-story">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders story updates in notification emails inside the <code>{{updates}}</code> replacement token. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
-            <div class="fcnen-spacer"></div>
-            <textarea name="fcnen_template_loop_part_story" id="fcnen-template-loop-part-story" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_story ); ?></textarea>
-            <div class="fcnen-placeholders">
-              <code>{{type}}</code>
-              <code>{{title}}</code>
-              <code>{{link}}</code>
-              <code>{{author}}</code>
-              <code>{{excerpt}}</code>
-              <code>{{date}}</code>
-              <code>{{time}}</code>
-              <code>{{thumbnail}}</code>
-              <code>{{categories}}</code>
-              <code>{{tags}}</code>
-              <code>{{genres}}</code>
-              <code>{{fandoms}}</code>
-              <code>{{characters}}</code>
-              <code>{{warnings}}</code>
-              <code>{{site_name}}</code>
-              <code>{{site_link}}</code>
-            </div>
-            <details class="fcnen-default-code">
-              <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
-              <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['loop_part_story'] ?? '' ); ?></code></pre>
-            </details>
-            <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
-            </div>
-          </div>
-
-          <div class="fcnen-box__row fcnen-box__vertical fcnen-template-wrapper hidden" id="loop-part-chapter">
-            <div class="fcnen-replacement-tokens"><?php _e( 'This partial renders chapter updates in notification emails inside the <code>{{updates}}</code> replacement token. You can use <code>{{#token}}</code>content<code>{{/token}}</code> to only render the middle part if the replacement is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/token}}</code> for when the replacement <em>is empty.</em>', 'fcnen' ); ?></div>
-            <div class="fcnen-spacer"></div>
-            <textarea name="fcnen_template_loop_part_chapter" id="fcnen-template-loop-part-chapter" class="fcnen-codemirror"><?php echo esc_textarea( $loop_part_chapter ); ?></textarea>
-            <div class="fcnen-placeholders">
-              <code>{{type}}</code>
-              <code>{{title}}</code>
-              <code>{{link}}</code>
-              <code>{{author}}</code>
-              <code>{{excerpt}}</code>
-              <code>{{date}}</code>
-              <code>{{time}}</code>
-              <code>{{thumbnail}}</code>
-              <code>{{categories}}</code>
-              <code>{{tags}}</code>
-              <code>{{genres}}</code>
-              <code>{{fandoms}}</code>
-              <code>{{characters}}</code>
-              <code>{{warnings}}</code>
-              <code>{{story_title}}</code>
-              <code>{{story_link}}</code>
-              <code>{{site_name}}</code>
-              <code>{{site_link}}</code>
-            </div>
-            <details class="fcnen-default-code">
-              <summary><?php _e( 'Default HTML', 'fcnen' ); ?></summary>
-              <pre><code><?php echo esc_textarea( FCNEN_DEFAULTS['loop_part_chapter'] ?? '' ); ?></code></pre>
-            </details>
-            <div class="fcnen-action-wrap">
-              <?php submit_button( __( 'Save Templates', 'fcnen' ), 'primary', 'submit', false ); ?>
-            </div>
-          </div>
-
-        </form>
-      </div>
-
-      <div class="fcnen-box">
-        <div class="fcnen-box__header">
-          <h2><?php _e( 'Preview', 'fcnen' ); ?></h2>
-        </div>
-        <div class="fcnen-box__body">
-          <div class="fcnen-box__row" id="fcnen-preview-notice">
-            <?php _e( 'No template selected.', 'fcnen' ); ?>
-          </div>
-          <div class="fcnen-box__row _iframe hidden" id="fcnen-preview">
-            <iframe id="fcnen-preview-iframe"></iframe>
-          </div>
-        </div>
-      </div>
-
+      <form method="post" action="options.php" novalidate="novalidate">
+        <?php
+          settings_fields( 'fcnen_general_group' );
+          do_settings_sections( 'fcnen_general_group' );
+        ?>
+        <table class="form-table" role="presentation">
+          <tbody>
+            <tr>
+              <th scope="row">
+                <label for="fcnen-from-email-address"><?php _e( 'Sender Email', 'fcnen' ); ?></label>
+              </th>
+              <td>
+                <input type="email" name="fcnen_from_email_address" id="fcnen-from-email-address" class="regular-text ltr" placeholder="<?php _ex( 'noreply@your-site.com', 'From email address placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $from ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
+                <p class="description"><?php _e( 'The sender email address of all outgoing notifications. Defaults to noreply@* or admin email address.', 'fcnen' ); ?></p>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">
+                <label for="fcnen-from-email-address"><?php _e( 'Sender Name', 'fcnen' ); ?></label>
+              </th>
+              <td>
+                <input type="text" name="fcnen_from_email_name" id="fcnen-from-email-name" class="regular-text" placeholder="<?php _ex( 'Your Site', 'From email name placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $name ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
+                <p class="description"><?php _e( 'The sender name of all outgoing notifications. Defaults to site name.', 'fcnen' ); ?></p>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row"><?php _e( 'Optional Settings', 'fcnen' ); ?></th>
+              <td>
+                <fieldset>
+                  <label for="fcnen-flag-stories">
+                    <input type="hidden" name="fcnen_flag_subscribe_to_stories" value="0">
+                    <input type="checkbox" name="fcnen_flag_subscribe_to_stories" id="fcnen-flag-stories" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_subscribe_to_stories' ), false ); ?>>
+                    <?php _e( 'Allow subscriptions to stories', 'fcnen' ); ?>
+                  </label>
+                  <br>
+                  <label for="fcnen-flag-taxonomies">
+                    <input type="hidden" name="fcnen_flag_subscribe_to_taxonomies" value="0">
+                    <input type="checkbox" name="fcnen_flag_subscribe_to_taxonomies" id="fcnen-flag-taxonomies" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_subscribe_to_taxonomies' ), false ); ?>>
+                    <?php _e( 'Allow subscriptions to taxonomies', 'fcnen' ); ?>
+                  </label>
+                  <br>
+                  <label for="fcnen-flag-allow-passwords">
+                    <input type="hidden" name="fcnen_flag_allow_passwords" value="0">
+                    <input type="checkbox" name="fcnen_flag_allow_passwords" id="fcnen-flag-allow-passwords" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_allow_passwords' ), false ); ?>>
+                    <?php _e( 'Allow notifications for protected posts', 'fcnen' ); ?>
+                  </label>
+                  <br>
+                  <label for="fcnen-flag-allow-hidden">
+                    <input type="hidden" name="fcnen_flag_allow_hidden" value="0">
+                    <input type="checkbox" name="fcnen_flag_allow_hidden" id="fcnen-flag-allow-hidden" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_allow_hidden' ), false ); ?>>
+                    <?php _e( 'Allow notifications for hidden posts', 'fcnen' ); ?>
+                  </label>
+                </fieldset>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 class="title"><?php _e( 'Email Service', 'fcnen' ); ?></h2>
+        <p><?php _e( 'You require an external account with an email service provider. The plugin composes the emails and pushes them in batches to the service, which in turn will send the email notifications.', 'fcnen' ); ?></p>
+        <table class="form-table" role="presentation">
+          <tbody>
+            <tr>
+              <th scope="row">
+                <label for="fcnen-select-service-provider"><?php _e( 'Provider', 'fcnen' ); ?></label>
+              </th>
+              <td>
+                <select name="fcnen_service_provider" id="fcnen-select-service-provider" disabled>
+                  <option value="mailersend" disabled selected><?php _e( 'MailerSend', 'fcnen' ); ?></option>
+                </select>
+                <p class="description"><?php _e( 'Currently only MailerSend available.', 'fcnen' ); ?></p>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">
+                <label for="fcnen-select-service-provider"><?php _e( 'API Key', 'fcnen' ); ?></label>
+              </th>
+              <td>
+                <input type="text" name="fcnen_api_key" id="fcnen-api-key" class="regular-text" value="<?php echo esc_attr( $api_key ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
+                <p class="description"><?php _e( 'You can get that from your provider account.', 'fcnen' ); ?></p>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">
+                <label for="fcnen-select-service-provider"><?php _e( 'Batch Limit', 'fcnen' ); ?></label>
+              </th>
+              <td>
+                <input type="number" name="fcnen_api_bulk_limit" id="fcnen-api-bulk-limit" class="small-text" value="<?php echo esc_attr( $api_bulk_limit ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
+                <p class="description"><?php _e( 'Emails per request.', 'fcnen' ); ?></p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="submit"><?php submit_button( __( 'Save Changes', 'fcnen' ), 'primary', 'submit', false ); ?></p>
+      </form>
     </div>
   </div>
   <?php // <--- End HTML

@@ -42,12 +42,11 @@ document.querySelectorAll('.fcnen-input-wrap._file').forEach(element => {
 
 function fcnen_revealTemplate(id) {
   document.querySelectorAll('.fcnen-codemirror').forEach(textarea => {
-    textarea.closest('.fcnen-box__row').classList.add('hidden');
+    textarea.closest('.fcnen-template-wrapper').classList.add('hidden');
   });
 
   if (!id) {
     fcnen_templatePreview('');
-    document.getElementById('fcnen-preview-notice').classList.remove('hidden');
     document.getElementById('fcnen-preview').classList.add('hidden');
 
     return;
@@ -55,7 +54,6 @@ function fcnen_revealTemplate(id) {
 
   const templateWrapper = document.getElementById(id);
 
-  document.getElementById('fcnen-preview-notice').classList.add('hidden');
   document.getElementById('fcnen-preview').classList.remove('hidden');
 
   if (templateWrapper) {
