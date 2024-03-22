@@ -1074,7 +1074,7 @@ function fcnen_settings_page() {
 
   // $provider = get_option( 'fcnen_service_provider' );
   $api_key = get_option( 'fcnen_api_key' );
-  $api_bulk_limit = get_option( 'fcnen_api_bulk_limit', 400 );
+  $api_bulk_limit = get_option( 'fcnen_api_bulk_limit', 300 );
 
   // Start HTML ---> ?>
   <div id="fcnen-admin-page-settings" class="wrap fcnen-settings _settings">
