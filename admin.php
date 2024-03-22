@@ -1224,29 +1224,14 @@ function fcnen_log_page() {
   <div id="fcnen-admin-page-log" class="wrap fcnen-settings _log">
     <h1 class="wp-heading-inline"><?php _e( 'Log', 'fcnen' ); ?></h1>
     <hr class="wp-header-end">
-
-    <div class="fcnen-settings__content">
-
-      <div class="fcnen-box">
-        <div class="fcnen-box__header">
-          <h2><?php _e( 'Log', 'fcnen' ); ?></h2>
-        </div>
-        <div class="fcnen-box__body">
-          <div class="fcnen-box__row">
-            <p><?php
-              printf(
-                __( 'These are the most recent 200 log items. Up to %s items are saved in the actual log file in the plugin directory. Note that due to privacy concerns, only administrative and system actions are logged and only with IDs instead of email addresses.', 'fcnen' ),
-                FCNEN_LOG_LIMIT
-              );
-            ?></p>
-          </div>
-          <hr>
-          <div class="fcnen-box__row">
-            <?php echo fcnen_get_log(); ?>
-          </div>
-        </div>
-      </div>
-
+    <p><?php
+      printf(
+        __( 'These are the most recent 200 log items. Up to %s items are saved in the actual log file in the plugin directory. Note that due to privacy concerns, only administrative and system actions are logged and only with IDs instead of email addresses.', 'fcnen' ),
+        FCNEN_LOG_LIMIT
+      );
+    ?></p>
+    <div class="fcnen-log-wrapper" id="fcnen-log">
+      <?php echo fcnen_get_log(); ?>
     </div>
   </div>
   <?php // <--- End HTML
