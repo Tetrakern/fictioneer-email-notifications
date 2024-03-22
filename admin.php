@@ -1236,3 +1236,82 @@ function fcnen_log_page() {
   </div>
   <?php // <--- End HTML
 }
+
+// =======================================================================================
+// POST META
+// =======================================================================================
+
+/**
+ * Register metabox
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_register_metabox() {
+  add_meta_box(
+    'fcnen-email-notifications',
+    __( 'Email Notification', 'fcnen' ),
+    'fcnen_render_metabox',
+    ['post', 'fcn_story', 'fcn_chapter'],
+    'side',
+    'high'
+  );
+}
+add_action( 'add_meta_boxes', 'fcnen_register_metabox' );
+
+/**
+ * Add classes to metabox
+ *
+ * @since 0.1.0
+ *
+ * @param array $classes  An array of postbox classes.
+ *
+ * @return array The modified array of postbox classes.
+ */
+
+function fcnen_add_metabox_classes( $classes ) {
+  // Add class
+  $classes[] = 'fcnen-metabox';
+
+  // Return with added class
+  return $classes;
+}
+add_filter( 'postbox_classes_post_fcnen-email-notifications', 'fcnen_add_metabox_classes' );
+add_filter( 'postbox_classes_fcn_story_fcnen-email-notifications', 'fcnen_add_metabox_classes' );
+add_filter( 'postbox_classes_fcn_chapter_fcnen-email-notifications', 'fcnen_add_metabox_classes' );
+
+/**
+ * Render the metabox
+ *
+ * @since 0.1.0
+ *
+ * @param WP_Post $post  The current post object.
+ */
+
+function fcnen_render_metabox( $post ) {
+  // Setup
+  $nonce = wp_create_nonce( 'fcnen-metabox-nonce' );
+
+  // Start HTML ---> ?>
+  <input type="hidden" name="fcnen-nonce" value="<?php echo esc_attr( $nonce ); ?>" autocomplete="off">
+  foobar
+  <?php // <--- End HTML
+}
+
+/**
+ * Save the metabox data
+ *
+ * @since 0.1.0
+ *
+ * @param int $post_id  The ID of the post being saved.
+ */
+
+function fcnen_save_metabox( $post_id ) {
+  // Verify request
+  if ( ! wp_verify_nonce( $_POST['fcnen-nonce'] ?? '', 'fcnen-metabox-nonce' ) ) {
+    return;
+  }
+}
+add_action( 'save_post_post', 'fcnen_save_metabox', 5 );
+add_action( 'save_post_fcn_story', 'fcnen_save_metabox', 5 );
+add_action( 'save_post_fcn_chapter', 'fcnen_save_metabox', 5 );
