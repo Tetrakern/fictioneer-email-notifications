@@ -949,3 +949,103 @@ function fcnen_unsent_notification_exists( $post_id ) {
   // Result
   return (int) $result > 0;
 }
+
+// =======================================================================================
+// POST META
+// =======================================================================================
+
+/**
+ * Get un-serialized meta array for post ID
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param int $post_id  The ID of the post.
+ *
+ * @return array The meta array of an empty array if not found.
+ */
+
+function fcnen_get_meta( $post_id ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_meta';
+
+  // Query
+  $meta = $wpdb->get_var(
+    $wpdb->prepare(
+      "SELECT meta FROM {$table_name} WHERE post_id = %d",
+      $post_id
+    )
+  );
+
+  // Exists?
+  if ( $meta === null || $meta === false ) {
+    return [];
+  }
+
+  // Unserialize
+  $meta = maybe_unserialize( $meta );
+
+  // Return
+  if ( is_array( $meta ) ) {
+    return $meta;
+  } else {
+    return [];
+  }
+}
+
+/**
+ * Save serialized meta array for post ID
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param int   $post_id     The ID of the post.
+ * @param array $meta_array  The meta array to store.
+ *
+ * @return bool True on success, false on failure.
+ */
+
+function fcnen_set_meta( $post_id, $meta_array ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_meta';
+
+  // Array?
+  if ( ! is_array( $meta_array ) ) {
+    return false;
+  }
+
+  // Serialize
+  $meta_serialized = maybe_serialize( $meta_array );
+
+  // Exists?
+  $exists = $wpdb->get_var(
+    $wpdb->prepare(
+      "SELECT COUNT(*) FROM {$table_name} WHERE post_id = %d",
+      $post_id
+    )
+  );
+
+  // Insert or update
+  if ( $exists ) {
+    $result = $wpdb->update(
+      $table_name,
+      array( 'meta' => $meta_serialized ),
+      array( 'post_id' => $post_id )
+    );
+  } else {
+    $result = $wpdb->insert(
+      $table_name,
+      array(
+        'post_id' => $post_id,
+        'meta' => $meta_serialized
+      )
+    );
+  }
+
+  // Return success or failure
+  return $result !== false;
+}

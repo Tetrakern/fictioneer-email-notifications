@@ -294,7 +294,7 @@ function fcnen_create_meta_table() {
   $sql = "CREATE TABLE IF NOT EXISTS $table_name (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     post_id BIGINT UNSIGNED NOT NULL,
-    meta LONGTEXT NOT NULL,
+    meta LONGTEXT NOT NULL DEFAULT '',
     PRIMARY KEY (id),
     INDEX post_id_index (post_id)
   ) $charset_collate;";
