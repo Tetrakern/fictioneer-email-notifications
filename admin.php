@@ -65,27 +65,26 @@ require_once( plugin_dir_path( __FILE__ ) . 'classes/class-notifications-table.p
  */
 
 function fcnen_enqueue_admin_scripts( $hook_suffix ) {
-  // Only on the plugin's admin pages
-  if ( strpos( $_GET['page'] ?? '', 'fcnen-' ) === false ) {
-    return;
+  // Setup
+  $screen = get_current_screen();
+
+  // Plugin menus
+  if ( strpos( $_GET['page'] ?? '', 'fcnen-' ) !== false ) {
+    wp_enqueue_style( 'fcnen-admin-styles', plugin_dir_url( __FILE__ ) . '/css/fcnen-admin.css', [], FCNEN_VERSION );
+
+    wp_enqueue_script(
+      'fcnen-admin-scripts',
+      plugin_dir_url( __FILE__ ) . '/js/fcnen-admin.min.js',
+      ['fictioneer-utility-scripts'],
+      FCNEN_VERSION,
+      true
+    );
   }
 
-  // Styles
-  wp_enqueue_style(
-    'fcnen-admin-styles',
-    plugin_dir_url( __FILE__ ) . '/css/fcnen-admin.css',
-    [],
-    FCNEN_VERSION
-  );
-
-  // Scripts
-  wp_enqueue_script(
-    'fcnen-admin-scripts',
-    plugin_dir_url( __FILE__ ) . '/js/fcnen-admin.min.js',
-    ['fictioneer-utility-scripts'],
-    FCNEN_VERSION,
-    true
-  );
+  // Post edit screens
+  if ( $screen && in_array( $screen->post_type, ['post', 'fcn_story', 'fcn_chapter'] ) ) {
+    wp_enqueue_style( 'fcnen-admin-styles', plugin_dir_url( __FILE__ ) . '/css/fcnen-admin.css', [], FCNEN_VERSION );
+  }
 }
 add_action( 'admin_enqueue_scripts', 'fcnen_enqueue_admin_scripts' );
 
@@ -1250,7 +1249,7 @@ function fcnen_log_page() {
 function fcnen_register_metabox() {
   add_meta_box(
     'fcnen-email-notifications',
-    __( 'Email Notification', 'fcnen' ),
+    __( 'Email Notifications', 'fcnen' ),
     'fcnen_render_metabox',
     ['post', 'fcn_story', 'fcn_chapter'],
     'side',
@@ -1291,10 +1290,41 @@ add_filter( 'postbox_classes_fcn_chapter_fcnen-email-notifications', 'fcnen_add_
 function fcnen_render_metabox( $post ) {
   // Setup
   $nonce = wp_create_nonce( 'fcnen-metabox-nonce' );
+  $meta = fcnen_get_meta( $post->ID );
+  $excluded = $meta['excluded'] ?? 0;
+  $dates = $meta['sent'] ?? [];
+  $last_sent = end( $dates );
+
+  if ( ! empty( $last_sent ) ) {
+    $last_sent = wp_date(
+      sprintf(
+        _x( '%1$s \a\t %2$s', 'Time format string.', 'fcnen' ),
+        get_option( 'date_format' ),
+        get_option( 'time_format' )
+      ),
+      $last_sent
+    );
+  }
 
   // Start HTML ---> ?>
   <input type="hidden" name="fcnen-nonce" value="<?php echo esc_attr( $nonce ); ?>" autocomplete="off">
-  foobar
+  <?php if ( ! empty( $last_sent ) ) : ?>
+    <p class="fcnen-metabox-last-sent"><?php printf( __( '<strong>Sent:</strong> %s', 'fcnen' ), $last_sent ); ?></p>
+  <?php endif; ?>
+  <label class="fictioneer-meta-checkbox">
+    <div class="fictioneer-meta-checkbox__checkbox">
+      <input type="checkbox" id="fcnen-enqueue-on-update" name="fcnen_enqueue_on_update" value="1" autocomplete="off">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M16.7 7.1l-6.3 8.5-3.3-2.5-.9 1.2 4.5 3.4L17.9 8z"></path></svg>
+    </div>
+    <div class="fictioneer-meta-checkbox__label"><?php _e( 'Enqueue on update once', 'fcnen' ); ?></div>
+  </label>
+  <label class="fictioneer-meta-checkbox">
+    <div class="fictioneer-meta-checkbox__checkbox">
+      <input type="checkbox" id="fcnen-exclude-from-notifications" name="fcnen_exclude_from_notifications" value="1" autocomplete="off" <?php checked( $excluded, 1 ); ?>>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M16.7 7.1l-6.3 8.5-3.3-2.5-.9 1.2 4.5 3.4L17.9 8z"></path></svg>
+    </div>
+    <div class="fictioneer-meta-checkbox__label"><?php _e( 'Exclude from notifications', 'fcnen' ); ?></div>
+  </label>
   <?php // <--- End HTML
 }
 
@@ -1311,6 +1341,19 @@ function fcnen_save_metabox( $post_id ) {
   if ( ! wp_verify_nonce( $_POST['fcnen-nonce'] ?? '', 'fcnen-metabox-nonce' ) ) {
     return;
   }
+
+  // Setup
+  $meta = fcnen_get_meta( $post_id );
+
+  // Exclude from queue
+  if ( isset( $_POST['fcnen_exclude_from_notifications'] ) ) {
+    $meta['excluded'] = 1;
+  } else {
+    $meta['excluded'] = 0;
+  }
+
+  // Save
+  fcnen_set_meta( $post_id, $meta );
 }
 add_action( 'save_post_post', 'fcnen_save_metabox', 5 );
 add_action( 'save_post_fcn_story', 'fcnen_save_metabox', 5 );
