@@ -1226,7 +1226,7 @@ function fcnen_log_page() {
     <hr class="wp-header-end">
     <p><?php
       printf(
-        __( 'These are the most recent 200 log items. Up to %s items are saved in the actual log file in the plugin directory. Note that due to privacy concerns, only administrative and system actions are logged and only with IDs instead of email addresses.', 'fcnen' ),
+        __( 'These are the most recent 200 log items. Up to %s items are saved in the actual log file in the wp-content directory. Note that due to privacy concerns, only administrative and system actions are logged and only with IDs instead of email addresses. Datetime in GMT/UTC.', 'fcnen' ),
         FCNEN_LOG_LIMIT
       );
     ?></p>

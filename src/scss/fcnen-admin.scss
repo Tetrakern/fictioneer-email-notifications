@@ -331,8 +331,16 @@ details {
   font-size: 11px;
   margin: 0;
 
-  li:not(:last-child) {
-    margin-bottom: 8px;
+  li {
+    margin: 0;
+
+    &:not(:first-child) {
+      margin-top: 8px;
+    }
+
+    &:empty {
+      display: none;
+    }
   }
 }
 
