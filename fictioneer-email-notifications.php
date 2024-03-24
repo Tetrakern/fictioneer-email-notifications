@@ -608,8 +608,8 @@ function fcnen_add_subscriber( $email, $args = [] ) {
     'taxonomies' => [],
     'confirmed' => 0,
     'trashed' => 0,
-    'created_at' => current_time( 'mysql' ),
-    'updated_at' => current_time( 'mysql' ),
+    'created_at' => current_time( 'mysql', 1 ),
+    'updated_at' => current_time( 'mysql', 1 ),
     'skip-confirmation-email' => 0
   );
 
@@ -623,11 +623,11 @@ function fcnen_add_subscriber( $email, $args = [] ) {
   $updated_at_date = DateTime::createFromFormat( 'Y-m-d H:i:s', $args['created_at'] );
 
   if ( ! $created_at_date || $created_at_date->format( 'Y-m-d H:i:s' ) !== $args['created_at'] ) {
-    $args['created_at'] = current_time( 'mysql' );
+    $args['created_at'] = current_time( 'mysql', 1 );
   }
 
   if ( ! $updated_at_date || $updated_at_date->format( 'Y-m-d H:i:s' ) !== $args['updated_at'] ) {
-    $args['updated_at'] = current_time( 'mysql' );
+    $args['updated_at'] = current_time( 'mysql', 1 );
   }
 
   // Scopes
@@ -1009,7 +1009,7 @@ function fcnen_add_notification( $post_id ) {
       'post_title' => $post->post_title,
       'post_type' => $post->post_type,
       'post_author' => $post->post_author,
-      'added_at' => current_time( 'mysql' )
+      'added_at' => current_time( 'mysql', 1 )
     ),
     array( '%d', '%s', '%s', '%s', '%d', '%s' )
   );

@@ -1293,44 +1293,47 @@ function fcnen_render_metabox( $post ) {
   $nonce = wp_create_nonce( 'fcnen-metabox-nonce' );
   $meta = fcnen_get_meta( $post->ID );
   $excluded = $meta['excluded'] ?? 0;
-  $dates = $meta['sent'] ?? [];
-  $last_sent = end( $dates );
+  $dates = [];
   $notification = fcnen_get_notification( $post->ID );
   $added_at = null;
 
-  if ( ! empty( $last_sent ) ) {
-    $last_sent = mysql2date(
-      sprintf(
-        _x( '%1$s \a\t %2$s', 'Time format string.', 'fcnen' ),
-        get_option( 'date_format' ),
-        get_option( 'time_format' )
-      ),
-      $last_sent
-    );
+  if ( $meta['sent'] ?? 0 ) {
+    foreach ( $meta['sent'] as $date ) {
+      $dates[] = get_date_from_gmt(
+        $date,
+        sprintf(
+          _x( '%1$s \a\t %2$s', 'Time format string.', 'fcnen' ),
+          get_option( 'date_format' ),
+          get_option( 'time_format' )
+        )
+      );
+    }
   }
 
   if ( $notification ) {
-    $added_at = mysql2date(
+    $added_at = get_date_from_gmt(
+      $notification->added_at,
       sprintf(
         _x( '%1$s \a\t %2$s', 'Time format string.', 'fcnen' ),
         get_option( 'date_format' ),
         get_option( 'time_format' )
-      ),
-      $notification->added_at
+      )
     );
   }
 
   // Start HTML ---> ?>
   <input type="hidden" name="fcnen-nonce" value="<?php echo esc_attr( $nonce ); ?>" autocomplete="off">
-  <?php if ( ! empty( $last_sent ) ) : ?>
-    <p class="fcnen-metabox-date-info"><?php printf( __( '<strong>Last sent:</strong><br>%s', 'fcnen' ), $last_sent ); ?></p>
+  <?php if ( ! empty( $dates ) ) : ?>
+    <p class="fcnen-metabox-date-info"><?php
+      printf( __( '<strong>Mailed on</strong>%s', 'fcnen' ), implode( '<br>', $dates ) );
+    ?></p>
   <?php endif; ?>
   <?php if ( $added_at ) : ?>
     <p class="fcnen-metabox-date-info"><?php
-      if ( $last_sent ) {
-        printf( __( '<strong>Enqueued again on:</strong><br>%s', 'fcnen' ), $added_at );
+      if ( empty( $dates ) ) {
+        printf( __( '<strong>Enqueued on</strong>%s', 'fcnen' ), $added_at );
       } else {
-        printf( __( '<strong>Enqueued on:</strong><br>%s', 'fcnen' ), $added_at );
+        printf( __( '<strong>Enqueued again on</strong>%s', 'fcnen' ), $added_at );
       }
     ?></p>
   <?php endif; ?>

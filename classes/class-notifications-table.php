@@ -512,7 +512,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
    */
 
   function column_added_at( $item ) {
-    return __( 'Enqueued', 'fcnen' ) . '<br>' . $item['added_at'];
+    return __( 'Enqueued', 'fcnen' ) . '<br>' . get_date_from_gmt( $item['added_at'], 'Y-m-d H:i:s' );
   }
 
   /**
@@ -526,8 +526,11 @@ class FCNEN_Notifications_Table extends WP_List_Table {
    */
 
   function column_last_sent( $item ) {
-    return empty( $item['last_sent'] ) ?
-      '&mdash;' : __( 'Mailed', 'fcnen' ) . '<br>' . $item['last_sent'];
+    if ( empty( $item['last_sent'] ) ) {
+      return '&mdash;';
+    }
+
+    return __( 'Mailed', 'fcnen' ) . '<br>' . get_date_from_gmt( $item['last_sent'], 'Y-m-d H:i:s' );
   }
 
   /**

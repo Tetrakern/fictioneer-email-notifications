@@ -730,7 +730,7 @@ function fcnen_log( $message ) {
   // Setup
   $current_user = wp_get_current_user();
   $log_file = plugin_dir_path( __FILE__ ) . 'fcnen-log.log';
-  $date = date( 'Y-m-d H:i:s' );
+  $date = current_time( 'mysql', 1 );
 
   // Acting user?
   $user_id = $current_user ? $current_user->ID : '0';

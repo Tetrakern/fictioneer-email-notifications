@@ -245,7 +245,7 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
       case 'status':
         return $item['confirmed'] ? __( 'Confirmed', 'fcnen' ) : __( 'Pending', 'fcnen' );
       case 'date':
-        $created_date = date_i18n( 'Y-m-d H:i:s', strtotime( $item['created_at'] ) );
+        $created_date = get_date_from_gmt( $item['created_at'], 'Y-m-d H:i:s' );
         return sprintf( __( 'Submitted<br>%s', 'fcnen' ), $created_date );
       default:
         return $item[ $column_name ];
