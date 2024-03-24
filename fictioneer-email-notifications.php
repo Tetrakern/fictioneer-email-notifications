@@ -42,6 +42,10 @@ function fcnen_load_stubs() {
   if ( ! function_exists( 'update_post_author_caches' ) ) {
     function update_post_author_caches( $posts ) {}
   }
+
+  if ( ! function_exists( 'fictioneer_multi_save_guard' ) ) {
+    function fictioneer_multi_save_guard( $post_id ) {}
+  }
 }
 add_action( 'wp_loaded', 'fcnen_load_stubs' );
 
@@ -1017,6 +1021,48 @@ function fcnen_add_notification( $post_id ) {
     return false;
   }
 }
+
+/**
+ * Track updates and add notifications
+ *
+ * @since 0.1.0
+ *
+ * @param int     $post_id  The ID of the post being saved.
+ * @param WP_Post $post     The post object being saved.
+ */
+
+function fcnen_track_posts( $post_id, $post ) {
+  // Prevent miss-fire
+  if (
+    fictioneer_multi_save_guard( $post_id ) ||
+    $post->post_status !== 'publish'
+  ) {
+    return;
+  }
+
+  // Setup
+  $meta = fcnen_get_meta( $post_id );
+  $dates = $meta['sent'] ?? [];
+  $on_update = $_POST['fcnen_enqueue_on_update'] ?? 0;
+  $current_time = current_datetime()->format( 'U' );
+  $publish_time = get_post_time( 'U', false, $post );
+
+  // Excluded?
+  if ( $meta['excluded'] ?? 0 ) {
+    return;
+  }
+
+  // New or enqueued on update?
+  if ( ( $current_time - $publish_time > 30 || ! empty( $dates ) ) && ! $on_update ) {
+    return;
+  }
+
+  // Add notification
+  fcnen_add_notification( $post_id );
+}
+add_action( 'save_post_post', 'fcnen_track_posts', 20, 2 );
+add_action( 'save_post_fcn_story', 'fcnen_track_posts', 20, 2 );
+add_action( 'save_post_fcn_chapter', 'fcnen_track_posts', 20, 2 );
 
 // =======================================================================================
 // EMAILS
