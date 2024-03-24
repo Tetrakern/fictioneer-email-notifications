@@ -950,6 +950,33 @@ function fcnen_unsent_notification_exists( $post_id ) {
   return (int) $result > 0;
 }
 
+/**
+ * Return a single notification based on a post ID
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param string $post_id  The post ID to query for.
+ *
+ * @return object|null The notification object or null on failure.
+ */
+
+function fcnen_get_notification( $post_id ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_notifications';
+
+  // Prepare
+  $sql = $wpdb->prepare(
+    "SELECT * FROM {$table_name} WHERE post_id = %d AND last_sent IS NULL LIMIT 1",
+    $post_id
+  );
+
+  // Query and return
+  return $wpdb->get_row( $sql );
+}
+
 // =======================================================================================
 // POST META
 // =======================================================================================
