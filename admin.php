@@ -1295,9 +1295,11 @@ function fcnen_render_metabox( $post ) {
   $excluded = $meta['excluded'] ?? 0;
   $dates = $meta['sent'] ?? [];
   $last_sent = end( $dates );
+  $notification = fcnen_get_notification( $post->ID );
+  $added_at = null;
 
   if ( ! empty( $last_sent ) ) {
-    $last_sent = wp_date(
+    $last_sent = mysql2date(
       sprintf(
         _x( '%1$s \a\t %2$s', 'Time format string.', 'fcnen' ),
         get_option( 'date_format' ),
@@ -1307,10 +1309,30 @@ function fcnen_render_metabox( $post ) {
     );
   }
 
+  if ( $notification ) {
+    $added_at = mysql2date(
+      sprintf(
+        _x( '%1$s \a\t %2$s', 'Time format string.', 'fcnen' ),
+        get_option( 'date_format' ),
+        get_option( 'time_format' )
+      ),
+      $notification->added_at
+    );
+  }
+
   // Start HTML ---> ?>
   <input type="hidden" name="fcnen-nonce" value="<?php echo esc_attr( $nonce ); ?>" autocomplete="off">
   <?php if ( ! empty( $last_sent ) ) : ?>
-    <p class="fcnen-metabox-last-sent"><?php printf( __( '<strong>Sent:</strong> %s', 'fcnen' ), $last_sent ); ?></p>
+    <p class="fcnen-metabox-date-info"><?php printf( __( '<strong>Last sent:</strong><br>%s', 'fcnen' ), $last_sent ); ?></p>
+  <?php endif; ?>
+  <?php if ( $added_at ) : ?>
+    <p class="fcnen-metabox-date-info"><?php
+      if ( $last_sent ) {
+        printf( __( '<strong>Enqueued again on:</strong><br>%s', 'fcnen' ), $added_at );
+      } else {
+        printf( __( '<strong>Enqueued on:</strong><br>%s', 'fcnen' ), $added_at );
+      }
+    ?></p>
   <?php endif; ?>
   <label class="fictioneer-meta-checkbox">
     <div class="fictioneer-meta-checkbox__checkbox">
@@ -1351,6 +1373,11 @@ function fcnen_save_metabox( $post_id ) {
     $meta['excluded'] = 1;
   } else {
     $meta['excluded'] = 0;
+  }
+
+  // Prepare sent dates if not set
+  if ( empty( $meta['sent'] ?? 0 ) ) {
+    $meta['sent'] = [];
   }
 
   // Save

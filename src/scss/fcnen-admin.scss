@@ -343,3 +343,13 @@ details {
 .fcnen-metabox[id] .inside {
   padding: 0 16px 16px;
 }
+
+.fcnen-metabox-date-info {
+  background: #f0f0f0;
+  padding: 6px 8px;
+  border-radius: 2px;
+
+  strong {
+    font-weight: 500;
+  }
+}
