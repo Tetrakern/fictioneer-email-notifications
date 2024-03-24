@@ -1049,3 +1049,23 @@ function fcnen_set_meta( $post_id, $meta_array ) {
   // Return success or failure
   return $result !== false;
 }
+
+/**
+ * Delete meta for post ID
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param int $post_id  The ID of the post.
+ */
+
+function fcnen_delete_meta( $post_id ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_meta';
+
+  // Delete meta
+  $sql = $wpdb->prepare( "DELETE FROM {$table_name} WHERE post_id = %d", $post_id );
+  $wpdb->query( $sql );
+}

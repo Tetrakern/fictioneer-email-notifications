@@ -157,6 +157,7 @@ function fcnen_admin_notices() {
   $message = sanitize_text_field( $_GET['fcnen-message'] ?? '' );
   $maybe_id = is_numeric( $message ) ? absint( $message ) : 0;
   $maybe_post = get_post( $maybe_id );
+  $post_title = empty( $maybe_post ) ? __( 'UNAVAILABLE', 'fcnen' ) : $maybe_post->post_title;
 
   // Default notices
   if ( ( $_GET['settings-updated'] ?? 0 ) === 'true' ) {
@@ -290,35 +291,35 @@ function fcnen_admin_notices() {
       $class = 'notice-success';
       break;
     case 'delete-notification-success':
-      $notice = sprintf( __( 'Deleted notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Deleted notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-success';
       break;
     case 'delete-notification-failure':
-      $notice = sprintf( __( 'Error. Could not delete notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Error. Could not delete notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-error';
       break;
     case 'paused-notification-success':
-      $notice = sprintf( __( 'Paused notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Paused notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-success';
       break;
     case 'paused-notification-failure':
-      $notice = sprintf( __( 'Error. Could not pause notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Error. Could not pause notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-error';
       break;
     case 'unpaused-notification-success':
-      $notice = sprintf( __( 'Unpaused notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Unpaused notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-success';
       break;
     case 'unpaused-notification-failure':
-      $notice = sprintf( __( 'Error. Could not unpause notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Error. Could not unpause notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-error';
       break;
     case 'unsent-notification-success':
-      $notice = sprintf( __( 'Notification for "%s" (#%s) marked as unsent.', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Notification for "%s" (#%s) marked as unsent.', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-success';
       break;
     case 'unsent-notification-failure':
-      $notice = sprintf( __( 'Error. Could not mark notification for "%s" (#%s) as unsent.', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Error. Could not mark notification for "%s" (#%s) as unsent.', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-error';
       break;
     case 'bulk-delete-notifications-success':
@@ -354,15 +355,15 @@ function fcnen_admin_notices() {
       $class = 'notice-error';
       break;
     case 'submit-notification-successful':
-      $notice = sprintf( __( 'Added notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Added notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-success';
       break;
     case 'submit-notification-failure':
-      $notice = sprintf( __( 'Error. Could not add notification for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Error. Could not add notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-error';
       break;
     case 'submit-notification-duplicate':
-      $notice = sprintf( __( 'Error. There is already an unsent notification enqueued for "%s" (#%s).', 'fcnen' ), $maybe_post->post_title, $maybe_id );
+      $notice = sprintf( __( 'Error. There is already an unsent notification enqueued for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
       $class = 'notice-error';
       break;
     case 'submit-notification-post-not-found':

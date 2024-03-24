@@ -1064,6 +1064,29 @@ add_action( 'save_post_post', 'fcnen_track_posts', 20, 2 );
 add_action( 'save_post_fcn_story', 'fcnen_track_posts', 20, 2 );
 add_action( 'save_post_fcn_chapter', 'fcnen_track_posts', 20, 2 );
 
+/**
+ * Delete related data on post deletion
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param int $post_id  The ID of the post.
+ */
+
+function fcnen_cleanup_on_post_delete( $post_id ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_notifications';
+
+  // Delete meta
+  fcnen_delete_meta( $post_id );
+
+  // Delete notifications
+  $wpdb->delete( $table_name, array( 'post_id' => $post_id ), ['%d'] );
+}
+add_action( 'before_delete_post', 'fcnen_cleanup_on_post_delete' );
+
 // =======================================================================================
 // EMAILS
 // =======================================================================================
