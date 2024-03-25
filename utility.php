@@ -1068,6 +1068,36 @@ function fcnen_get_notification( $post_id ) {
   return $wpdb->get_row( $sql );
 }
 
+/**
+ * Get array of notification objects (unserialized)
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param bool $paused  Whether the notification must be paused. Default false.
+ * @param bool $sent    Whether the notification must have been sent. Default false.
+ *
+ * @return array Array of notification objects.
+ */
+
+function fcnen_get_notifications( $paused = false, $sent = false ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_notifications';
+  $sql = "SELECT * FROM {$table_name} WHERE paused = %d AND last_sent " . ( $sent ? 'IS NOT NULL' : 'IS NULL' );
+
+  // Query
+  $notifications = $wpdb->get_results( $wpdb->prepare( $sql, $paused ? 1 : 0 ) );
+
+  // Return result
+  if ( ! empty( $notifications ) ) {
+    return $notifications;
+  } else {
+    return [];
+  }
+}
+
 // =======================================================================================
 // POST META
 // =======================================================================================
