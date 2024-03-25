@@ -437,11 +437,11 @@ function fcnen_get_subscriber_by_email( $email ) {
   }
 
   // Unserialize
-  $subscriber->post_ids = maybe_unserialize( $subscriber->post_ids );
-  $subscriber->post_types = maybe_unserialize( $subscriber->post_types );
-  $subscriber->categories = maybe_unserialize( $subscriber->categories );
-  $subscriber->tags = maybe_unserialize( $subscriber->tags );
-  $subscriber->taxonomies = maybe_unserialize( $subscriber->taxonomies );
+  $subscriber->post_ids = maybe_unserialize( $subscriber->post_ids ?? 'a:0:{}' );
+  $subscriber->post_types = maybe_unserialize( $subscriber->post_types ?? 'a:0:{}' );
+  $subscriber->categories = maybe_unserialize( $subscriber->categories ?? 'a:0:{}' );
+  $subscriber->tags = maybe_unserialize( $subscriber->tags ?? 'a:0:{}' );
+  $subscriber->taxonomies = maybe_unserialize( $subscriber->taxonomies ?? 'a:0:{}' );
 
   // Return subscriber object
   return $subscriber;
@@ -487,11 +487,11 @@ function fcnen_get_subscriber_by_email_and_code( $email, $code ) {
   }
 
   // Unserialize
-  $subscriber->post_ids = maybe_unserialize( $subscriber->post_ids );
-  $subscriber->post_types = maybe_unserialize( $subscriber->post_types );
-  $subscriber->categories = maybe_unserialize( $subscriber->categories );
-  $subscriber->tags = maybe_unserialize( $subscriber->tags );
-  $subscriber->taxonomies = maybe_unserialize( $subscriber->taxonomies );
+  $subscriber->post_ids = maybe_unserialize( $subscriber->post_ids ?? 'a:0:{}' );
+  $subscriber->post_types = maybe_unserialize( $subscriber->post_types ?? 'a:0:{}' );
+  $subscriber->categories = maybe_unserialize( $subscriber->categories ?? 'a:0:{}' );
+  $subscriber->tags = maybe_unserialize( $subscriber->tags ?? 'a:0:{}' );
+  $subscriber->taxonomies = maybe_unserialize( $subscriber->taxonomies ?? 'a:0:{}' );
 
   // Return subscriber object
   return $subscriber;
@@ -634,11 +634,11 @@ function fcnen_get_subscribers( $confirmed = true, $trashed = false ) {
 
   // Unserialize
   foreach ( $subscribers as $subscriber ) {
-    $subscriber->post_ids = maybe_unserialize( $subscriber->post_ids );
-    $subscriber->post_types = maybe_unserialize( $subscriber->post_types );
-    $subscriber->categories = maybe_unserialize( $subscriber->categories );
-    $subscriber->tags = maybe_unserialize( $subscriber->tags );
-    $subscriber->taxonomies = maybe_unserialize( $subscriber->taxonomies );
+    $subscriber->post_ids = maybe_unserialize( $subscriber->post_ids ?? 'a:0:{}' );
+    $subscriber->post_types = maybe_unserialize( $subscriber->post_types ?? 'a:0:{}' );
+    $subscriber->categories = maybe_unserialize( $subscriber->categories ?? 'a:0:{}' );
+    $subscriber->tags = maybe_unserialize( $subscriber->tags ?? 'a:0:{}' );
+    $subscriber->taxonomies = maybe_unserialize( $subscriber->taxonomies ?? 'a:0:{}' );
   }
 
   // Return result
