@@ -593,6 +593,75 @@ function fcnen_get_subscriber_scopes( $subscriber ) {
   );
 }
 
+/**
+ * Get array of subscriber objects
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param bool $confirmed  Whether the subscriber must be confirmed. Default true.
+ * @param bool $trashed    Whether the subscriber must be trashed. Default false.
+ *
+ * @return array Array of subscriber objects.
+ */
+
+function fcnen_get_subscribers( $confirmed = true, $trashed = false ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
+  $sql = "SELECT * FROM {$table_name} WHERE confirmed = %d AND trashed = %d";
+
+  // Query
+  $subscribers = $wpdb->get_results( $wpdb->prepare( $sql, $confirmed ? 1 : 0, $trashed ? 1 : 0 ) );
+
+  // Return result
+  if ( ! empty( $subscribers ) ) {
+    return $subscribers;
+  } else {
+    return [];
+  }
+}
+
+/**
+ * Get array of email-ready subscribers
+ *
+ * @since 0.1.0
+ *
+ * @param array|null $subscribers  Array of subscriber objects. Defaults to
+ *                                 all confirmed, non-trashed subscribers.
+ *
+ * @return array Array of prepared associative subscriber arrays.
+ */
+
+function fcnen_get_email_subscribers( $subscribers = null ) {
+  // Setup
+  $prepared = [];
+  $subscribers = $subscribers ? $subscribers : fcnen_get_subscribers();
+
+  // Prepare subscribers
+  foreach ( $subscribers as $subscriber ) {
+    $data = array(
+      'id' => $subscriber->id,
+      'email' => $subscriber->email,
+      'code' => $subscriber->code,
+      'everything' => $subscriber->everything,
+      'post_ids' => maybe_unserialize( $subscriber->post_ids ?? 'a:0:{}' ),
+      'post_types' => maybe_unserialize( $subscriber->post_types ?? 'a:0:{}' ),
+      'categories' => maybe_unserialize( $subscriber->categories ?? 'a:0:{}' ),
+      'tags' => maybe_unserialize( $subscriber->tags ?? 'a:0:{}' ),
+      'taxonomies' => maybe_unserialize( $subscriber->taxonomies ?? 'a:0:{}' ),
+      'confirmed' => $subscriber->confirmed,
+      'trashed' => $subscriber->trashed,
+    );
+
+    $prepared[ $subscriber->email ] = $data;
+  }
+
+  // Return result
+  return $prepared;
+}
+
 // =======================================================================================
 // SANITIZATION
 // =======================================================================================
