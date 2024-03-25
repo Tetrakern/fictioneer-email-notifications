@@ -1098,6 +1098,66 @@ function fcnen_get_notifications( $paused = false, $sent = false ) {
   }
 }
 
+/**
+ * Get array of WP_Post objects for ready notifications
+ *
+ * @since 0.1.0
+ *
+ * @param array|null $notifications  Array of notifications objects. Defaults to
+ *                                   all ready, unsent notifications.
+ *
+ * @return array The WP_Post objects.
+ */
+
+function fcnen_get_email_posts( $notifications = null ) {
+  // Setup
+  $notifications = $notifications ? $notifications : fcnen_get_notifications();
+  $post_ids = [];
+
+  // Collect post IDs
+  foreach ( $notifications as $notification ) {
+    $post_ids[ $notification->post_id ] = $notification->post_id;
+
+    if ( $notification->story_id ?? 0 ) {
+      $post_ids[ $notification->story_id ] = $notification->story_id;
+    }
+  }
+
+  // Empty IDs?
+  if ( empty( $post_ids ) ) {
+    return [];
+  }
+
+  // Get posts
+  $posts = get_posts(
+    array(
+      'post_type' => ['post', 'fcn_story', 'fcn_chapter'],
+      'post__in' => array_unique( $post_ids ),
+      'numberposts' => -1,
+      'update_post_meta_cache' => true,
+      'update_post_term_cache' => true,
+      'no_found_rows' => true
+    )
+  );
+
+  // Prime author cache
+  if ( function_exists( 'update_post_author_caches' ) ) {
+    update_post_author_caches( $posts );
+  }
+
+  // Filter posts
+  $sendable_posts = array_filter( $posts, function( $post ) {
+    return fcnen_post_sendable( $post->ID );
+  });
+
+  // Return result
+  if ( empty( $sendable_posts ) ) {
+    return [];
+  } else {
+    return $sendable_posts;
+  }
+}
+
 // =======================================================================================
 // POST META
 // =======================================================================================
