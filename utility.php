@@ -411,7 +411,7 @@ function fcnen_subscriber_exists( $email ) {
 }
 
 /**
- * Get a subscriber by email
+ * Get a subscriber by email (unserialized)
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
@@ -431,12 +431,24 @@ function fcnen_get_subscriber_by_email( $email ) {
   $query = $wpdb->prepare( "SELECT * FROM $table_name WHERE email = %s", $email );
   $subscriber = $wpdb->get_row( $query );
 
-  // Result
-  return $subscriber ?: false;
+  // Failure?
+  if ( empty( $subscriber ) ) {
+    return false;
+  }
+
+  // Unserialize
+  $subscriber->post_ids = maybe_unserialize( $subscriber->post_ids );
+  $subscriber->post_types = maybe_unserialize( $subscriber->post_types );
+  $subscriber->categories = maybe_unserialize( $subscriber->categories );
+  $subscriber->tags = maybe_unserialize( $subscriber->tags );
+  $subscriber->taxonomies = maybe_unserialize( $subscriber->taxonomies );
+
+  // Return subscriber object
+  return $subscriber;
 }
 
 /**
- * Get a subscriber by email and code
+ * Get a subscriber by email and code (unserialized)
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
@@ -594,7 +606,7 @@ function fcnen_get_subscriber_scopes( $subscriber ) {
 }
 
 /**
- * Get array of subscriber objects
+ * Get array of subscriber objects (unserialized)
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
@@ -615,12 +627,22 @@ function fcnen_get_subscribers( $confirmed = true, $trashed = false ) {
   // Query
   $subscribers = $wpdb->get_results( $wpdb->prepare( $sql, $confirmed ? 1 : 0, $trashed ? 1 : 0 ) );
 
-  // Return result
-  if ( ! empty( $subscribers ) ) {
-    return $subscribers;
-  } else {
+  // Failure or empty?
+  if ( empty( $subscribers ) ) {
     return [];
   }
+
+  // Unserialize
+  foreach ( $subscribers as $subscriber ) {
+    $subscriber->post_ids = maybe_unserialize( $subscriber->post_ids );
+    $subscriber->post_types = maybe_unserialize( $subscriber->post_types );
+    $subscriber->categories = maybe_unserialize( $subscriber->categories );
+    $subscriber->tags = maybe_unserialize( $subscriber->tags );
+    $subscriber->taxonomies = maybe_unserialize( $subscriber->taxonomies );
+  }
+
+  // Return result
+  return $subscribers;
 }
 
 /**
