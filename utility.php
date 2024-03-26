@@ -121,6 +121,27 @@ function fcnen_get_term_html_attribute( $term_name ) {
   return $attribute;
 }
 
+/**
+ * Check whether the right set has a key of the left set
+ *
+ * @since 0.1.0
+ *
+ * @param array $left_set   Array set where the keys are the values.
+ * @param array $right_set  Array set where the keys are the values.
+ *
+ * @return bool True if there is a match of keys, false if not.
+ */
+
+function fcnen_match_sets( $left_set, $right_set ) {
+  foreach ( $left_set as $term_id => $value ) {
+    if ( isset( $right_set[ $term_id ] ) ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // =======================================================================================
 // EMAILS
 // =======================================================================================
@@ -379,6 +400,97 @@ function fcnen_get_edit_link( $email, $code ) {
 
   // Return link
   return add_query_arg( $query_args, home_url() );
+}
+
+/**
+ * Get matching email content for each subscriber
+ *
+ * @since 0.1.0
+ *
+ * @return array Associated array of subscriber and matched posts.
+ */
+
+function fcnen_get_email_contents() {
+  // Setup
+  $subscribers = fcnen_get_email_subscribers();
+  $posts = fcnen_get_email_posts();
+  $post_terms = [];
+  $contents = [];
+
+  // Prepare terms
+  foreach ( $posts as $post ) {
+    $term_ids = wp_get_post_terms(
+      $post->ID,
+      ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],
+      array( 'fields' => 'ids' )
+    );
+
+    if ( ! is_wp_error( $term_ids ) && ! empty( $term_ids ) ) {
+      $post_terms[ $post->ID ] = array_flip( $term_ids ); // Values become keys
+    }
+  }
+
+  // Match notifications to subscriber scopes
+  foreach ( $subscribers as $subscriber ) {
+    // Collect matches
+    $matches = [];
+
+    // Everything?
+    if ( $subscriber['everything'] ?? 0 ) {
+      $contents[ $subscriber['email'] ] = array(
+        'subscriber' => $subscriber,
+        'posts' => array_column( $posts, null, 'ID' )
+      );
+      continue;
+    }
+
+    // Match posts...
+    foreach ( $posts as $post ) {
+      // Match post type
+      if ( in_array( $post->post_type, $subscriber['post_types'] ?? [] ) ) {
+        $matches[ $post->ID ] = $post;
+        continue;
+      }
+
+      // Match post ID
+      if ( in_array( $post->ID, $subscriber['post_ids'] ?? [] ) ) {
+        $matches[ $post->ID ] = $post;
+        continue;
+      }
+
+      // Match parent story ID (if any)
+      if ( $post->post_type === 'fcn_chapter' ) {
+        $story_id = get_post_meta( $post->ID, 'fictioneer_chapter_story', true );
+
+        if ( in_array( $story_id, $subscriber['post_ids'] ?? [] ) ) {
+          $matches[ $post->ID ] = $post;
+          continue;
+        }
+      }
+
+      // Match terms (post terms are flipped)
+      $post_terms_set = $post_terms[ $post->ID ] ?? [];
+
+      if (
+        fcnen_match_sets( $post_terms_set, array_flip( $subscriber['tags'] ) ) ||
+        fcnen_match_sets( $post_terms_set, array_flip( $subscriber['taxonomies'] ) ) ||
+        fcnen_match_sets( $post_terms_set, array_flip( $subscriber['categories'] ) )
+      ) {
+        $matches[ $post->ID ] = $post;
+      }
+    }
+
+    // Append subscriber
+    if ( ! empty( $matches ) ) {
+      $contents[ $subscriber['email'] ] = array(
+        'subscriber' => $subscriber,
+        'posts' => $matches
+      );
+    }
+  }
+
+  // Return result
+  return $contents;
 }
 
 // =======================================================================================
