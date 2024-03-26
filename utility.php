@@ -1300,7 +1300,7 @@ function fcnen_get_edit_link( $email, $code ) {
 }
 
 /**
- * Get matching email content for each subscriber
+ * Get matching notification content for each subscriber
  *
  * @since 0.1.0
  *
@@ -1309,7 +1309,7 @@ function fcnen_get_edit_link( $email, $code ) {
  * @return array Associated array of posts, subscribers and matched IDs.
  */
 
-function fcnen_get_email_contents( $subscribers = null ) {
+function fcnen_get_notification_contents( $subscribers = null ) {
   // Setup
   $subscribers = $subscribers ?? fcnen_get_email_subscribers();
   $posts = fcnen_get_email_posts();
@@ -1399,7 +1399,7 @@ function fcnen_get_email_contents( $subscribers = null ) {
 
 function fcnen_get_notification_emails( $args = [] ) {
   // Setup
-  $contents = fcnen_get_email_contents( $args['subscribers'] ?? null ); // TODO: Use post IDs instead of objects, they are already cached anyway
+  $contents = fcnen_get_notification_contents( $args['subscribers'] ?? null );
   $time_format = get_option( 'time_format' );
   $date_format = get_option( 'date_format' );
 }
