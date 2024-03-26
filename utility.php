@@ -143,357 +143,6 @@ function fcnen_match_sets( $left_set, $right_set ) {
 }
 
 // =======================================================================================
-// EMAILS
-// =======================================================================================
-
-/**
- * Get the from email name
- *
- * @since 0.1.0
- *
- * @return string The from email name.
- */
-
-function fcnen_get_from_email_name() {
-  // From email address set?
-  $from = get_option( 'fcnen_from_email_name' );
-
-  if ( $from ) {
-    return $from;
-  }
-
-  // Return the blog name
-  return get_bloginfo( 'name' );
-}
-
-/**
- * Get the from email address
- *
- * @since 0.1.0
- *
- * @return string The from email address.
- */
-
-function fcnen_get_from_email_address() {
-  // From email address set?
-  $from = get_option( 'fcnen_from_email_address' );
-
-  if ( $from ) {
-    return $from;
-  }
-
-  // Setup
-  $parsed_url = wp_parse_url( get_home_url() );
-  $domain = isset( $parsed_url['host'] ) ? preg_replace( '/^www\./i', '', $parsed_url['host'] ) : '';
-
-  // Fallback
-  if ( empty( $domain ) ) {
-    return get_option( 'admin_email' );
-  }
-
-  // Return the noreply email address
-  return 'noreply@' . $domain;
-}
-
-/**
- * Get the subject for the confirmation email
- *
- * @since 0.1.0
- *
- * @return string The subject.
- */
-
-function fcnen_get_confirmation_email_subject() {
-  // Return custom subject if set
-  $subject = get_option( 'fcnen_template_subject_confirmation' );
-
-  if ( $subject ) {
-    return $subject;
-  }
-
-  // Return default otherwise
-  return FCNEN_DEFAULTS['subject_confirmation'];
-}
-
-/**
- * Get the HTML body for the confirmation email
- *
- * @since 0.1.0
- *
- * @return string The email HTML.
- */
-
-function fcnen_get_confirmation_email_body() {
-  // Custom or default
-  $body = get_option( 'fcnen_template_layout_confirmation' ) ?: FCNEN_DEFAULTS['layout_confirmation'];
-
-  // Check for {{code}} presence
-  if ( strpos( $body, '{{code}}' ) === false ) {
-    $body = FCNEN_DEFAULTS['layout_confirmation'];
-  }
-
-  // Return HTML
-  return $body;
-}
-
-/**
- * Get the subject for the code email
- *
- * @since 0.1.0
- *
- * @return string The subject.
- */
-
-function fcnen_get_code_email_subject() {
-  // Return custom subject if set
-  $subject = get_option( 'fcnen_template_subject_code' );
-
-  if ( $subject ) {
-    return $subject;
-  }
-
-  // Return default otherwise
-  return FCNEN_DEFAULTS['subject_code'];
-}
-
-/**
- * Get the HTML body for the code email
- *
- * @since 0.1.0
- *
- * @return string The email HTML.
- */
-
-function fcnen_get_code_email_body() {
-  // Custom or default
-  $body = get_option( 'fcnen_template_layout_code' ) ?: FCNEN_DEFAULTS['layout_code'];
-
-  // Check for {{code}} presence
-  if ( strpos( $body, '{{code}}' ) === false ) {
-    $body = FCNEN_DEFAULTS['layout_code'];
-  }
-
-  // Return HTML
-  return $body;
-}
-
-/**
- * Get the subject for the edit email
- *
- * @since 0.1.0
- *
- * @return string The subject.
- */
-
-function fcnen_get_edit_email_subject() {
-  // Return custom subject if set
-  $subject = get_option( 'fcnen_template_subject_edit' );
-
-  if ( $subject ) {
-    return $subject;
-  }
-
-  // Return default otherwise
-  return FCNEN_DEFAULTS['subject_edit'];
-}
-
-/**
- * Get the HTML body for the edit email
- *
- * @since 0.1.0
- *
- * @return string The email HTML.
- */
-
-function fcnen_get_edit_email_body() {
-  // Return custom or default
-  return get_option( 'fcnen_template_layout_edit' ) ?: FCNEN_DEFAULTS['layout_edit'];
-}
-
-/**
- * Get the subject for the edit email
- *
- * @since 0.1.0
- *
- * @return string The subject.
- */
-
-function fcnen_get_notification_email_subject() {
-  // Return custom subject if set
-  $subject = get_option( 'fcnen_template_subject_notification' );
-
-  if ( $subject ) {
-    return $subject;
-  }
-
-  // Return default otherwise
-  return FCNEN_DEFAULTS['subject_notification'];
-}
-
-/**
- * Get the activation link for the subscriber
- *
- * @since 0.1.0
- *
- * @param string $email  Email address of the subscriber.
- * @param string $code   Code of the subscriber.
- *
- * @return string The activation link.
- */
-
-function fcnen_get_activation_link( $email, $code ) {
-  // Setup
-  $query_args = array(
-    'fcnen' => 1,
-    'fcnen-action' => 'activation',
-    'fcnen-email' => urlencode( $email ),
-    'fcnen-code' => urlencode( $code )
-  );
-
-  // Return link
-  return add_query_arg( $query_args, home_url() );
-}
-
-/**
- * Get the unsubscribe link for the subscriber
- *
- * @since 0.1.0
- *
- * @param string $email  The email address of the subscriber.
- * @param string $code   The code associated with the subscriber.
- *
- * @return string The unsubscribe link.
- */
-
-function fcnen_get_unsubscribe_link( $email, $code ) {
-  // Setup
-  $query_args = array(
-    'fcnen' => 1,
-    'fcnen-action' => 'unsubscribe',
-    'fcnen-email' => urlencode( $email ),
-    'fcnen-code' => urlencode( $code )
-  );
-
-  // Return link
-  return add_query_arg( $query_args, home_url() );
-}
-
-/**
- * Get the edit link for the subscriber
- *
- * @since 0.1.0
- *
- * @param string $email  The email address of the subscriber.
- * @param string $code   The code associated with the subscriber.
- *
- * @return string The edit link.
- */
-
-function fcnen_get_edit_link( $email, $code ) {
-  // Setup
-  $query_args = array(
-    'fcnen' => 1,
-    'fcnen-action' => 'edit',
-    'fcnen-email' => urlencode( $email ),
-    'fcnen-code' => urlencode( $code )
-  );
-
-  // Return link
-  return add_query_arg( $query_args, home_url() );
-}
-
-/**
- * Get matching email content for each subscriber
- *
- * @since 0.1.0
- *
- * @return array Associated array of subscriber and matched posts.
- */
-
-function fcnen_get_email_contents() {
-  // Setup
-  $subscribers = fcnen_get_email_subscribers();
-  $posts = fcnen_get_email_posts();
-  $post_terms = [];
-  $contents = [];
-
-  // Prepare terms
-  foreach ( $posts as $post ) {
-    $term_ids = wp_get_post_terms(
-      $post->ID,
-      ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],
-      array( 'fields' => 'ids' )
-    );
-
-    if ( ! is_wp_error( $term_ids ) && ! empty( $term_ids ) ) {
-      $post_terms[ $post->ID ] = array_flip( $term_ids ); // Values become keys
-    }
-  }
-
-  // Match notifications to subscriber scopes
-  foreach ( $subscribers as $subscriber ) {
-    // Collect matches
-    $matches = [];
-
-    // Everything?
-    if ( $subscriber['everything'] ?? 0 ) {
-      $contents[ $subscriber['email'] ] = array(
-        'subscriber' => $subscriber,
-        'posts' => array_column( $posts, null, 'ID' )
-      );
-      continue;
-    }
-
-    // Match posts...
-    foreach ( $posts as $post ) {
-      // Match post type
-      if ( in_array( $post->post_type, $subscriber['post_types'] ?? [] ) ) {
-        $matches[ $post->ID ] = $post;
-        continue;
-      }
-
-      // Match post ID
-      if ( in_array( $post->ID, $subscriber['post_ids'] ?? [] ) ) {
-        $matches[ $post->ID ] = $post;
-        continue;
-      }
-
-      // Match parent story ID (if any)
-      if ( $post->post_type === 'fcn_chapter' ) {
-        $story_id = get_post_meta( $post->ID, 'fictioneer_chapter_story', true );
-
-        if ( in_array( $story_id, $subscriber['post_ids'] ?? [] ) ) {
-          $matches[ $post->ID ] = $post;
-          continue;
-        }
-      }
-
-      // Match terms (post terms are flipped)
-      $post_terms_set = $post_terms[ $post->ID ] ?? [];
-
-      if (
-        fcnen_match_sets( $post_terms_set, array_flip( $subscriber['tags'] ) ) ||
-        fcnen_match_sets( $post_terms_set, array_flip( $subscriber['taxonomies'] ) ) ||
-        fcnen_match_sets( $post_terms_set, array_flip( $subscriber['categories'] ) )
-      ) {
-        $matches[ $post->ID ] = $post;
-      }
-    }
-
-    // Append subscriber
-    if ( ! empty( $matches ) ) {
-      $contents[ $subscriber['email'] ] = array(
-        'subscriber' => $subscriber,
-        'posts' => $matches
-      );
-    }
-  }
-
-  // Return result
-  return $contents;
-}
-
-// =======================================================================================
 // SUBSCRIBERS
 // =======================================================================================
 
@@ -1388,4 +1037,379 @@ function fcnen_delete_meta( $post_id ) {
   // Delete meta
   $sql = $wpdb->prepare( "DELETE FROM {$table_name} WHERE post_id = %d", $post_id );
   $wpdb->query( $sql );
+}
+
+// =======================================================================================
+// EMAILS
+// =======================================================================================
+
+/**
+ * Get the from email name
+ *
+ * @since 0.1.0
+ *
+ * @return string The from email name.
+ */
+
+function fcnen_get_from_email_name() {
+  // From email address set?
+  $from = get_option( 'fcnen_from_email_name' );
+
+  if ( $from ) {
+    return $from;
+  }
+
+  // Return the blog name
+  return get_bloginfo( 'name' );
+}
+
+/**
+ * Get the from email address
+ *
+ * @since 0.1.0
+ *
+ * @return string The from email address.
+ */
+
+function fcnen_get_from_email_address() {
+  // From email address set?
+  $from = get_option( 'fcnen_from_email_address' );
+
+  if ( $from ) {
+    return $from;
+  }
+
+  // Setup
+  $parsed_url = wp_parse_url( get_home_url() );
+  $domain = isset( $parsed_url['host'] ) ? preg_replace( '/^www\./i', '', $parsed_url['host'] ) : '';
+
+  // Fallback
+  if ( empty( $domain ) ) {
+    return get_option( 'admin_email' );
+  }
+
+  // Return the noreply email address
+  return 'noreply@' . $domain;
+}
+
+/**
+ * Get the subject for the confirmation email
+ *
+ * @since 0.1.0
+ *
+ * @return string The subject.
+ */
+
+function fcnen_get_confirmation_email_subject() {
+  // Return custom subject if set
+  $subject = get_option( 'fcnen_template_subject_confirmation' );
+
+  if ( $subject ) {
+    return $subject;
+  }
+
+  // Return default otherwise
+  return FCNEN_DEFAULTS['subject_confirmation'];
+}
+
+/**
+ * Get the HTML body for the confirmation email
+ *
+ * @since 0.1.0
+ *
+ * @return string The email HTML.
+ */
+
+function fcnen_get_confirmation_email_body() {
+  // Custom or default
+  $body = get_option( 'fcnen_template_layout_confirmation' ) ?: FCNEN_DEFAULTS['layout_confirmation'];
+
+  // Check for {{code}} presence
+  if ( strpos( $body, '{{code}}' ) === false ) {
+    $body = FCNEN_DEFAULTS['layout_confirmation'];
+  }
+
+  // Return HTML
+  return $body;
+}
+
+/**
+ * Get the subject for the code email
+ *
+ * @since 0.1.0
+ *
+ * @return string The subject.
+ */
+
+function fcnen_get_code_email_subject() {
+  // Return custom subject if set
+  $subject = get_option( 'fcnen_template_subject_code' );
+
+  if ( $subject ) {
+    return $subject;
+  }
+
+  // Return default otherwise
+  return FCNEN_DEFAULTS['subject_code'];
+}
+
+/**
+ * Get the HTML body for the code email
+ *
+ * @since 0.1.0
+ *
+ * @return string The email HTML.
+ */
+
+function fcnen_get_code_email_body() {
+  // Custom or default
+  $body = get_option( 'fcnen_template_layout_code' ) ?: FCNEN_DEFAULTS['layout_code'];
+
+  // Check for {{code}} presence
+  if ( strpos( $body, '{{code}}' ) === false ) {
+    $body = FCNEN_DEFAULTS['layout_code'];
+  }
+
+  // Return HTML
+  return $body;
+}
+
+/**
+ * Get the subject for the edit email
+ *
+ * @since 0.1.0
+ *
+ * @return string The subject.
+ */
+
+function fcnen_get_edit_email_subject() {
+  // Return custom subject if set
+  $subject = get_option( 'fcnen_template_subject_edit' );
+
+  if ( $subject ) {
+    return $subject;
+  }
+
+  // Return default otherwise
+  return FCNEN_DEFAULTS['subject_edit'];
+}
+
+/**
+ * Get the HTML body for the edit email
+ *
+ * @since 0.1.0
+ *
+ * @return string The email HTML.
+ */
+
+function fcnen_get_edit_email_body() {
+  // Return custom or default
+  return get_option( 'fcnen_template_layout_edit' ) ?: FCNEN_DEFAULTS['layout_edit'];
+}
+
+/**
+ * Get the subject for the edit email
+ *
+ * @since 0.1.0
+ *
+ * @return string The subject.
+ */
+
+function fcnen_get_notification_email_subject() {
+  // Return custom subject if set
+  $subject = get_option( 'fcnen_template_subject_notification' );
+
+  if ( $subject ) {
+    return $subject;
+  }
+
+  // Return default otherwise
+  return FCNEN_DEFAULTS['subject_notification'];
+}
+
+/**
+ * Get the activation link for the subscriber
+ *
+ * @since 0.1.0
+ *
+ * @param string $email  Email address of the subscriber.
+ * @param string $code   Code of the subscriber.
+ *
+ * @return string The activation link.
+ */
+
+function fcnen_get_activation_link( $email, $code ) {
+  // Setup
+  $query_args = array(
+    'fcnen' => 1,
+    'fcnen-action' => 'activation',
+    'fcnen-email' => urlencode( $email ),
+    'fcnen-code' => urlencode( $code )
+  );
+
+  // Return link
+  return add_query_arg( $query_args, home_url() );
+}
+
+/**
+ * Get the unsubscribe link for the subscriber
+ *
+ * @since 0.1.0
+ *
+ * @param string $email  The email address of the subscriber.
+ * @param string $code   The code associated with the subscriber.
+ *
+ * @return string The unsubscribe link.
+ */
+
+function fcnen_get_unsubscribe_link( $email, $code ) {
+  // Setup
+  $query_args = array(
+    'fcnen' => 1,
+    'fcnen-action' => 'unsubscribe',
+    'fcnen-email' => urlencode( $email ),
+    'fcnen-code' => urlencode( $code )
+  );
+
+  // Return link
+  return add_query_arg( $query_args, home_url() );
+}
+
+/**
+ * Get the edit link for the subscriber
+ *
+ * @since 0.1.0
+ *
+ * @param string $email  The email address of the subscriber.
+ * @param string $code   The code associated with the subscriber.
+ *
+ * @return string The edit link.
+ */
+
+function fcnen_get_edit_link( $email, $code ) {
+  // Setup
+  $query_args = array(
+    'fcnen' => 1,
+    'fcnen-action' => 'edit',
+    'fcnen-email' => urlencode( $email ),
+    'fcnen-code' => urlencode( $code )
+  );
+
+  // Return link
+  return add_query_arg( $query_args, home_url() );
+}
+
+/**
+ * Get matching email content for each subscriber
+ *
+ * @since 0.1.0
+ *
+ * @param array|null $subscribers  Optional. Array of prepared subscribers.
+ *
+ * @return array Associated array of posts, subscribers and matched IDs.
+ */
+
+function fcnen_get_email_contents( $subscribers = null ) {
+  // Setup
+  $subscribers = $subscribers ?? fcnen_get_email_subscribers();
+  $posts = fcnen_get_email_posts();
+  $post_terms = [];
+  $contents = array(
+    'posts' => array_column( $posts, null, 'ID' ), // Use IDs as keys
+    'subscribers' => []
+  );
+
+  // Prepare terms
+  foreach ( $posts as $post ) {
+    $term_ids = wp_get_post_terms(
+      $post->ID,
+      ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],
+      array( 'fields' => 'ids' )
+    );
+
+    if ( ! is_wp_error( $term_ids ) && ! empty( $term_ids ) ) {
+      $post_terms[ $post->ID ] = array_flip( $term_ids ); // Values become keys
+    }
+  }
+
+  // Match notifications to subscriber scopes
+  foreach ( $subscribers as $subscriber ) {
+    // Collect matches
+    $matches = [];
+
+    // Everything?
+    if ( $subscriber['everything'] ?? 0 ) {
+      $contents['subscribers'][ $subscriber['email'] ] = array(
+        'subscriber' => $subscriber,
+        'post_ids' => array_column( $posts, 'ID', 'ID' ) // Use IDs as keys and only keep IDs
+      );
+      continue;
+    }
+
+    // Match posts...
+    foreach ( $posts as $post ) {
+      // Match post type
+      if ( in_array( $post->post_type, $subscriber['post_types'] ?? [] ) ) {
+        $matches[ $post->ID ] = $post->ID;
+        continue;
+      }
+
+      // Match post ID
+      if ( in_array( $post->ID, $subscriber['post_ids'] ?? [] ) ) {
+        $matches[ $post->ID ] = $post->ID;
+        continue;
+      }
+
+      // Match parent story ID (if any)
+      if ( $post->post_type === 'fcn_chapter' ) {
+        $story_id = get_post_meta( $post->ID, 'fictioneer_chapter_story', true );
+
+        if ( in_array( $story_id, $subscriber['post_ids'] ?? [] ) ) {
+          $matches[ $post->ID ] = $post->ID;
+          continue;
+        }
+      }
+
+      // Match terms (post terms are flipped)
+      $post_terms_set = $post_terms[ $post->ID ] ?? [];
+
+      if (
+        fcnen_match_sets( $post_terms_set, array_flip( $subscriber['tags'] ) ) ||
+        fcnen_match_sets( $post_terms_set, array_flip( $subscriber['taxonomies'] ) ) ||
+        fcnen_match_sets( $post_terms_set, array_flip( $subscriber['categories'] ) )
+      ) {
+        $matches[ $post->ID ] = $post->ID;
+      }
+    }
+
+    // Append subscriber
+    if ( ! empty( $matches ) ) {
+      $contents['subscribers'][ $subscriber['email'] ] = array(
+        'subscriber' => $subscriber,
+        'post_ids' => $matches
+      );
+    }
+  }
+
+  // Return result
+  return $contents;
+}
+
+
+
+function fcnen_get_notification_emails( $args = [] ) {
+  // Setup
+  $contents = fcnen_get_email_contents( $args['subscribers'] ?? null ); // TODO: Use post IDs instead of objects, they are already cached anyway
+  $time_format = get_option( 'time_format' );
+  $date_format = get_option( 'date_format' );
+}
+
+
+
+function fcnen_get_mailersend_payload( $emails = null ) {
+  // Setup
+  $emails = $emails ?? fcnen_get_notification_emails();
+  $from = fcnen_get_from_email_address();
+  $name = fcnen_get_from_email_name();
+  $payload = [];
 }
