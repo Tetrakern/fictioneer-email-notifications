@@ -1395,13 +1395,145 @@ function fcnen_get_notification_contents( $subscribers = null ) {
   return $contents;
 }
 
-
+/**
+ * Get notification email bodies for subscribers
+ *
+ * @since 0.1.0
+ *
+ * @param array $args {
+ *   Array of optional arguments.
+ *
+ *   @type array $subscribers  Array of prepared email subscribers. Defaults
+ *                             to return value of fcnen_get_email_subscribers().
+ * }
+ *
+ * @return array Associated array of posts and email bodies.
+ */
 
 function fcnen_get_notification_emails( $args = [] ) {
   // Setup
   $contents = fcnen_get_notification_contents( $args['subscribers'] ?? null );
+  $posts = $contents['posts'];
+  $subscribers = $contents['subscribers'];
   $time_format = get_option( 'time_format' );
   $date_format = get_option( 'date_format' );
+  $cached_partials = [];
+  $email_bodies = [];
+
+  $type_names = array(
+    'post' => __( 'Post', 'fcnen' ),
+    'fcn_story' => __( 'Story', 'fcnen' ),
+    'fcn_chapter' => __( 'Chapter', 'fcnen' )
+  );
+
+  $templates = array(
+    'notification' => get_option( 'fcnen_template_layout_notification' ) ?: FCNEN_DEFAULTS['layout_notification'],
+    'post' => get_option( 'fcnen_template_loop_part_post' ) ?: FCNEN_DEFAULTS['loop_part_post'],
+    'fcn_story' => get_option( 'fcnen_template_loop_part_story' ) ?: FCNEN_DEFAULTS['loop_part_story'],
+    'fcn_chapter' => get_option( 'fcnen_template_loop_part_chapter' ) ?: FCNEN_DEFAULTS['loop_part_chapter']
+  );
+
+  // Remove special characters from templates
+  $templates = array_map( function( $a ) { return preg_replace( '/[\x00-\x1F\x7F\xA0]/u', '', $a ); }, $templates );
+
+  // Loop over subscribers...
+  foreach ( $subscribers as $email => $data ) {
+    $post_ids = $data['post_ids'];
+    $subscriber = $data['subscriber'];
+    $partials = []; // Holds post, story, and chapter HTML snippets
+
+    // Loop over matched post IDs...
+    foreach ( $post_ids as $post_id ) {
+      // Look for already prepared partial
+      if ( isset( $cached_partials[ $post_id ] ) ) {
+        $partials[] = $cached_partials[ $post_id ];
+        continue;
+      }
+
+      // Prepare replacement content
+      $post = $posts[ $post_id ]; // WP_Post object
+      $categories = get_the_category( $post_id );
+      $tags = get_the_tags( $post_id );
+      $genres = get_the_terms( $post_id, 'fcn_genre' );
+      $fandoms = get_the_terms( $post_id, 'fcn_fandom' );
+      $characters = get_the_terms( $post_id, 'fcn_character' );
+      $warnings = get_the_terms( $post_id, 'fcn_content_warning' );
+
+      if ( is_wp_error( $tags ) || ! $tags ) {
+        $tags = [];
+      }
+
+      if ( is_wp_error( $genres ) || ! $genres ) {
+        $genres = [];
+      }
+
+      if ( is_wp_error( $fandoms ) || ! $fandoms ) {
+        $fandoms = [];
+      }
+
+      if ( is_wp_error( $characters ) || ! $characters ) {
+        $characters = [];
+      }
+
+      if ( is_wp_error( $warnings ) || ! $warnings ) {
+        $warnings = [];
+      }
+
+      $extra_replacements = array(
+        '{{type}}' => $type_names[ $post->post_type ], // Post, Story, or Chapter
+        '{{title}}' => fictioneer_get_safe_title( $post ),
+        '{{link}}' => esc_url( get_the_permalink( $post ) ?: '' ),
+        '{{excerpt}}' => fictioneer_get_forced_excerpt( $post_id ),
+        '{{date}}' => get_the_date( $date_format, $post ),
+        '{{time}}' => get_the_time( $time_format, $post ),
+        '{{author}}' => get_the_author_meta( 'display_name', $post->post_author ?? 0 ) ?: __( 'Unknown Author', 'fcnen' ),
+        '{{thumbnail}}' => esc_url( get_the_post_thumbnail_url( $post, 'cover' ) ?: '' ),
+        '{{categories}}' => implode( ', ', wp_list_pluck( $categories, 'name' ) ) ?: '',
+        '{{tags}}' => implode( ', ', wp_list_pluck( $tags, 'name' ) ) ?: '',
+        '{{genres}}' => implode( ', ', wp_list_pluck( $genres, 'name' ) ) ?: '',
+        '{{fandoms}}' => implode( ', ', wp_list_pluck( $fandoms, 'name' ) ) ?: '',
+        '{{characters}}' => implode( ', ', wp_list_pluck( $characters, 'name' ) ) ?: '',
+        '{{warnings}}' => implode( ', ', wp_list_pluck( $warnings, 'name' ) ) ?: '',
+        '{{story_title}}' => '', // Empty will not be rendered
+        '{{story_link}}' => '' // Empty will not be rendered
+      );
+
+      // Chapter?
+      if ( $post->post_type === 'fcn_chapter' ) {
+        $story_id = get_post_meta( $post_id, 'fictioneer_chapter_story', true );
+
+        if ( $story_id ) {
+          $story = get_post( $story_id );
+
+          $extra_replacements['{{story_title}}'] = fictioneer_get_safe_title( $story );
+          $extra_replacements['{{story_link}}'] = esc_url( get_the_permalink( $story ) ?: '' );
+        }
+      }
+
+      // Replace placeholders in loop template and cache for next iteration
+      $cached_partials[ $post_id ] = fcnen_replace_placeholders( $templates[ $post->post_type ], $extra_replacements );
+      $partials[] = $cached_partials[ $post_id ];
+    }
+
+    // Replace placeholders in notification template
+    $email_bodies[ $email ] = fcnen_replace_placeholders(
+      $templates[ 'notification' ],
+      array(
+        '{{email}}' => $email,
+        '{{code}}' => $subscriber['code'],
+        '{{id}}' => $subscriber['id'],
+        '{{updates}}' => implode( '', $partials ),
+        '{{edit_link}}' => esc_url( fcnen_get_edit_link( $email, $subscriber['code'] ) ),
+        '{{unsubscribe_link}}' => esc_url( fcnen_get_unsubscribe_link( $email, $subscriber['code'] ) )
+      )
+    );
+  }
+
+  // Return ready email HTML for each subscriber
+  return array(
+    'email_bodies' => $email_bodies,
+    'posts' => $posts
+  );
 }
 
 
