@@ -46,6 +46,10 @@ function fcnen_load_stubs() {
   if ( ! function_exists( 'fictioneer_multi_save_guard' ) ) {
     function fictioneer_multi_save_guard( $post_id ) {}
   }
+
+  if ( ! function_exists( 'fictioneer_get_forced_excerpt' ) ) {
+    function fictioneer_get_forced_excerpt( $post_id, $limit = 256, $default = false ) {}
+  }
 }
 add_action( 'wp_loaded', 'fcnen_load_stubs' );
 
