@@ -157,7 +157,7 @@ EOT,
     <div style="font-size: 14px;">
       <strong>Chapter: <a href="{{link}}" style="text-decoration: none;">{{title}}</a></strong>
     </div>
-    <div style="font-size: 11px; margin-top: 5px;">by {{author}} in <a href="{{story_link}}" style="text-decoration: none;">{{story_title}}</a></div>
+    <div style="font-size: 11px; margin-top: 5px;">by {{author}}{{#story_title}} in <a href="{{story_link}}" style="text-decoration: none;">{{story_title}}</a>{{/story_title}}</div>
   </div>
   <div style="margin-top: 10px">{{excerpt}}</div>
 </fieldset>
