@@ -1479,6 +1479,8 @@ function fcnen_get_notification_emails( $args = [] ) {
         $warnings = [];
       }
 
+      $all_terms = array_merge( $categories, $tags, $genres, $fandoms, $characters, $warnings );
+
       $extra_replacements = array(
         '{{type}}' => $type_names[ $post->post_type ], // Post, Story, or Chapter
         '{{title}}' => fictioneer_get_safe_title( $post ),
@@ -1494,6 +1496,7 @@ function fcnen_get_notification_emails( $args = [] ) {
         '{{fandoms}}' => implode( ', ', wp_list_pluck( $fandoms, 'name' ) ) ?: '',
         '{{characters}}' => implode( ', ', wp_list_pluck( $characters, 'name' ) ) ?: '',
         '{{warnings}}' => implode( ', ', wp_list_pluck( $warnings, 'name' ) ) ?: '',
+        '{{all_terms}}' => implode( ', ', wp_list_pluck( $all_terms, 'name' ) ),
         '{{story_title}}' => '', // Empty will not be rendered
         '{{story_link}}' => '' // Empty will not be rendered
       );

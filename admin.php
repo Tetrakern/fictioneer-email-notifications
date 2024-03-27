@@ -909,7 +909,6 @@ function fcnen_templates_page() {
                   <p class="fcnen-replacement-tokens">
                     <code>{{site_name}}</code>
                     <code>{{site_link}}</code>
-                    <code>{{activation_link}}</code>
                     <code>{{unsubscribe_link}}</code>
                     <code>{{edit_link}}</code>
                     <code>{{email}}</code>
@@ -968,6 +967,7 @@ function fcnen_templates_page() {
                     <code>{{fandoms}}</code>
                     <code>{{characters}}</code>
                     <code>{{warnings}}</code>
+                    <code>{{all_terms}}</code>
                     <code>{{site_name}}</code>
                     <code>{{site_link}}</code>
                   </p>
@@ -997,6 +997,7 @@ function fcnen_templates_page() {
                     <code>{{fandoms}}</code>
                     <code>{{characters}}</code>
                     <code>{{warnings}}</code>
+                    <code>{{all_terms}}</code>
                     <code>{{story_title}}</code>
                     <code>{{story_link}}</code>
                     <code>{{site_name}}</code>
