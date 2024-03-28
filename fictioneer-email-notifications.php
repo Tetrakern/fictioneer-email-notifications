@@ -503,6 +503,28 @@ function fcnen_add_user_menu_subscription_button( $items ) {
 }
 add_action( 'fictioneer_filter_user_menu_items', 'fcnen_add_user_menu_subscription_button', 10 );
 
+/**
+ * Adds subscription button to mobile menu
+ *
+ * @since 0.1.0
+ *
+ * @param array $items  The mobile user menu items.
+ *
+ * @return array The updated mobile user menu items.
+ */
+
+function fcnen_add_mobile_subscription_button( $items ) {
+  // Setup
+  $html = '<a data-click-target="#fcnen-subscription-modal" data-click-action="open-dialog-modal fcnen-load-modal-form"><i class="fa-solid fa-envelope mobile-menu__item-icon"></i> ' . __( 'Subscription', 'fcnen' ) . '</a>';
+
+  // Insert in second to last place
+  array_splice( $items, count( $items ) - 1, 0, $html );
+
+  // Continue filter
+  return $items;
+}
+add_action( 'fictioneer_filter_mobile_user_menu_items', 'fcnen_add_mobile_subscription_button', 10 );
+
 // =======================================================================================
 // SUBSCRIBERS
 // =======================================================================================
