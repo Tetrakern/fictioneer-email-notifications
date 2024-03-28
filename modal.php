@@ -55,6 +55,7 @@ function fcnen_get_modal_content() {
   $terms = null;
   $search_placeholder = __( 'Search for stories or taxonomies…', 'fcnen' );
   $search_term = '';
+  $max_per_term = absint( get_option( 'fcnen_max_per_term', 10 ) );
 
   if ( ! $allow_stories ) {
     $search_placeholder = __( 'Search for taxonomies…', 'fcnen' );
@@ -158,12 +159,20 @@ function fcnen_get_modal_content() {
       <?php else : ?>
         <div class="dialog-modal__row">
           <p class="dialog-modal__description"><?php
+            $max_per_term = absint( get_option( 'fcnen_max_per_term', 10 ) );
+
             if ( $allow_stories && $allow_taxonomies ) {
-              _e( 'Receive email notifications about new content. Uncheck "everything" to filter for specific types, stories, or taxonomies. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' );
+              printf(
+                __( 'Receive email notifications about new content. Uncheck "everything" to filter for specific types, stories, tags, or taxonomies%s. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' ),
+                $max_per_term > 0 ? sprintf( __( ' (max. %s)', 'fcnen' ), $max_per_term ) : ''
+              );
             } elseif ( $allow_stories ) {
               _e( 'Receive email notifications about new content. Uncheck "everything" to filter for specific types or stories. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' );
             } elseif ( $allow_taxonomies ) {
-              _e( 'Receive email notifications about new content. Uncheck "everything" to filter for specific types or taxonomies. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' );
+              printf(
+                __( 'Receive email notifications about new content. Uncheck "everything" to filter for specific types, tags, or taxonomies%s. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' ),
+                $max_per_term > 0 ? sprintf( __( ' (max. %s)', 'fcnen' ), $max_per_term ) : ''
+              );
             } else {
               _e( 'Receive email notifications about new content. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' );
             }
@@ -215,7 +224,7 @@ function fcnen_get_modal_content() {
             <ol class="fcnen-dialog-modal__advanced-sources" data-target="fcnen-sources">
               <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No search query.', 'fcnen' ); ?></span></li>
             </ol>
-            <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection"><?php
+            <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection" data-max="<?php echo $max_per_term; ?>" data-too-many="<?php esc_attr_e( 'Too many!', 'fcnen' ); ?>"><?php
               if ( $allow_stories && $stories ) {
                 foreach ( $stories->posts as $story ) {
                   echo fcnen_get_selection_node(

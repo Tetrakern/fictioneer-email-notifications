@@ -487,6 +487,21 @@ function fcnen_disableSelected() {
 function fcnen_addSelection(source) {
   // Setup
   const destination = fcnen_modal.querySelector('[data-target="fcnen-selection"]');
+  const max = destination.dataset.max ?? 10;
+
+  // Check if too many items
+  if (
+    max > 0 &&
+    destination.querySelectorAll(`[data-type="${source.dataset.type}"]`).length >= max
+  ) {
+    // Show flash
+    destination.classList.add('flash-too-many');
+    setTimeout(() => {
+      destination.classList.remove('flash-too-many');
+    }, 500);
+
+    return;
+  }
 
   // Check if already added
   if (destination.querySelector(`[data-compare="${source.dataset.compare}"]`)) {

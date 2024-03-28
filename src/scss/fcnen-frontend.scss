@@ -113,6 +113,25 @@
       }
     }
 
+    &-selection.flash-too-many {
+      position: relative;
+
+      &::after {
+        content: attr(data-too-many);
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: grid;
+        place-content: center;
+        background: var(--red-400);
+        color: var(--notice-warning-color);
+        font-weight: 400;
+        opacity: 0;
+        transition: opacity .5s;
+        animation: fcnen-flash .5s ease-out;
+      }
+    }
+
     &-li {
       cursor: pointer;
       user-select: none;
@@ -192,4 +211,9 @@
       display: none;
     }
   }
+}
+
+@keyframes fcnen-flash {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }

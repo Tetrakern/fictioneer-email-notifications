@@ -564,6 +564,7 @@ function fcnen_add_subscriber( $email, $args = [] ) {
   $table_name = $wpdb->prefix . 'fcnen_subscribers';
   $subscriber_id = false;
   $email = sanitize_email( $email );
+  $max_per_term = get_option( 'fcnen_max_per_term', 10 );
 
   // Valid and new email?
   if ( empty( $email ) || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) || fcnen_subscriber_exists( $email ) )  {
@@ -637,6 +638,13 @@ function fcnen_add_subscriber( $email, $args = [] ) {
     $args['taxonomies'] = [];
   }
 
+  // Limit items
+  if ( $max_per_term > 0 ) {
+    $args['categories'] = array_slice( $args['categories'], 0, $max_per_term );
+    $args['tags'] = array_slice( $args['tags'], 0, $max_per_term );
+    $args['taxonomies'] = array_slice( $args['taxonomies'], 0, $max_per_term );
+  }
+
   // Prepare data
   $data = array(
     'email' => $email,
@@ -703,6 +711,7 @@ function fcnen_update_subscriber( $email, $args = [] ) {
   // Setup
   $table_name = $wpdb->prefix . 'fcnen_subscribers';
   $email = sanitize_email( $email );
+  $max_per_term = get_option( 'fcnen_max_per_term', 10 );
 
   // Valid email?
   if ( empty( $email ) || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
@@ -762,6 +771,13 @@ function fcnen_update_subscriber( $email, $args = [] ) {
     $args['categories'] = [];
     $args['tags'] = [];
     $args['taxonomies'] = [];
+  }
+
+  // Limit items
+  if ( $max_per_term > 0 ) {
+    $args['categories'] = array_slice( $args['categories'], 0, $max_per_term );
+    $args['tags'] = array_slice( $args['tags'], 0, $max_per_term );
+    $args['taxonomies'] = array_slice( $args['taxonomies'], 0, $max_per_term );
   }
 
   // Prepare data
