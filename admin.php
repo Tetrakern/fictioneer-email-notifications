@@ -21,6 +21,7 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_general_group', 'fcnen_flag_subscribe_to_taxonomies', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_allow_passwords', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_allow_hidden', 'absint' );
+  register_setting( 'fcnen_general_group', 'fcnen_excerpt_length', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_service_provider', 'sanitize_text_field' );
   register_setting( 'fcnen_general_group', 'fcnen_api_key', 'sanitize_text_field' );
   register_setting( 'fcnen_general_group', 'fcnen_api_bulk_limit', 'absint' );
@@ -1075,6 +1076,7 @@ function fcnen_settings_page() {
   // Setup
   $from = fcnen_get_from_email_address();
   $name = fcnen_get_from_email_name();
+  $excerpt_length = absint( get_option( 'fcnen_excerpt_length', 256 ) );
 
   // $provider = get_option( 'fcnen_service_provider' );
   $api_key = get_option( 'fcnen_api_key' );
@@ -1103,7 +1105,7 @@ function fcnen_settings_page() {
             </tr>
             <tr>
               <th scope="row">
-                <label for="fcnen-from-email-address"><?php _e( 'Sender Name', 'fcnen' ); ?></label>
+                <label for="fcnen-from-email-name"><?php _e( 'Sender Name', 'fcnen' ); ?></label>
               </th>
               <td>
                 <input type="text" name="fcnen_from_email_name" id="fcnen-from-email-name" class="regular-text" placeholder="<?php _ex( 'Your Site', 'From email name placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $name ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
@@ -1111,7 +1113,7 @@ function fcnen_settings_page() {
               </td>
             </tr>
             <tr>
-              <th scope="row"><?php _e( 'Optional Settings', 'fcnen' ); ?></th>
+              <th scope="row"><?php _e( 'Optional', 'fcnen' ); ?></th>
               <td>
                 <fieldset>
                   <label for="fcnen-flag-stories">
@@ -1140,6 +1142,17 @@ function fcnen_settings_page() {
                 </fieldset>
               </td>
             </tr>
+            <tr>
+              <th scope="row">
+                <label for="fcnen-excerpt-length"><?php _e( 'Excerpts', 'fcnen' ); ?></label>
+              </th>
+              <td>
+                <fieldset>
+                  <input type="number" name="fcnen_excerpt_length" id="fcnen-excerpt-length" class="small-text" placeholder="256" value="<?php echo esc_attr( $excerpt_length ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
+                  <p class="description"><?php _e( 'Maximum number of characters for generated excerpts. Custom excerpts are unaffected.', 'fcnen' ); ?></p>
+                </fieldset>
+              </td>
+            </tr>
           </tbody>
         </table>
         <h2 class="title"><?php _e( 'Email Service', 'fcnen' ); ?></h2>
@@ -1159,7 +1172,7 @@ function fcnen_settings_page() {
             </tr>
             <tr>
               <th scope="row">
-                <label for="fcnen-select-service-provider"><?php _e( 'API Key', 'fcnen' ); ?></label>
+                <label for="fcnen-api-key"><?php _e( 'API Key', 'fcnen' ); ?></label>
               </th>
               <td>
                 <input type="text" name="fcnen_api_key" id="fcnen-api-key" class="regular-text" value="<?php echo esc_attr( $api_key ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
@@ -1168,7 +1181,7 @@ function fcnen_settings_page() {
             </tr>
             <tr>
               <th scope="row">
-                <label for="fcnen-select-service-provider"><?php _e( 'Batch Limit', 'fcnen' ); ?></label>
+                <label for="fcnen-api-bulk-limit"><?php _e( 'Batch Limit', 'fcnen' ); ?></label>
               </th>
               <td>
                 <input type="number" name="fcnen_api_bulk_limit" id="fcnen-api-bulk-limit" class="small-text" value="<?php echo esc_attr( $api_bulk_limit ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
