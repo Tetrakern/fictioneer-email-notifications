@@ -481,6 +481,28 @@ function fcnen_filter_extend_subscribe_buttons( $buttons, $post_id ) {
 }
 add_filter( 'fictioneer_filter_subscribe_buttons', 'fcnen_filter_extend_subscribe_buttons', 20, 2 );
 
+/**
+ * Adds subscription button to user menu
+ *
+ * @since 0.1.0
+ *
+ * @param array $items  The user menu items.
+ *
+ * @return array The updated user menu items.
+ */
+
+function fcnen_add_user_menu_subscription_button( $items ) {
+  // Setup
+  $html = '<li class="menu-item"><a data-click-target="#fcnen-subscription-modal" data-click-action="open-dialog-modal fcnen-load-modal-form" class="_align-left" tabindex="0">' . __( 'Subscription', 'fcnen' ) . '</a></li>';
+
+  // Insert in second to last place
+  array_splice( $items, count( $items ) - 1, 0, $html );
+
+  // Continue filter
+  return $items;
+}
+add_action( 'fictioneer_filter_user_menu_items', 'fcnen_add_user_menu_subscription_button', 10 );
+
 // =======================================================================================
 // SUBSCRIBERS
 // =======================================================================================
