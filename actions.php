@@ -367,7 +367,7 @@ add_action( 'admin_post_fcnen_import_subscribers_csv', 'fcnen_import_subscribers
  * @param int $post_id  The ID of the notification post.
  */
 
-function fcnen_submit_notification( $post_id ) {
+function fcnen_submit_notification() {
   // Verify request
   if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'submit-notification', 'fcnen-nonce' ) ) {
     wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
@@ -416,3 +416,80 @@ function fcnen_submit_notification( $post_id ) {
   exit();
 }
 add_action( 'admin_post_fcnen_submit_notification', 'fcnen_submit_notification' );
+
+/**
+ * Preview notification email for a subscriber
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_preview_notification() {
+  // Verify request
+  if ( ! isset( $_GET['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-preview-notification', 'fcnen-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed.', 'fcnen' ) );
+  }
+
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) || ! is_admin() ) {
+    wp_die( __( 'Insufficient permissions.', 'fcnen' ) );
+  }
+
+  // Setup
+  $email = sanitize_email( $_GET['email'] );
+  $subscriber = fcnen_get_subscriber_by_email( $email );
+  $from = fcnen_get_from_email_address();
+  $name = fcnen_get_from_email_name();
+  $subject = fcnen_replace_placeholders( fcnen_get_notification_email_subject() );
+
+  // Found?
+  if ( ! $subscriber ) {
+    wp_die( __( 'Subscriber not found.', 'fcnen' ) );
+  }
+
+  // Notification
+  $notification = fcnen_get_notification_emails(
+    array( 'subscribers' => [ (array) $subscriber ], 'preview' => 1 )
+  );
+
+  // Nothing?
+  if ( empty( $notification['email_bodies'] ) ) {
+    wp_die( __( 'No matching notifications enqueued.', 'fcnen' ) );
+  }
+
+  // Render
+  foreach ( $notification['email_bodies'] as $email => $body ) {
+    // Start HTML ---> ?>
+    <html>
+      <head>
+        <meta charset="<?php echo get_bloginfo( 'charset' ); ?>">
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+        <title><?php _e( 'Notification Preview', 'fcnen' ); ?></title>
+        <style>body{font-family: '-apple-system', 'Segoe UI', Roboto, 'Oxygen-Sans', Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 20px;}</style>
+      </head>
+      <body>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin: 0 auto; max-width: 640px;">
+          <div style="background: rgb(0 0 0 / 5%); padding: 5px;">
+            <?php printf( __( '<strong>From:</strong> %s', 'fcnes' ), $from ); ?>
+          </div>
+          <div style="background: rgb(0 0 0 / 5%); padding: 5px;">
+            <?php printf( __( '<strong>To:</strong> %s', 'fcnes' ), $email ); ?>
+          </div>
+          <div style="background: rgb(0 0 0 / 5%); padding: 5px;">
+            <?php printf( __( '<strong>Name:</strong> %s', 'fcnes' ), $name ); ?>
+          </div>
+          <div style="background: rgb(0 0 0 / 5%); padding: 5px;">
+            <?php printf( __( '<strong>Subject:</strong> %s', 'fcnes' ), $subject ); ?>
+          </div>
+          <div style="margin-top: 20px;">
+            <?php echo $body; ?>
+          </div>
+        </div>
+      </body>
+    </html>
+    <?php // <--- End HTML
+  }
+
+  // Terminate
+  exit;
+}
+add_action( 'admin_post_fcnen_preview_notification', 'fcnen_preview_notification' );

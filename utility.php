@@ -1405,6 +1405,7 @@ function fcnen_get_notification_contents( $subscribers = null ) {
  *
  *   @type array $subscribers  Array of prepared email subscribers. Defaults
  *                             to return value of fcnen_get_email_subscribers().
+ *   @type bool  $preview      Optional. Whether this is for an email preview.
  * }
  *
  * @return array Associated array of posts and email bodies.
@@ -1417,6 +1418,7 @@ function fcnen_get_notification_emails( $args = [] ) {
   $subscribers = $contents['subscribers'];
   $time_format = get_option( 'time_format' );
   $date_format = get_option( 'date_format' );
+  $is_preview = $args['preview'] ?? 0;
   $cached_partials = [];
   $email_bodies = [];
 
@@ -1526,8 +1528,8 @@ function fcnen_get_notification_emails( $args = [] ) {
         '{{code}}' => $subscriber['code'],
         '{{id}}' => $subscriber['id'],
         '{{updates}}' => implode( '', $partials ),
-        '{{edit_link}}' => esc_url( fcnen_get_edit_link( $email, $subscriber['code'] ) ),
-        '{{unsubscribe_link}}' => esc_url( fcnen_get_unsubscribe_link( $email, $subscriber['code'] ) )
+        '{{edit_link}}' => $is_preview ? '#' : esc_url( fcnen_get_edit_link( $email, $subscriber['code'] ) ),
+        '{{unsubscribe_link}}' => $is_preview ? '#' : esc_url( fcnen_get_unsubscribe_link( $email, $subscriber['code'] ) )
       )
     );
   }

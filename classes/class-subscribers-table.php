@@ -280,6 +280,19 @@ class FCNEN_Subscribers_Table extends WP_List_Table {
     // Setup
     $actions = [];
 
+    // Preview actions
+    if ( ! empty( $item['confirmed'] ) && empty( $item['trashed'] ) ) {
+      $actions['email_preview'] = sprintf(
+        '<a href="%s" target="_blank">%s</a>',
+        wp_nonce_url(
+          add_query_arg( array( 'email' => $item['email'] ), admin_url( 'admin-post.php?action=fcnen_preview_notification' ) ),
+          'fcnen-preview-notification',
+          'fcnen-nonce'
+        ),
+        __( 'Preview', 'fcnen' )
+      );
+    }
+
     // Confirm action
     if ( empty( $item['confirmed'] ) && empty( $item['trashed'] ) ) {
       $actions['confirm'] = sprintf(
