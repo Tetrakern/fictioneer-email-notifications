@@ -78,7 +78,7 @@ define(
     'subject_confirmation' => _x( 'Please confirm your subscription', 'Email subject', 'fcnen' ),
     'subject_code' => _x( 'Your subscription code', 'Email subject', 'fcnen' ),
     'subject_edit' => _x( 'Your subscription has been updated', 'Email subject', 'fcnen' ),
-    'subject_notification' => _x( 'New content on {{site_name}}', 'Email subject', 'fcnen' ),
+    'subject_notification' => _x( 'Updates on {{site_name}}', 'Email subject', 'fcnen' ),
     'layout_confirmation' =>
 <<<EOT
 <p>Thank you for subscribing to <a href="{{site_link}}" target="_blank">{{site_name}}</a>.</p>
