@@ -443,10 +443,20 @@ function fcnen_get_subscription_button( $post_id = null ) {
   // Setup
   $attributes = '';
 
-  // Story ID
+  // Story
   if ( $post_id && get_post_type( $post_id ) === 'fcn_story' ) {
     $attributes .= " data-story-id='{$post_id}'";
     $attributes .= " data-story-title='" . esc_attr( get_the_title( $post_id ) ) . "'";
+  }
+
+  // Chapter
+  if ( $post_id && get_post_type( $post_id ) === 'fcn_chapter' ) {
+    $story_id = get_post_meta( $post_id, 'fictioneer_chapter_story', true );
+
+    if ( $story_id ) {
+      $attributes .= " data-story-id='{$story_id}'";
+      $attributes .= " data-story-title='" . esc_attr( get_the_title( $story_id ) ) . "'";
+    }
   }
 
   return '<button type="button" data-click-target="#fcnen-subscription-modal" data-click-action="open-dialog-modal fcnen-load-modal-form" class="_align-left" tabindex="0" ' . $attributes . '><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcnen' ) . '</span></button>';
