@@ -1491,6 +1491,7 @@ function fcnen_get_notification_emails( $args = [] ) {
         '{{date}}' => get_the_date( $date_format, $post ),
         '{{time}}' => get_the_time( $time_format, $post ),
         '{{author}}' => get_the_author_meta( 'display_name', $post->post_author ?? 0 ) ?: __( 'Unknown Author', 'fcnen' ),
+        '{{author_link}}' => esc_url( get_author_posts_url( $post->post_author ?? 0 ) ?: get_home_url() ),
         '{{thumbnail}}' => esc_url( get_the_post_thumbnail_url( $post, 'cover' ) ?: '' ),
         '{{categories}}' => implode( ', ', wp_list_pluck( $categories, 'name' ) ) ?: '',
         '{{tags}}' => implode( ', ', wp_list_pluck( $tags, 'name' ) ) ?: '',

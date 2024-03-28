@@ -932,6 +932,7 @@ function fcnen_templates_page() {
                     <code>{{title}}</code>
                     <code>{{link}}</code>
                     <code>{{author}}</code>
+                    <code>{{author_link}}</code>
                     <code>{{excerpt}}</code>
                     <code>{{date}}</code>
                     <code>{{time}}</code>
@@ -957,6 +958,7 @@ function fcnen_templates_page() {
                     <code>{{title}}</code>
                     <code>{{link}}</code>
                     <code>{{author}}</code>
+                    <code>{{author_link}}</code>
                     <code>{{excerpt}}</code>
                     <code>{{date}}</code>
                     <code>{{time}}</code>
@@ -987,6 +989,7 @@ function fcnen_templates_page() {
                     <code>{{title}}</code>
                     <code>{{link}}</code>
                     <code>{{author}}</code>
+                    <code>{{author_link}}</code>
                     <code>{{excerpt}}</code>
                     <code>{{date}}</code>
                     <code>{{time}}</code>
