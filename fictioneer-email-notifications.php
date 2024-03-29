@@ -169,6 +169,37 @@ EOT
   )
 );
 
+if ( ! defined( 'FCNEN_SETTING_DEFAULTS' ) ) {
+  define(
+    'FCNEN_SETTING_DEFAULTS',
+    array(
+      'fcnen_from_email_address' => '',
+      'fcnen_from_email_name' => '',
+      'fcnen_flag_subscribe_to_stories' => 0,
+      'fcnen_flag_subscribe_to_taxonomies' => 0,
+      'fcnen_flag_allow_passwords' => 0,
+      'fcnen_flag_allow_hidden' => 0,
+      'fcnen_flag_purge_on_deactivation' => 0,
+      'fcnen_excerpt_length' => 256,
+      'fcnen_max_per_term' => 10,
+      'fcnen_service_provider' => 'mailersend',
+      'fcnen_api_key' => '',
+      'fcnen_api_bulk_limit' => 300,
+      'fcnen_template_layout_confirmation' => FCNEN_DEFAULTS['layout_confirmation'] ?? '',
+      'fcnen_template_subject_confirmation' => FCNEN_DEFAULTS['subject_confirmation'] ?? '',
+      'fcnen_template_layout_code' => FCNEN_DEFAULTS['layout_code'] ?? '',
+      'fcnen_template_subject_code' => FCNEN_DEFAULTS['subject_code'] ?? '',
+      'fcnen_template_layout_edit' => FCNEN_DEFAULTS['layout_edit'] ?? '',
+      'fcnen_template_subject_edit' => FCNEN_DEFAULTS['subject_edit'] ?? '',
+      'fcnen_template_layout_notification' => FCNEN_DEFAULTS['layout_notification'] ?? '',
+      'fcnen_template_subject_notification' => FCNEN_DEFAULTS['subject_notification'] ?? '',
+      'fcnen_template_loop_part_post' => FCNEN_DEFAULTS['loop_part_post'] ?? '',
+      'fcnen_template_loop_part_story' => FCNEN_DEFAULTS['loop_part_story'] ?? '',
+      'fcnen_template_loop_part_chapter' => FCNEN_DEFAULTS['loop_part_chapter'] ?? ''
+    )
+  );
+}
+
 // =======================================================================================
 // INCLUDES & REQUIRES
 // =======================================================================================
@@ -185,6 +216,37 @@ if ( is_admin() ) {
 // =======================================================================================
 // INSTALLATION
 // =======================================================================================
+
+/**
+ * Add default settings to database table
+ *
+ * Note: These settings are not required on every page load
+ * and should therefore not be auto-loaded.
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_add_default_settings() {
+  // Settings
+  foreach ( FCNEN_SETTING_DEFAULTS as $option => $default ) {
+    if ( ! get_option( $option ) ) {
+      add_option( $option, $default, '', 'no' );
+    }
+  }
+
+  // Plugin info
+  if ( ! get_option( 'fcnen_plugin_info' ) ) {
+    $info = array(
+      'install_date' => current_time( 'mysql', 1 ),
+      'version' => FCNEN_VERSION,
+      'last_update_check' => current_time( 'mysql', 1 ),
+      'found_update_version' => ''
+    );
+
+    add_option( 'fcnen_plugin_info', $info );
+  }
+}
+register_activation_hook( __FILE__, 'fcnen_add_default_settings' );
 
 /**
  * Create the subscriber database table

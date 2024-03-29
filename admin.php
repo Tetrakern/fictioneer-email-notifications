@@ -109,6 +109,7 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_general_group', 'fcnen_flag_subscribe_to_taxonomies', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_allow_passwords', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_allow_hidden', 'absint' );
+  register_setting( 'fcnen_general_group', 'fcnen_flag_purge_on_deactivation', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_excerpt_length', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_max_per_term', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_service_provider', 'sanitize_text_field' );
