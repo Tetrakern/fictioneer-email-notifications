@@ -374,6 +374,52 @@ function fcnen_create_meta_table() {
 register_activation_hook( __FILE__, 'fcnen_create_meta_table' );
 
 // =======================================================================================
+// DEACTIVATION
+// =======================================================================================
+
+/**
+ * Clean up when the plugin is deactivated
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ */
+
+function fcnen_deactivation() {
+  global $wpdb;
+
+  // Guard
+  if ( ! get_option( 'fcnen_flag_purge_on_deactivation' ) ) {
+    return;
+  }
+
+  // Delete options
+  foreach ( FCNEN_SETTING_DEFAULTS as $option => $values ) {
+    delete_option( $option );
+  }
+
+  delete_option( 'fcnen_plugin_info' );
+
+  // Drop tables
+  $tables = array(
+    $wpdb->prefix . 'fcnen_subscribers',
+    $wpdb->prefix . 'fcnen_notifications',
+    $wpdb->prefix . 'fcnen_meta'
+  );
+
+  foreach ($tables as $table) {
+    $wpdb->query( "DROP TABLE IF EXISTS {$table}" );
+  }
+
+  // Delete log file
+  $log_file = WP_CONTENT_DIR . '/fcnen-log.log';
+
+  if ( file_exists( $log_file ) ) {
+    unlink( $log_file );
+  }
+}
+register_deactivation_hook( __FILE__, 'fcnen_deactivation' );
+
+// =======================================================================================
 // CRON JOBS
 // =======================================================================================
 

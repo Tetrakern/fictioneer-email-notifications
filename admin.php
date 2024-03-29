@@ -1251,6 +1251,18 @@ function fcnen_settings_page() {
                 <p class="description"><?php _e( 'Maximum subscription items per category, tag, and taxonomies. Disable with 0.', 'fcnen' ); ?></p>
               </td>
             </tr>
+            <tr>
+              <th scope="row">
+                <label for="fcnen-flag-purge-on-deactivation"><?php _e( 'Deactivation', 'fcnen' ); ?></label>
+              </th>
+              <td>
+                <label for="fcnen-flag-purge-on-deactivation">
+                  <input type="hidden" name="fcnen_flag_purge_on_deactivation" value="0">
+                  <input type="checkbox" name="fcnen_flag_purge_on_deactivation" id="fcnen-flag-purge-on-deactivation" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_purge_on_deactivation' ), false ); ?>>
+                  <?php _e( 'Delete all plugin data on deactivation (irreversible)', 'fcnen' ); ?>
+                </label>
+              </td>
+            </tr>
           </tbody>
         </table>
         <h2 class="title"><?php _e( 'Email Service', 'fcnen' ); ?></h2>
