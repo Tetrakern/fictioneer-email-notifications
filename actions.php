@@ -469,16 +469,16 @@ function fcnen_preview_notification() {
       <body>
         <div style="display: flex; flex-direction: column; gap: 10px; margin: 0 auto; max-width: 640px;">
           <div style="background: rgb(0 0 0 / 5%); padding: 5px;">
-            <?php printf( __( '<strong>From:</strong> %s', 'fcnes' ), $from ); ?>
+            <?php printf( __( '<strong>From:</strong> %s', 'fcnen' ), $from ); ?>
           </div>
           <div style="background: rgb(0 0 0 / 5%); padding: 5px;">
-            <?php printf( __( '<strong>To:</strong> %s', 'fcnes' ), $email ); ?>
+            <?php printf( __( '<strong>To:</strong> %s', 'fcnen' ), $email ); ?>
           </div>
           <div style="background: rgb(0 0 0 / 5%); padding: 5px;">
-            <?php printf( __( '<strong>Name:</strong> %s', 'fcnes' ), $name ); ?>
+            <?php printf( __( '<strong>Name:</strong> %s', 'fcnen' ), $name ); ?>
           </div>
           <div style="background: rgb(0 0 0 / 5%); padding: 5px;">
-            <?php printf( __( '<strong>Subject:</strong> %s', 'fcnes' ), $subject ); ?>
+            <?php printf( __( '<strong>Subject:</strong> %s', 'fcnen' ), $subject ); ?>
           </div>
           <div style="margin-top: 20px;">
             <?php echo $body; ?>
