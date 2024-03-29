@@ -34,15 +34,14 @@ add_action( 'fictioneer_modals', 'fcnen_subscription_modal', 10 );
 
 function fcnen_get_modal_content() {
   // Setup
+  $current_user_id = get_current_user_id();
   $allow_stories = get_option( 'fcnen_flag_subscribe_to_stories' );
   $allow_taxonomies = get_option( 'fcnen_flag_subscribe_to_taxonomies' );
   $default_filter = $allow_stories ? 'story' : 'taxonomies';
   $auth_email = $_POST['auth-email'] ?? 0;
   $auth_code = $_POST['auth-code'] ?? 0;
   $story_id = $_POST['story'] ?? 0;
-  $subscriber = fcnen_get_subscriber_by_email_and_code( $auth_email, $auth_code );
   $form_classes = ['fcnen-subscription-form'];
-  $button_label = $subscriber ? __( 'Update', 'fcnen' ) : __( 'Subscribe', 'fcnen' );
   $check_everything = 1;
   $check_posts = 0;
   $check_stories = 0;
@@ -56,6 +55,14 @@ function fcnen_get_modal_content() {
   $search_placeholder = __( 'Search for stories or taxonomies…', 'fcnen' );
   $search_term = '';
   $max_per_term = absint( get_option( 'fcnen_max_per_term', 10 ) );
+
+  if ( empty( $auth_email ) && empty( $auth_code ) ) {
+    $auth_email = get_user_meta( $current_user_id, 'fcnen_subscription_email', true );
+    $auth_code = get_user_meta( $current_user_id, 'fcnen_subscription_code', true );
+  }
+
+  $subscriber = fcnen_get_subscriber_by_email_and_code( $auth_email, $auth_code );
+  $button_label = $subscriber ? __( 'Update', 'fcnen' ) : __( 'Subscribe', 'fcnen' );
 
   if ( ! $allow_stories ) {
     $search_placeholder = __( 'Search for taxonomies…', 'fcnen' );

@@ -50,6 +50,10 @@ function fcnen_load_stubs() {
   if ( ! function_exists( 'fictioneer_get_forced_excerpt' ) ) {
     function fictioneer_get_forced_excerpt( $post_id, $limit = 256, $default = false ) {}
   }
+
+  if ( ! function_exists( 'fictioneer_notice' ) ) {
+    function fictioneer_notice( $message, $type = 'warning', $display = true ) {}
+  }
 }
 add_action( 'wp_loaded', 'fcnen_load_stubs' );
 
@@ -632,6 +636,94 @@ function fcnen_add_mobile_subscription_button( $items ) {
   return $items;
 }
 add_action( 'fictioneer_filter_mobile_user_menu_items', 'fcnen_add_mobile_subscription_button', 10 );
+
+/**
+ * Outputs the HTML for the account profile section
+ *
+ * @since 0.1.0
+ *
+ * @param WP_User $args['user']          Current user.
+ * @param boolean $args['is_admin']      True if the user is an administrator.
+ * @param boolean $args['is_author']     True if the user is an author (by capabilities).
+ * @param boolean $args['is_editor']     True if the user is an editor.
+ * @param boolean $args['is_moderator']  True if the user is a moderator (by capabilities).
+ */
+
+function fcnen_account_profile_section( $args ) {
+  // Setup
+  $current_user = $args['user'];
+  $email = get_user_meta( $current_user->ID, 'fcnen_subscription_email', true ) ?: '';
+  $code = get_user_meta( $current_user->ID, 'fcnen_subscription_code', true ) ?: '';
+  $subscription = null;
+  $link_status = null;
+  $action_url = esc_url( admin_url( 'admin-post.php?action=fcnen_update_profile' ) );
+
+  // Subscription?
+  if ( ! empty( $email ) && ! empty( $code ) ) {
+    $subscription = fcnen_get_subscriber_by_email_and_code( $email, $code );
+  }
+
+  // Linked?
+  if ( $subscription === false ) {
+    $link_status = 'mismatch';
+  } elseif ( ! empty( $subscription ) ) {
+    $link_status = 'linked';
+  }
+
+  // Start HTML ---> ?>
+  <h3 id="fcnen" class="profile__account-headline"><?php _e( 'Email Subscription', 'fcnen' ) ?></h3>
+
+  <p class="profile__description"><?php
+    _e( 'Your email subscription for selected content updates is kept separate from your account, meaning you can use a different email address. But you also need to authenticate with your code every time you wish to view or update your subscription. For convenience, you can link your subscription here.', 'fcnen' );
+  ?></p>
+
+  <?php
+    if ( $link_status === 'mismatch' ) {
+      fictioneer_notice( __( 'No matching subscription found.', 'fcnen' ) );
+    }
+  ?>
+
+  <form method="post" action="<?php echo $action_url; ?>" class="profile__fcnen profile__segment">
+    <?php wp_nonce_field( 'fcnen-update-profile', 'fcnen-nonce' ); ?>
+    <input name="user_id" type="hidden" value="<?php echo $current_user->ID; ?>">
+
+    <div class="profile__input-group">
+      <div class="profile__input-label">
+        <?php _ex( 'Subscription Email Address', 'Profile label for subscription email address.', 'fcnen' ) ?>
+      </div>
+      <div class="profile__input-wrapper _checkmark">
+        <?php
+          if ( $link_status === 'linked' ) {
+            echo '<i class="fa-solid fa-circle-check checkmark"></i>';
+          }
+        ?>
+        <input type="email" maxlength="191" name="fcnen-email" value="<?php echo esc_attr( $email ); ?>" class="profile__input-field profile__fcnen-email">
+        <p class="profile__input-note"><?php _e( 'The email address used for your subscription.', 'fcnen' ) ?></p>
+      </div>
+    </div>
+
+    <div class="profile__input-group">
+      <div class="profile__input-label">
+        <?php _ex( 'Subscription Code', 'Profile label for subscription code.', 'fcnen' ) ?>
+      </div>
+      <div class="profile__input-wrapper">
+        <?php if ( $link_status === 'linked' ) : ?>
+          <i class="fa-solid fa-circle-check checkmark"></i>
+        <?php endif; ?>
+        <input type="text" name="fcnen-code" value="<?php echo esc_attr( $code ); ?>" class="profile__input-field profile__fcnen-code">
+        <p class="profile__input-note"><?php _e( 'Found in notification emails. If compromised, delete and renew subscription.', 'fcnen' ) ?></p>
+      </div>
+    </div>
+
+    <div class="profile__actions">
+      <input name="submit" type="submit" value="<?php esc_attr_e( 'Save', 'fictioneer' ) ?>" class="button">
+      <button type="button" class="button _secondary" data-click-target="#fcnen-subscription-modal" data-click-action="open-dialog-modal fcnen-load-modal-form"><?php _e( 'Open Modal', 'fcnen' ); ?></button>
+    </div>
+
+  </form>
+  <?php // <--- End HTML
+}
+add_action( 'fictioneer_account_content', 'fcnen_account_profile_section', 25 );
 
 // =======================================================================================
 // SUBSCRIBERS

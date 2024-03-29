@@ -493,3 +493,54 @@ function fcnen_preview_notification() {
   exit;
 }
 add_action( 'admin_post_fcnen_preview_notification', 'fcnen_preview_notification' );
+
+// =======================================================================================
+// PROFILE
+// =======================================================================================
+
+/**
+ * Update subscription data in the user frontend profile
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_update_profile() {
+  // Verify request
+  if ( ! isset( $_POST['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-update-profile', 'fcnen-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed. Please try again.', 'fcnen' ) );
+  }
+
+  // Setup
+  $current_user = wp_get_current_user();
+  $email = sanitize_email( $_POST['fcnen-email'] ?? '' );
+  $code = sanitize_text_field( $_POST['fcnen-code'] ?? '' );
+  $updated_user_id = absint( $_POST['user_id'] ?? 0 );
+
+  // User?
+  if ( ! is_user_logged_in() || empty( $current_user ) || $current_user->ID !== $updated_user_id ) {
+    wp_die( __( 'Wrong user or not logged-in.', 'fcnen' ) );
+  }
+
+  // Validate email if set
+  if ( empty( $email ) && ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+    $email = '';
+  }
+
+  // Update subscriber email
+  update_user_meta( $updated_user_id, 'fcnen_subscription_email', $email );
+
+  // Update subscriber code
+  update_user_meta( $updated_user_id, 'fcnen_subscription_code', $code );
+
+  // Redirect
+  wp_safe_redirect(
+    add_query_arg(
+      array( 'fcnen-notice' => 'profile-updated' ),
+      wp_get_referer()
+    ) . '#fcnen'
+  );
+
+  // Terminate
+  exit();
+}
+add_action( 'admin_post_fcnen_update_profile', 'fcnen_update_profile' );
