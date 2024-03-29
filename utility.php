@@ -1542,12 +1542,37 @@ function fcnen_get_notification_emails( $args = [] ) {
   );
 }
 
+/**
+ * Get the MailerSend payload for bulk emails
+ *
+ * @since 0.1.0
+ *
+ * @param array|null $email_bodies  Optional. Array of email addresses and bodies. Defaults
+ *                                  to the return of fcnen_get_notification_emails().
+ *
+ * @return array The MailerSend payload.
+ */
 
-
-function fcnen_get_mailersend_payload( $emails = null ) {
+function fcnen_get_mailersend_payload( $email_bodies = null ) {
   // Setup
-  $emails = $emails ?? fcnen_get_notification_emails();
+  $email_bodies = $email_bodies ?? fcnen_get_notification_emails()['email_bodies'] ?? [];
   $from = fcnen_get_from_email_address();
   $name = fcnen_get_from_email_name();
+  $subject = fcnen_replace_placeholders( fcnen_get_notification_email_subject() );
   $payload = [];
+
+  // Prepare payload
+  foreach ( $email_bodies as $email => $body ) {
+    $payload[] = array(
+      'from' => array( 'email' => $from, 'name' => $name ),
+      'to' => array(
+        array( 'email' => $email )
+      ),
+      'subject' => $subject,
+      'html' => $body
+    );
+  }
+
+  // Return result
+  return $payload;
 }
