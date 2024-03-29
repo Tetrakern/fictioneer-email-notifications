@@ -294,7 +294,7 @@ function fcnen_import_subscribers_csv() {
     }
 
     // Process arrays
-    if ( ! empty( $reset_scopes ) ) {
+    if ( empty( $reset_scopes ) ) {
       // Only allowed post types
       $post_types = is_array( $post_types ) ? array_intersect( $post_types, $allowed_types ) : [];
 
@@ -340,7 +340,7 @@ function fcnen_import_subscribers_csv() {
   }
 
   // Log
-  fcnen_log( "Imported CSV." );
+  fcnen_log( 'Imported CSV.' );
 
   // Success!
   wp_safe_redirect(
