@@ -119,3 +119,75 @@ function fcnen_templatePreview(html, height = null) {
 
   iframe.style.height = h + 'px';
 }
+
+// =============================================================================
+// QUEUE
+// =============================================================================
+
+var fcnen_apiStartTime = 0;
+var fcnen_apiRequests = 0;
+
+function fcnen_handleRateLimiting() {
+  const elapsedTime = Date.now() - fcnen_apiStartTime;
+
+  if (elapsedTime < 60000 && ++fcnen_apiRequests > 10) {
+    return new Promise(resolve => setTimeout(() => {
+      fcnen_apiStartTime = Date.now();
+      fcnen_apiRequests = 0;
+      resolve();
+    }, 61000 - elapsedTime));
+  }
+
+  if (elapsedTime > 60000) {
+    fcnen_apiStartTime = Date.now();
+    fcnen_apiRequests = 0;
+  }
+
+  return Promise.resolve();
+}
+
+function fcnen_processQueue(index = 0, fresh = 0, count = 0) {
+  // Check if the queue has finished processing
+  if (index >= count && count > 0) {
+    return;
+  }
+
+  // Rate limit for max. 10 requests per minute...
+  fcnen_handleRateLimiting().then(() => {
+    // Prepare payload
+    const payload = {
+      'action': 'fictioneer_ajax_fcnen_process_email_queue',
+      'index': index,
+      'fresh': fresh,
+      'fcnen_queue_nonce': document.getElementById('fcnen_queue_nonce').value ?? ''
+    };
+
+    // Request
+    fcn_ajaxPost(payload)
+    .then(response => {
+      if (response.success) {
+        const container = document.querySelector('[data-target="fcnen-email-queue"]');
+
+        container.innerHTML = response.data.html;
+
+        if (!response.data.finished) {
+          fcnen_processQueue(response.data.index + 1, 0, response.data.count);
+        }
+      } else {
+        console.error('Error:', response.data.error)
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-click-target="fcnen-work-queue"]').forEach(button => {
+    button.addEventListener('click', () => {
+      fcnen_apiStartTime = Date.now();
+      fcnen_apiRequests = 0;
+
+      fcnen_processQueue(0, 1);
+    });
+  });
+});

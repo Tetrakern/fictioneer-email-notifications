@@ -329,6 +329,7 @@ details {
 .fcnen-log {
   font-family: Consolas, Monaco, monospace;
   font-size: 11px;
+  overflow-wrap: break-word;
   margin: 0;
 
   li {
@@ -365,4 +366,50 @@ details {
     text-transform: uppercase;
     margin-bottom: 4px;
   }
+}
+
+/* =============================================================================
+ * QUEUE
+ * ========================================================================== */
+
+.fcnen-queue-wrapper {
+  display: grid;
+  gap: 8px;
+  background: #fff;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 11px;
+  overflow-wrap: break-word;
+  padding: 12px;
+}
+
+.fcnen-queue-statistics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 24px 0 12px;
+}
+
+.fcnen-queue-batch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+
+  &__id {
+    // min-width: 56px;
+  }
+
+  &__items {
+    // min-width: 72px;
+  }
+
+  &__status {
+
+  }
+}
+
+.fcnen-queue-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
 }

@@ -242,9 +242,9 @@ function fcnen_add_default_settings() {
   if ( ! get_option( 'fcnen_plugin_info' ) ) {
     $info = array(
       'install_date' => current_time( 'mysql', 1 ),
-      'version' => FCNEN_VERSION,
       'last_update_check' => current_time( 'mysql', 1 ),
-      'found_update_version' => ''
+      'found_update_version' => '',
+      'last_sent' => ''
     );
 
     add_option( 'fcnen_plugin_info', $info );
@@ -1430,4 +1430,200 @@ function fcnen_send_edit_email( $args ) {
 
   // Send
   fcnen_send_transactional_email( $args, $subject, $body );
+}
+
+// =======================================================================================
+// QUEUE & BULK EMAILS
+// =======================================================================================
+
+/**
+ * Process email queue and post bulk emails to provider
+ *
+ * @since 0.1.0
+ *
+ * @param int  $index  Index of current batch. Default 0.
+ * @param bool $fresh  Whether to start from the top. Default false.
+ *
+ * @return array Response data for use in AJAX requests.
+ */
+
+function fcnen_process_email_queue( $index = 0, $fresh = false ) {
+  // Setup
+  $queue = get_transient( 'fcnen_request_queue' ) ?: fcnen_get_email_queue();
+  $batch_count = count( $queue['batches'] );
+  $current_batch = null;
+
+  // Empty?
+  if ( empty( $queue ) || empty( $queue['batches'] ) ) {
+    // Response data
+    return array( 'error' => __( 'Queue is empty.', 'fcnen' ) );
+  }
+
+  // End of queue?
+  if ( $index > $batch_count - 1 ) {
+    // Delete Transient if batches have been completed
+    if ( fcnen_batches_completed( $queue['batches'] ) ) {
+      delete_transient( 'fcnen_request_queue' );
+    }
+
+    // Response data
+    return array(
+      'html' => fcnen_build_queue_html( $queue['batches'] ),
+      'index' => $index,
+      'finished' => true,
+      'count' => $batch_count
+    );
+  }
+
+  // First HTML for fresh queue
+  if ( $fresh ) {
+    // Cleanup previous iterations (if any)
+    foreach ( $queue['batches'] as $key => $batch ) {
+      if ( $batch['status'] !== 'transmitted' ) {
+        $queue['batches'][ $key ]['status'] = 'pending';
+      }
+    }
+
+    // Mark first incomplete batch as 'working'
+    foreach ( $queue['batches'] as $key => $batch ) {
+      if ( ! $batch['success'] ) {
+        $queue['batches'][ $key ]['status'] = 'working';
+        break;
+      }
+    }
+
+    // Response data
+    return array(
+      'html' => fcnen_build_queue_html( $queue['batches'] ),
+      'index' => -1, // Restart from the beginning
+      'finished' => false,
+      'count' => $batch_count
+    );
+  }
+
+  // Mark unsent notifications and posts as 'sent' (once per queue)
+  if ( $index < 1 ) {
+    foreach ( $queue['post_ids'] as $post_id ) {
+      if ( fcnen_unsent_notification_exists( $post_id ) ) {
+        // Update notification
+        fcnen_mark_notification_as_sent( $post_id );
+
+        // // Update fcnen post meta
+        $meta = fcnen_get_meta( $post_id );
+        $meta['sent'][] = current_time( 'mysql', 1 );
+        fcnen_set_meta( $post_id, $meta );
+      }
+    }
+  }
+
+  // Extract current batch
+  $current_batch = $queue['batches'][ $index ];
+
+  // Batch already completed?
+  if ( $current_batch['success'] ?? 0 ) {
+    $current_batch = null;
+
+    // Search for incomplete batch
+    foreach ( $queue['batches'] as $key => $batch ) {
+      if ( ! $batch['success'] ) {
+        $current_batch = $batch;
+        $index = $key;
+        break;
+      }
+    }
+
+    // No incomplete batch found?
+    if ( ! $current_batch ) {
+      delete_transient( 'fcnen_request_queue' );
+
+      // Response data
+      return array(
+        'html' => __( 'All emails have been transmitted.', 'fcnen' ),
+        'index' => $index,
+        'finished' => true,
+        'count' => $batch_count
+      );
+    }
+  }
+
+  // Request
+  $response = fcnen_sent_bulk_notifications( $current_batch );
+
+  // Update queue state
+  if ( ! is_wp_error( $response ) ) {
+    $response_body = wp_remote_retrieve_body( $response );
+    $response_code = wp_remote_retrieve_response_code( $response );
+
+    $queue['batches'][ $index ]['response'] = $response_body;
+    $queue['batches'][ $index ]['code'] = $response_code;
+
+    if ( $response_code == 200 ) {
+      $queue['batches'][ $index ]['success'] = true;
+      $queue['batches'][ $index ]['status'] = 'transmitted';
+    } else {
+      $queue['batches'][ $index ]['success'] = false;
+      $queue['batches'][ $index ]['status'] = 'failure';
+    }
+
+    fcnen_log( sprintf( __( 'Sending Response: Status %s | %s', 'fcnen' ), $response_code, $response_body ) );
+  } else {
+    $queue['batches'][ $index ]['success'] = false;
+    $queue['batches'][ $index ]['status'] = 'error';
+
+    fcnen_log( sprintf( __( 'Sending Error: %s', 'fcnen' ), $response->get_error_message() ) );
+  }
+
+  $queue['batches'][ $index ]['date'] = current_time( 'mysql', 1 );
+  $queue['batches'][ $index ]['attempts'] += 1;
+
+  // Mark next incomplete batch as 'working' but ignore previous
+  if ( $index + 1 <= $batch_count - 1 ) {
+    for ( $i = $index + 1; $i <= $batch_count - 1; $i++ ) {
+      if ( ! $queue['batches'][ $i ]['success'] ) {
+        $queue['batches'][ $i ]['status'] = 'working';
+        break;
+      }
+    }
+  }
+
+  // Update or delete Transient
+  if ( fcnen_batches_completed( $queue['batches'] ) ) {
+    delete_transient( 'fcnen_request_queue' );
+  } else {
+    set_transient( 'fcnen_request_queue', $queue, DAY_IN_SECONDS );
+  }
+
+  // Response data
+  return array(
+    'html' => fcnen_build_queue_html( $queue['batches'] ),
+    'index' => $index,
+    'finished' => ( $index >= $batch_count - 1 ),
+    'count' => $batch_count
+  );
+}
+
+
+
+
+function fcnen_sent_bulk_notifications( $batch ) {
+  // Setup
+  $api_key = get_option( 'fcnen_api_key' ) ?: 0;
+  $api_endpoint = FCNEN_API['mailersend']['bulk'];
+  $headers = array(
+    'Authorization' => "Bearer {$api_key}",
+    'Content-Type' => 'application/json'
+  );
+
+  // API key missing
+  if ( empty( $api_key ) ) {
+    return new WP_Error( 'api_key_missing', __( 'API key has not been set.', 'fcnen' ) );
+  }
+
+  // TEST
+  $response = wp_remote_get(
+    FCNEN_API['mailersend']['quota'],
+    array( 'headers' => $headers )
+  );
+
+  return $response;
 }

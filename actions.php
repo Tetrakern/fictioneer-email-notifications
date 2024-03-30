@@ -544,3 +544,35 @@ function fcnen_update_profile() {
   exit();
 }
 add_action( 'admin_post_fcnen_update_profile', 'fcnen_update_profile' );
+
+// =======================================================================================
+// QUEUE
+// =======================================================================================
+
+/**
+ * Clear email queue
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_clear_queue() {
+  // Verify request
+  if ( ! isset( $_GET['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-clear-queue', 'fcnen-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed. Please try again.', 'fcnen' ) );
+  }
+
+  // Delete queue
+  delete_transient( 'fcnen_request_queue' );
+
+  // Redirect
+  wp_safe_redirect(
+    add_query_arg(
+      array( 'fcnen-notice' => 'queue-cleared' ),
+      wp_get_referer()
+    )
+  );
+
+  // Terminate
+  exit();
+}
+add_action( 'admin_post_fcnen_clear_queue', 'fcnen_clear_queue' );

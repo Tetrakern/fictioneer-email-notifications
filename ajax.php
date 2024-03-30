@@ -313,3 +313,48 @@ function fictioneer_ajax_fcnen_search_content() {
 }
 add_action( 'wp_ajax_fictioneer_ajax_fcnen_search_content', 'fictioneer_ajax_fcnen_search_content' );
 add_action( 'wp_ajax_nopriv_fictioneer_ajax_fcnen_search_content', 'fictioneer_ajax_fcnen_search_content' );
+
+/**
+ * AJAX callback to process email queue
+ *
+ * Note: The "fictioneer_ajax_" prefix enables the plugin skipping
+ * in the theme's must-use-plugin.
+ *
+ * @since 0.1.0
+ */
+
+function fictioneer_ajax_fcnen_process_email_queue() {
+  // Verify
+  if ( ! wp_doing_ajax() ) {
+    wp_send_json_error(
+      array( 'error' => __( 'Invalid request.', 'fcnen' ) )
+    );
+  }
+
+  if ( ! check_ajax_referer( 'fcnen-process-email-queue', 'fcnen_queue_nonce', false ) ) {
+    wp_send_json_error(
+      array( 'error' => __( 'Nonce verification failed. Please reload and try again.', 'fcnen' ) )
+    );
+  }
+
+  if ( ! current_user_can( 'manage_options' ) ) {
+    wp_send_json_error(
+      array( 'error' => __( 'Insufficient permission', 'fcnen' ) )
+    );
+  }
+
+  // Setup
+  $index = absint( $_REQUEST['index'] ?? 0 );
+  $fresh = absint( $_REQUEST['fresh'] ?? 0 );
+
+  // Process
+  $result = fcnen_process_email_queue( $index, $fresh );
+
+  // Response
+  if ( ! ( $result['error'] ?? 0 ) ) {
+    wp_send_json_success( $result );
+  } else {
+    wp_send_json_error( $result );
+  }
+}
+add_action( 'wp_ajax_fictioneer_ajax_fcnen_process_email_queue', 'fictioneer_ajax_fcnen_process_email_queue' );
