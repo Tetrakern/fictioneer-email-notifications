@@ -341,7 +341,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
         '<a href="%s">%s</a>',
         wp_nonce_url(
           add_query_arg(
-            array( 'action' => 'unsent_notification', 'id' => $item['post_id'] ),
+            array( 'action' => 'unsent_notification', 'id' => $item['id'], 'post_id' => $item['post_id'] ),
             $this->uri
           ),
           'fcnen-table-action',
@@ -357,7 +357,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
         '<a href="%s">%s</a>',
         wp_nonce_url(
           add_query_arg(
-            array( 'action' => 'pause_notification', 'id' => $item['post_id'] ),
+            array( 'action' => 'pause_notification', 'id' => $item['id'], 'post_id' => $item['post_id'] ),
             $this->uri
           ),
           'fcnen-table-action',
@@ -373,7 +373,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
         '<a href="%s">%s</a>',
         wp_nonce_url(
           add_query_arg(
-            array( 'action' => 'unpause_notification', 'id' => $item['post_id'] ),
+            array( 'action' => 'unpause_notification', 'id' => $item['id'], 'post_id' => $item['post_id'] ),
             $this->uri
           ),
           'fcnen-table-action',
@@ -388,7 +388,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       '<a href="%s">%s</a>',
       wp_nonce_url(
         add_query_arg(
-          array( 'action' => 'delete_notification', 'id' => $item['post_id'] ),
+          array( 'action' => 'delete_notification', 'id' => $item['id'], 'post_id' => $item['post_id'] ),
           $this->uri
         ),
         'fcnen-table-action',
@@ -657,7 +657,8 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
     // GET actions
     if ( isset( $_GET['action'] ) ) {
-      $post_id = absint( $_GET['id'] ?? 0 );
+      $id = absint( $_GET['id'] ?? 0 );
+      $post_id = absint( $_GET['post_id'] ?? 0 );
       $post = get_post( $post_id );
       $title = empty( $post ) ? __( 'UNAVAILABLE', 'fcnen' ) : $post->post_title;
 
@@ -669,7 +670,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
       // Delete notifications
       if ( $_GET['action'] === 'delete_notification' ) {
-        if ( $wpdb->delete( $table_name, array( 'post_id' => $post_id ), ['%d'] ) ) {
+        if ( $wpdb->delete( $table_name, array( 'id' => $id ), ['%d'] ) ) {
           $query_args['fcnen-notice'] = 'delete-notification-success';
           fcnen_log( "Deleted notification for \"{$title}\" (#{$post_id})." );
         } else {
@@ -681,7 +682,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
       // Pause notifications
       if ( $_GET['action'] === 'pause_notification' ) {
-        if ( $wpdb->update( $table_name, array( 'paused' => 1 ), array( 'post_id' => $post_id ), ['%d'], ['%d'] ) ) {
+        if ( $wpdb->update( $table_name, array( 'paused' => 1 ), array( 'id' => $id ), ['%d'], ['%d'] ) ) {
           $query_args['fcnen-notice'] = 'paused-notification-success';
           fcnen_log( "Paused notification for \"{$title}\" (#{$post_id})." );
         } else {
@@ -693,7 +694,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
       // Unpause notifications
       if ( $_GET['action'] === 'unpause_notification' ) {
-        if ( $wpdb->update( $table_name, array( 'paused' => 0 ), array( 'post_id' => $post_id ), ['%d'], ['%d'] ) ) {
+        if ( $wpdb->update( $table_name, array( 'paused' => 0 ), array( 'id' => $id ), ['%d'], ['%d'] ) ) {
           $query_args['fcnen-notice'] = 'unpaused-notification-success';
           fcnen_log( "Unpaused notification for \"{$title}\" (#{$post_id})." );
         } else {
@@ -705,7 +706,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
 
       // Unsent notifications
       if ( $_GET['action'] === 'unsent_notification' ) {
-        if ( $wpdb->update( $table_name, array( 'last_sent' => null ), array( 'post_id' => $post_id ) ) ) {
+        if ( $wpdb->update( $table_name, array( 'last_sent' => null ), array( 'id' => $id ) ) ) {
           $query_args['fcnen-notice'] = 'unsent-notification-success';
           fcnen_log( "Marked notification for \"{$title}\" (#{$post_id}) as unsent." );
         } else {
