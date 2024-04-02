@@ -691,6 +691,27 @@ function fcnen_get_log() {
 // =======================================================================================
 
 /**
+ * Returns the number of ready notifications
+ *
+ * Note: This does include blocked notifications!
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @return bool True if paused, false if not.
+ */
+
+function fcnen_notification_ready_count() {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_notifications';
+
+  // Return count
+  return $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE paused = 0 AND last_sent IS NULL" ) ?? 0;
+}
+
+/**
  * Returns whether a notification is paused
  *
  * @since 0.1.0
