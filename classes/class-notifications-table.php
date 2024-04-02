@@ -56,10 +56,10 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     // Initialize
     $table_name = $wpdb->prefix . 'fcnen_notifications';
     $this->view = $_GET['view'] ?? 'all';
-    $this->total_items = $wpdb->get_var( "SELECT COUNT(post_id) FROM {$table_name}" );
-    $this->ready_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE paused = 0 AND last_sent IS NULL" );
-    $this->paused_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE paused = 1" );
-    $this->sent_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE last_sent IS NOT NULL" );
+    $this->total_items = $wpdb->get_var( "SELECT COUNT(post_id) FROM {$table_name}" ) ?? 0;
+    $this->ready_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE paused = 0 AND last_sent IS NULL" ) ?? 0;
+    $this->paused_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE paused = 1" ) ?? 0;
+    $this->sent_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE last_sent IS NOT NULL" ) ?? 0;
     $this->uri = remove_query_arg( ['action', 'id', 'notifications', 'fcnen-nonce'], $_SERVER['REQUEST_URI'] );
 
     // Redirect from empty views
