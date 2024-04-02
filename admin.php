@@ -670,25 +670,18 @@ add_action( 'admin_menu', 'fcnen_add_send_emails_menu_page' );
  */
 
 function fcnen_send_emails_page() {
-  global $wpdb;
-
   // Guard
   if ( ! current_user_can( 'manage_options' ) ) {
     wp_die( __( 'You do not have permission to access this page.', 'fcnen' ) );
   }
 
   // Setup
-  $table_name = $wpdb->prefix . 'fcnen_notifications';
-  $ready_notifications = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE paused = 0 AND last_sent IS NULL" );
-  $plugin_info = fcnen_get_plugin_info();
-  $queue_raw = fcnen_get_email_queue();
-  $email_count = $queue_raw['count'] ?? 0;
-  $batch_count = count( $queue_raw['batches'] ?? [] );
+  $statistics = fcnen_get_queue_statistics();
+  $ready_notifications = fcnen_notification_ready_count();
   $queue_incomplete = get_transient( 'fcnen_request_queue' );
   $queue_html = __( 'Click the button to generate and start the next queue.', 'fcnen' );
-  $button_label = $queue_incomplete ? __( 'Retry Unsent', 'fcnen' ) : __( 'Send Emails', 'fcnen' );
   $clear_url = wp_nonce_url( admin_url( 'admin-post.php?action=fcnen_clear_queue' ), 'fcnen-clear-queue', 'fcnen-nonce' );
-  $disabled = $email_count < 1 && ! $queue_incomplete;
+  $disabled = $statistics['emails'] < 1 && ! $queue_incomplete;
 
   // Incomplete queue?
   if ( $queue_incomplete ) {
@@ -712,52 +705,63 @@ function fcnen_send_emails_page() {
   <div id="fcnen-admin-page-send-emails" class="wrap fcnen-settings _send-emails">
     <h1 class="wp-heading-inline"><?php _e( 'Send Emails', 'fcnen' ); ?></h1>
     <hr class="wp-header-end">
-    <p><?php
-      printf(
-        __( '%s are ready to be enqueued in batches of up to %s emails. <strong>Do not close the page and wait for the queue to finish.</strong> This may take a while due to the API rate limit (10 requests per minute). If interrupted, you can retry unsent batches. Incomplete queues are stored for 24 hours; you cannot start a new queue as long as an incomplete remains.' ),
-        sprintf(
-          _n( '%s notification', '%s notifications', $ready_notifications, 'fcnen' ),
-          $ready_notifications
-        ),
-        max( absint( get_option( 'fcnen_api_bulk_limit', 300 ) ), 1 )
-      );
-    ?></p>
-    <div class="fcnen-queue-statistics">
-      <div class="fcnen-queue-statistics__stat _count">
-        <?php printf( __( '<strong>Emails:</strong> %s', 'fcnen' ), $email_count ); ?>
+
+    <div class="fcnen-queue-stats">
+
+      <div class="fcnen-queue-stats__item">
+        <div class="fcnen-queue-stats__item-value _posts"><?php echo $statistics['sendable']; ?></div>
+        <div class="fcnen-queue-stats__item-label _posts"><?php
+          echo _nx( 'Post', 'Posts', $statistics['sendable'], 'Queue statistics.', 'fcnen' );
+        ?></div>
       </div>
-      |
-      <div class="fcnen-queue-statistics__stat _batches">
-        <?php printf( __( '<strong>Batches:</strong> %s', 'fcnen' ), $batch_count ); ?>
+
+      <div class="fcnen-queue-stats__item">
+        <div class="fcnen-queue-stats__item-value _blocked"><?php echo $statistics['blocked']; ?></div>
+        <div class="fcnen-queue-stats__item-label _blocked"><?php
+          echo _x( 'Blocked', 'Queue statistics.', 'fcnen' );
+        ?></div>
       </div>
-      |
-      <div class="fcnen-queue-statistics__stat _last-sent">
-        <?php
+
+      <div class="fcnen-queue-stats__item">
+        <div class="fcnen-queue-stats__item-value _emails"><?php echo $statistics['emails']; ?></div>
+        <div class="fcnen-queue-stats__item-label _emails"><?php
+          echo _nx( 'Email', 'Emails', $statistics['emails'], 'Queue statistics.', 'fcnen' );
+        ?></div>
+      </div>
+
+      <div class="fcnen-queue-stats__item">
+        <div class="fcnen-queue-stats__item-value _batches"><?php
           printf(
-            __( '<strong>Last Sent:</strong> %s', 'fcnen' ),
-            ( $plugin_info['last_sent'] ?? 0 ) ?
-              get_date_from_gmt(
-                $plugin_info['last_sent'],
-                sprintf(
-                  _x( '%1$s \a\t %2$s', 'Queue time format string.', 'fcnen' ),
-                  get_option( 'date_format' ),
-                  get_option( 'time_format' )
-                )
-              ) : _x( 'Never', 'Last Sent: Never.', 'fcnen' )
-          );
-        ?>
+            _x( '%s / %s', 'Queue statistics: Batches/Size.', 'fcnen' ),
+            $statistics['batches'],
+            $statistics['batch_limit']
+          )
+        ?></div>
+        <div class="fcnen-queue-stats__item-label _batches"><?php
+          echo _nx( 'Batch', 'Batches', $statistics['batches'], 'Queue statistics.', 'fcnen' );
+        ?></div>
       </div>
-      <?php if ( $queue_incomplete ) : ?>
-        |
-        <div class="fcnen-queue-statistics__stat _previous-queue">
-          <?php _e( '<strong>Incomplete Queue</strong>', 'fcnen' ); ?>
-        </div>
-      <?php endif; ?>
+
+      <div class="fcnen-queue-stats__item">
+        <div class="fcnen-queue-stats__item-value _last-sent"><?php echo $statistics['last_sent']; ?></div>
+        <div class="fcnen-queue-stats__item-label _last-sent"><?php
+          echo _x( 'Last Sent', 'Queue statistics.', 'fcnen' );
+        ?></div>
+      </div>
+
     </div>
+
+    <?php if ( $queue_incomplete ) : ?>
+      <h2 class="title"><?php _e( 'Previous Queue (Incomplete)', 'fcnen' ); ?></h2>
+    <?php else : ?>
+      <h2 class="title"><?php _e( 'Queue', 'fcnen' ); ?></h2>
+    <?php endif; ?>
+
     <div class="fcnen-queue-wrapper" data-target="fcnen-email-queue"><?php echo $queue_html; ?></div>
+
     <div class="fcnen-queue-actions">
       <button type="button" class="button button-primary" data-click-target="fcnen-work-queue" <?php echo $disabled ? 'disabled' : ''; ?>><?php
-        echo $button_label;
+        echo $queue_incomplete ? __( 'Retry Unsent', 'fcnen' ) : __( 'Send Emails', 'fcnen' );
       ?></button>
       <?php if ( $queue_incomplete ) : ?>
         <a href="<?php echo $clear_url; ?>" class="button"><?php
@@ -765,6 +769,7 @@ function fcnen_send_emails_page() {
         ?></a>
       <?php endif; ?>
     </div>
+
     <?php wp_nonce_field( 'fcnen-process-email-queue', 'fcnen_queue_nonce' ); ?>
   <?php // <--- End HTML
 }
@@ -1607,7 +1612,7 @@ function fcnen_render_metabox( $post ) {
       <input type="checkbox" id="fcnen-enqueue-on-update" name="fcnen_enqueue_on_update" value="1" autocomplete="off">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M16.7 7.1l-6.3 8.5-3.3-2.5-.9 1.2 4.5 3.4L17.9 8z"></path></svg>
     </div>
-    <div class="fictioneer-meta-checkbox__label"><?php _e( 'Enqueue on update', 'fcnen' ); ?></div>
+    <div class="fictioneer-meta-checkbox__label"><?php _e( 'Enqueue again on update', 'fcnen' ); ?></div>
   </label>
   <label class="fictioneer-meta-checkbox">
     <div class="fictioneer-meta-checkbox__checkbox">

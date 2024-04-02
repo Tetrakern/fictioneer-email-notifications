@@ -1501,8 +1501,12 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
     );
   }
 
-  // Mark unsent notifications and posts as 'sent' (once per queue)
+  // Once per queue run...
   if ( $index < 1 ) {
+    // Update plugin info
+    update_option( 'fcnen_last_sent', current_time( 'mysql', 1 ), 'no' );
+
+    // Mark unsent notifications and posts as 'sent' (once per queue)
     foreach ( $queue['post_ids'] as $post_id ) {
       if ( fcnen_unsent_notification_exists( $post_id ) ) {
         // Update notification

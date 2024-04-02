@@ -159,8 +159,7 @@ function fcnen_get_plugin_info() {
     array(
       'install_date' => current_time( 'mysql', 1 ),
       'last_update_check' => current_time( 'mysql', 1 ),
-      'found_update_version' => '',
-      'last_sent' => ''
+      'found_update_version' => ''
     ),
     $info
   );
@@ -913,13 +912,14 @@ function fcnen_get_notification( $post_id ) {
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
  *
- * @param bool $paused  Whether the notification must be paused. Default false.
- * @param bool $sent    Whether the notification must have been sent. Default false.
+ * @param bool   $paused  Optional. Whether the notification must be paused. Default false.
+ * @param bool   $sent    Optional. Whether the notification must have been sent. Default false.
+ * @param string $output  Optional. Return notifications as objects or arrays. Default objects.
  *
- * @return array Array of notification objects.
+ * @return array Array of notifications.
  */
 
-function fcnen_get_notifications( $paused = false, $sent = false ) {
+function fcnen_get_notifications( $paused = false, $sent = false, $output = \OBJECT ) {
   global $wpdb;
 
   // Setup
@@ -927,7 +927,7 @@ function fcnen_get_notifications( $paused = false, $sent = false ) {
   $sql = "SELECT * FROM {$table_name} WHERE paused = %d AND last_sent " . ( $sent ? 'IS NOT NULL' : 'IS NULL' );
 
   // Query
-  $notifications = $wpdb->get_results( $wpdb->prepare( $sql, $paused ? 1 : 0 ) );
+  $notifications = $wpdb->get_results( $wpdb->prepare( $sql, $paused ? 1 : 0 ), $output );
 
   // Return result
   if ( ! empty( $notifications ) ) {
@@ -953,7 +953,7 @@ function fcnen_get_email_posts( $notifications = null ) {
   $notifications = $notifications ? $notifications : fcnen_get_notifications();
   $post_ids = [];
 
-  // Collect post IDs
+  // Extract post IDs
   foreach ( $notifications as $notification ) {
     $post_ids[ $notification->post_id ] = $notification->post_id;
 
@@ -1119,66 +1119,6 @@ function fcnen_delete_meta( $post_id ) {
   // Delete meta
   $sql = $wpdb->prepare( "DELETE FROM {$table_name} WHERE post_id = %d", $post_id );
   $wpdb->query( $sql );
-}
-
-// =======================================================================================
-// QUEUE
-// =======================================================================================
-
-/**
- * Returns HTML for the sending queue
- *
- * @since 0.1.0
- *
- * @param $array $batches  Batches of bulk email payloads and their status.
- *
- * @return string The HTML.
- */
-
-function fcnen_build_queue_html( $batches ) {
-  // Setup
-  $html = '';
-  $translations = array(
-    'pending' => _x( 'Pending', 'Email queue status.', 'fcnen' ),
-    'transmitted' => _x( 'Transmitted', 'Email queue status.', 'fcnen' ),
-    'working' => _x( 'Working', 'Email queue status.', 'fcnen' ),
-    'error' => _x( 'Error', 'Email queue status.', 'fcnen' ),
-    'failure' => _x( 'Failure', 'Email queue status.', 'fcnen' )
-  );
-
-  // Build HTML
-  foreach ( $batches as $key => $batch ) {
-    $status = $batch['status'];
-    $email_count = count( $batch['payload'] );
-    $icon = '';
-
-    $html .= "<div class='fcnen-queue-batch' data-batch-id='{$key}' data-status='{$status}'>";
-    $html .= '<span class="fcnen-queue-batch__id">' . sprintf( __( 'Batch #%s', 'fcnen' ), $key + 1 ) . '</span> | ';
-    $html .= '<span class="fcnen-queue-batch__items">' . sprintf( __( '%s Emails', 'fcnen' ), $email_count ) . '</span> | ';
-
-    if ( $status === 'working' ) {
-      $icon = ' <i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i>';
-    }
-
-    $html .= '<span class="fcnen-queue-batch__status"><span>' . $translations[ $status ] . '</span>' . $icon . '</span>';
-
-    if ( $batch['code'] ?? 0 ) {
-      $html .= ' | <span class="fcnen-queue-batch__code">' . sprintf( __( 'Code: %s', 'fcnen' ), $batch['code'] ) . '</span>';
-    }
-
-    if ( $batch['response'] ?? 0 ) {
-      $html .= ' | <span class="fcnen-queue-batch__response">' . $batch['response'] . '</span>';
-    }
-
-    if ( $batch['date'] ?? 0 ) {
-      $html .= ' | <span class="fcnen-queue-batch__date">' . $batch['date'] . '</span>';
-    }
-
-    $html .= '</div>';
-  }
-
-  // Return HTML
-  return $html;
 }
 
 // =======================================================================================
@@ -1732,6 +1672,135 @@ function fcnen_get_mailersend_payload( $email_bodies = null ) {
 // =======================================================================================
 // QUEUE
 // =======================================================================================
+
+/**
+ * Returns statistics for the (next) queue
+ *
+ * @since 0.1.0
+ *
+ * @param $array $queue  Optional. Queue to get the statistics for, defaults to next queue.
+ *
+ * @return array Associative array with statistics.
+ */
+
+function fcnen_get_queue_statistics( $queue = null ) {
+  // Setup
+  $queue = $queue ?: fcnen_get_email_queue();
+  $last_sent = get_option( 'fcnen_last_sent' );
+  $notifications = fcnen_get_notifications( false, false );
+  $next_queue = fcnen_get_email_queue();
+  $post_ids = [];
+  $sendable = [];
+  $blocked = [];
+
+  // Extract post IDs
+  foreach ( $notifications as $notification ) {
+    $post_ids[ $notification->post_id ] = $notification->post_id;
+
+    if ( $notification->story_id ?? 0 ) {
+      $post_ids[ $notification->story_id ] = $notification->story_id;
+    }
+  }
+
+  // Query posts
+  $posts = empty( $post_ids ) ? [] : get_posts(
+    array(
+      'post_type' => ['post', 'fcn_story', 'fcn_chapter'],
+      'post__in' => array_unique( $post_ids ),
+      'numberposts' => -1,
+      'update_post_meta_cache' => true,
+      'update_post_term_cache' => false,
+      'no_found_rows' => true
+    )
+  );
+
+  // Sort into sendable and blocked
+  foreach ( $posts as $post ) {
+    if ( fcnen_post_sendable( $post ) ) {
+      $sendable[ $post->ID] = $post;
+    } else {
+      $blocked[ $post->ID] = $post;
+    }
+  }
+
+  // Last sent date
+  $last_sent = ( $last_sent ?? 0 ) ? get_date_from_gmt(
+    $last_sent,
+    sprintf(
+      _x( '%1$s \<\b\r\> %2$s', 'Queue time format string.', 'fcnen' ),
+      get_option( 'date_format' ),
+      get_option( 'time_format' )
+    )
+  ) : _x( 'Never', 'Last Sent: Never.', 'fcnen' );
+
+  // Return statistics
+  return array(
+    'total' => count( $posts ),
+    'sendable' => count( $sendable ),
+    'blocked' => count( $blocked ),
+    'last_sent' => $last_sent,
+    'emails' => $next_queue['count'] ?? 0,
+    'batches' => count( $next_queue['batches'] ?? [] ),
+    'batch_limit' => max( absint( get_option( 'fcnen_api_bulk_limit', 300 ) ), 1 ),
+    'api_limit' => 10
+  );
+}
+
+/**
+ * Returns HTML for the sending queue
+ *
+ * @since 0.1.0
+ *
+ * @param $array $batches  Batches of bulk email payloads and their status.
+ *
+ * @return string The HTML.
+ */
+
+function fcnen_build_queue_html( $batches ) {
+  // Setup
+  $html = '';
+  $translations = array(
+    'pending' => _x( 'Pending', 'Email queue status.', 'fcnen' ),
+    'transmitted' => _x( 'Transmitted', 'Email queue status.', 'fcnen' ),
+    'working' => _x( 'Working', 'Email queue status.', 'fcnen' ),
+    'error' => _x( 'Error', 'Email queue status.', 'fcnen' ),
+    'failure' => _x( 'Failure', 'Email queue status.', 'fcnen' )
+  );
+
+  // Build HTML
+  foreach ( $batches as $key => $batch ) {
+    $status = $batch['status'];
+    $email_count = count( $batch['payload'] );
+    $icon = '';
+
+    $html .= "<div class='fcnen-queue-batch' data-batch-id='{$key}' data-status='{$status}'>";
+    $html .= '<span class="fcnen-queue-batch__id">' . sprintf( __( 'Batch #%s', 'fcnen' ), $key + 1 ) . '</span> | ';
+    $html .= '<span class="fcnen-queue-batch__items">' . sprintf( __( '%s Emails', 'fcnen' ), $email_count ) . '</span> | ';
+
+    if ( $status === 'working' ) {
+      $icon = ' <i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i>';
+    }
+
+    $html .= '<span class="fcnen-queue-batch__status"><span>' . $translations[ $status ] . '</span>' . $icon . '</span>';
+
+    if ( $batch['code'] ?? 0 ) {
+      $html .= ' | <span class="fcnen-queue-batch__code">' . sprintf( __( 'Code: %s', 'fcnen' ), $batch['code'] ) . '</span>';
+    }
+
+    if ( $batch['response'] ?? 0 ) {
+      $html .= ' | <span class="fcnen-queue-batch__response">' . $batch['response'] . '</span>';
+    }
+
+    if ( $batch['date'] ?? 0 ) {
+      $html .= ' | <span class="fcnen-queue-batch__date">' . $batch['date'] . '</span>';
+    }
+
+    $html .= '</div>';
+  }
+
+  // Return HTML
+  return $html;
+}
 
 /**
  * Checks whether a set of payload batches has been completely processed
