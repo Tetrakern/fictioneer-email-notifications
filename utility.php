@@ -773,7 +773,9 @@ function fcnen_post_sendable( $post, $with_message = false ) {
   }
 
   // Reject excluded posts
-  if ( get_post_meta( $post->ID, 'fcnen_exclude_from_notifications', true ) ) {
+  $meta = fcnen_get_meta( $post->ID );
+
+  if ( $meta['excluded'] ?? 0 ) {
     if ( $with_message ) {
       return array( 'sendable' => false, 'message' => 'post-excluded' );
     } else {
