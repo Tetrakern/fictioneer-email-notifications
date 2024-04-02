@@ -688,6 +688,7 @@ function fcnen_send_emails_page() {
   $queue_html = __( 'Click the button to generate and start the next queue.', 'fcnen' );
   $button_label = $queue_incomplete ? __( 'Retry Unsent', 'fcnen' ) : __( 'Send Emails', 'fcnen' );
   $clear_url = wp_nonce_url( admin_url( 'admin-post.php?action=fcnen_clear_queue' ), 'fcnen-clear-queue', 'fcnen-nonce' );
+  $disabled = $email_count < 1 && ! $queue_incomplete;
 
   // Incomplete queue?
   if ( $queue_incomplete ) {
@@ -703,7 +704,7 @@ function fcnen_send_emails_page() {
   }
 
   // Nothing to send?
-  if ( $email_count < 1 ) {
+  if ( $disabled ) {
     $queue_html = __( 'Nothing to send.', 'fcnen' );
   }
 
@@ -755,7 +756,7 @@ function fcnen_send_emails_page() {
     </div>
     <div class="fcnen-queue-wrapper" data-target="fcnen-email-queue"><?php echo $queue_html; ?></div>
     <div class="fcnen-queue-actions">
-      <button type="button" class="button button-primary" data-click-target="fcnen-work-queue" <?php echo $email_count > 0 ? '' : 'disabled'; ?>><?php
+      <button type="button" class="button button-primary" data-click-target="fcnen-work-queue" <?php echo $disabled ? 'disabled' : ''; ?>><?php
         echo $button_label;
       ?></button>
       <?php if ( $queue_incomplete ) : ?>
