@@ -677,7 +677,6 @@ function fcnen_send_emails_page() {
 
   // Setup
   $statistics = fcnen_get_queue_statistics();
-  $ready_notifications = fcnen_notification_ready_count();
   $queue_incomplete = get_transient( 'fcnen_request_queue' );
   $queue_html = __( 'Click the button to generate and start the next queue.', 'fcnen' );
   $clear_url = wp_nonce_url( admin_url( 'admin-post.php?action=fcnen_clear_queue' ), 'fcnen-clear-queue', 'fcnen-nonce' );
@@ -718,7 +717,7 @@ function fcnen_send_emails_page() {
       <div class="fcnen-queue-stats__item">
         <div class="fcnen-queue-stats__item-value _blocked"><?php echo $statistics['blocked']; ?></div>
         <div class="fcnen-queue-stats__item-label _blocked"><?php
-          echo _x( 'Blocked', 'Queue statistics.', 'fcnen' );
+          _ex( 'Blocked', 'Queue statistics.', 'fcnen' );
         ?></div>
       </div>
 
@@ -744,9 +743,7 @@ function fcnen_send_emails_page() {
 
       <div class="fcnen-queue-stats__item">
         <div class="fcnen-queue-stats__item-value _last-sent"><?php echo $statistics['last_sent']; ?></div>
-        <div class="fcnen-queue-stats__item-label _last-sent"><?php
-          echo _x( 'Last Sent', 'Queue statistics.', 'fcnen' );
-        ?></div>
+        <div class="fcnen-queue-stats__item-label _last-sent"><?php _ex( 'Last Sent', 'Queue statistics.', 'fcnen' ); ?></div>
       </div>
 
     </div>
@@ -757,16 +754,16 @@ function fcnen_send_emails_page() {
       <h2 class="title"><?php _e( 'Queue', 'fcnen' ); ?></h2>
     <?php endif; ?>
 
-    <div class="fcnen-queue-wrapper" data-target="fcnen-email-queue"><?php echo $queue_html; ?></div>
+    <div class="fcnen-queue-wrapper" data-target="fcnen-email-queue" data-api-limit="<?php echo FCNEN_API_LIMIT; ?>" data-api-interval="<?php echo FCNEN_API_INTERVAL; ?>" data-pause-message="<?php esc_attr_e( 'Waiting for API reset', 'fcnen' ); ?>"><?php
+      echo $queue_html;
+    ?></div>
 
     <div class="fcnen-queue-actions">
       <button type="button" class="button button-primary" data-click-target="fcnen-work-queue" <?php echo $disabled ? 'disabled' : ''; ?>><?php
         echo $queue_incomplete ? __( 'Retry Unsent', 'fcnen' ) : __( 'Send Emails', 'fcnen' );
       ?></button>
       <?php if ( $queue_incomplete ) : ?>
-        <a href="<?php echo $clear_url; ?>" class="button"><?php
-          _e( 'Clear Queue', 'fcnen' );
-        ?></a>
+        <a href="<?php echo $clear_url; ?>" class="button"><?php _e( 'Clear Queue', 'fcnen' ); ?></a>
       <?php endif; ?>
     </div>
 

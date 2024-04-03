@@ -65,6 +65,14 @@ if ( ! defined( 'FCNEN_LOG_LIMIT' ) ) {
   define( 'FCNEN_LOG_LIMIT', 2000 );
 }
 
+if ( ! defined( 'FCNEN_API_LIMIT' ) ) {
+  define( 'FCNEN_API_LIMIT', 10 );
+}
+
+if ( ! defined( 'FCNEN_API_INTERVAL' ) ) {
+  define( 'FCNEN_API_INTERVAL', 60000 );
+}
+
 define(
   'FCNEN_API',
   array(

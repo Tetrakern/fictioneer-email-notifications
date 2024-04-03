@@ -124,21 +124,32 @@ function fcnen_templatePreview(html, height = null) {
 // QUEUE
 // =============================================================================
 
+const fcnen_queueWrapper = document.querySelector('[data-target="fcnen-email-queue"]');
+const fcnen_apiLimit = parseInt(fcnen_queueWrapper?.dataset.apiLimit ?? 10);
+const fcnen_apiInterval = parseInt(fcnen_queueWrapper?.dataset.apiInterval ?? 60000);
+
 var fcnen_apiStartTime = 0;
 var fcnen_apiRequests = 0;
 
 function fcnen_handleRateLimiting() {
   const elapsedTime = Date.now() - fcnen_apiStartTime;
 
-  if (elapsedTime < 60000 && ++fcnen_apiRequests > 10) {
+  if (elapsedTime < fcnen_apiInterval && ++fcnen_apiRequests > fcnen_apiLimit) {
+    const current = fcnen_queueWrapper.querySelector('[data-status="working"]');
+
+    if (current) {
+      current.querySelector('.fcnen-queue-batch__status').innerHTML =
+        `<span>${fcnen_queueWrapper.dataset.pauseMessage}</span> <i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i>`;
+    }
+
     return new Promise(resolve => setTimeout(() => {
       fcnen_apiStartTime = Date.now();
       fcnen_apiRequests = 0;
       resolve();
-    }, 61000 - elapsedTime));
+    }, fcnen_apiInterval + 1000 - elapsedTime));
   }
 
-  if (elapsedTime > 60000) {
+  if (elapsedTime > fcnen_apiInterval) {
     fcnen_apiStartTime = Date.now();
     fcnen_apiRequests = 0;
   }
