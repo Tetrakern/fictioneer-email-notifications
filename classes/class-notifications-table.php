@@ -430,6 +430,10 @@ class FCNEN_Notifications_Table extends WP_List_Table {
    */
 
   function column_status( $item ) {
+    if ( $item['last_sent'] ) {
+      return _x( 'Sent', 'Notification list table status column.', 'fcnen' );
+    }
+
     if ( $item['paused'] ) {
       return _x( 'Paused', 'Notification list table status column.', 'fcnen' );
     }
