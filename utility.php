@@ -951,6 +951,8 @@ function fcnen_get_notifications( $paused = false, $sent = false, $output = \OBJ
 function fcnen_get_email_posts( $notifications = null ) {
   // Setup
   $notifications = $notifications ? $notifications : fcnen_get_notifications();
+  $excluded_posts = get_option( 'fcnen_excluded_posts', [] ) ?: [];
+  $excluded_authors = get_option( 'fcnen_excluded_authors', [] ) ?: [];
   $post_ids = [];
 
   // Extract post IDs
@@ -985,8 +987,12 @@ function fcnen_get_email_posts( $notifications = null ) {
   }
 
   // Filter posts
-  $sendable_posts = array_filter( $posts, function( $post ) {
-    return fcnen_post_sendable( $post->ID );
+  $sendable_posts = array_filter( $posts, function( $post ) use ( $excluded_posts, $excluded_authors ) {
+    $keep = fcnen_post_sendable( $post->ID );
+    $keep = ! in_array( $post->ID, $excluded_posts ) && $keep;
+    $keep = ! in_array( $post->post_author, $excluded_authors ) && $keep;
+
+    return $keep;
   });
 
   // Return result

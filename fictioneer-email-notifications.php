@@ -1143,9 +1143,16 @@ function fcnen_add_notification( $post_id ) {
   $post = get_post( $post_id );
   $allowed_types = ['post', 'fcn_story', 'fcn_chapter'];
   $story_id = null;
+  $excluded_posts = get_option( 'fcnen_excluded_posts', [] ) ?: [];
+  $excluded_authors = get_option( 'fcnen_excluded_authors', [] ) ?: [];
 
   // Post not found
   if ( ! $post ) {
+    return false;
+  }
+
+  // Excluded author ID?
+  if ( in_array( $post->post_author, $excluded_authors ) ) {
     return false;
   }
 
@@ -1157,6 +1164,11 @@ function fcnen_add_notification( $post_id ) {
   // Chapter?
   if ( $post->post_type === 'fcn_chapter' ) {
     $story_id = get_post_meta( $post->ID, 'fictioneer_chapter_story', true ) ?: null;
+  }
+
+  // Excluded post ID?
+  if ( in_array( $post_id, $excluded_posts ) || in_array( $story_id ?? 0, $excluded_posts ) ) {
+    return false;
   }
 
   // Insert into table

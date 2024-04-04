@@ -116,6 +116,8 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_general_group', 'fcnen_service_provider', 'sanitize_text_field' );
   register_setting( 'fcnen_general_group', 'fcnen_api_key', 'sanitize_text_field' );
   register_setting( 'fcnen_general_group', 'fcnen_api_bulk_limit', 'absint' );
+  register_setting( 'fcnen_general_group', 'fcnen_excluded_posts', 'fcnen_sanitize_comma_separated_list' );
+  register_setting( 'fcnen_general_group', 'fcnen_excluded_authors', 'fcnen_sanitize_comma_separated_list' );
 
   // Templates
   register_setting( 'fcnen_template_group', 'fcnen_template_layout_confirmation', 'wp_kses_post' );
@@ -135,6 +137,29 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_template_group', 'fcnen_template_loop_part_chapter', 'wp_kses_post' );
 }
 add_action( 'admin_init', 'fcnen_register_settings' );
+
+/**
+ * Sanitizes and returns a comma-separated list as array
+ *
+ * @since 0.1.0
+ *
+ * @param string $value  The value to sanitize.
+ *
+ * @return array The value as array.
+ */
+
+function fcnen_sanitize_comma_separated_list( $value ) {
+  if ( is_array( $value ) ) {
+    return $value;
+  }
+
+  $value = sanitize_text_field( $value );
+  $value = fictioneer_explode_list( $value );
+  $value = array_map( 'absint', $value );
+  $value = array_map( 'strval', $value );
+
+  return array_unique( $value );
+}
 
 // =======================================================================================
 // INCLUDES
@@ -1309,8 +1334,8 @@ function fcnen_settings_page() {
   $name = fcnen_get_from_email_name();
   $excerpt_length = absint( get_option( 'fcnen_excerpt_length', 256 ) );
   $max_per_term = absint( get_option( 'fcnen_max_per_term', 10 ) );
-
-  // $provider = get_option( 'fcnen_service_provider' );
+  $excluded_posts = implode( ', ', get_option( 'fcnen_excluded_posts', [] ) ?: [] );
+  $excluded_authors = implode( ', ', get_option( 'fcnen_excluded_authors', [] ) ?: [] );
   $api_key = get_option( 'fcnen_api_key' );
   $api_bulk_limit = get_option( 'fcnen_api_bulk_limit', 300 );
 
@@ -1396,6 +1421,28 @@ function fcnen_settings_page() {
               <td>
                 <input type="number" name="fcnen_max_per_term" id="fcnen-max-per-term" class="small-text" placeholder="10" value="<?php echo esc_attr( $max_per_term ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
                 <p class="description"><?php _e( 'Maximum subscription items per category, tag, and taxonomies. Disable with 0.', 'fcnen' ); ?></p>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">
+                <label for="fcnen-excluded-posts"><?php _e( 'Excluded Posts', 'fcnen' ); ?></label>
+              </th>
+              <td>
+                <fieldset>
+                  <p><label for="fcnen-excluded-posts"><?php _e( 'Comma-separated list of excluded post IDs.', 'fcnen' ); ?></label></p>
+                  <p><textarea name="fcnen_excluded_posts" id="fcnen-excluded-posts" class="code" cols="50" rows="5" autocomplete="off" spellcheck="false" autocorrect="off"><?php echo $excluded_posts; ?></textarea></p>
+                </fieldset>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">
+                <label for="fcnen-excluded-authors"><?php _e( 'Excluded Authors', 'fcnen' ); ?></label>
+              </th>
+              <td>
+                <fieldset>
+                  <p><label for="fcnen-excluded-authors"><?php _e( 'Comma-separated list of excluded author IDs.', 'fcnen' ); ?></label></p>
+                  <p><textarea name="fcnen_excluded_authors" id="fcnen-excluded-authors" class="code" cols="50" rows="5" autocomplete="off" spellcheck="false" autocorrect="off"><?php echo $excluded_authors; ?></textarea></p>
+                </fieldset>
               </td>
             </tr>
             <tr>
