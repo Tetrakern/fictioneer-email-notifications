@@ -1246,6 +1246,9 @@ function fcnen_track_posts( $post_id, $post ) {
   $on_update = $_POST['fcnen_enqueue_on_update'] ?? 0;
   $current_time = current_datetime()->format( 'U' );
   $publish_time = get_post_time( 'U', false, $post );
+  $is_new = $current_time - $publish_time < 30 && empty( $dates );
+  $allow_password = get_option( 'fcnen_flag_allow_passwords' );
+  $allow_hidden = get_option( 'fcnen_flag_allow_hidden' );
 
   // Excluded?
   if ( $meta['excluded'] ?? 0 ) {
@@ -1253,8 +1256,24 @@ function fcnen_track_posts( $post_id, $post ) {
   }
 
   // New or enqueued on update?
-  if ( ( $current_time - $publish_time > 30 || ! empty( $dates ) ) && ! $on_update ) {
+  if ( ! $is_new && ! $on_update ) {
     return;
+  }
+
+  // Ignore disallowed
+  if ( get_option( 'fcnen_flag_disable_blocked_enqueue' ) ) {
+    // Password?
+    if ( ! $allow_password && ! empty( $post->post_password ) ) {
+      return;
+    }
+
+    // Hidden?
+    $story_hidden = $_POST['fictioneer_story_hidden'] ?? 0;
+    $chapter_hidden = $_POST['fictioneer_chapter_hidden'] ?? 0;
+
+    if ( ! $allow_hidden && ( $story_hidden || $chapter_hidden ) ) {
+      return;
+    }
   }
 
   // Add notification

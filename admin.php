@@ -109,6 +109,7 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_general_group', 'fcnen_flag_subscribe_to_taxonomies', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_allow_passwords', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_allow_hidden', 'absint' );
+  register_setting( 'fcnen_general_group', 'fcnen_flag_disable_blocked_enqueue', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_flag_purge_on_deactivation', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_excerpt_length', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_max_per_term', 'absint' );
@@ -1369,6 +1370,12 @@ function fcnen_settings_page() {
                     <input type="hidden" name="fcnen_flag_allow_hidden" value="0">
                     <input type="checkbox" name="fcnen_flag_allow_hidden" id="fcnen-flag-allow-hidden" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_allow_hidden' ), false ); ?>>
                     <?php _e( 'Allow notifications for hidden posts', 'fcnen' ); ?>
+                  </label>
+                  <br>
+                  <label for="fcnen-flag-disabled-blocked-enqueue">
+                    <input type="hidden" name="fcnen_flag_disable_blocked_enqueue" value="0">
+                    <input type="checkbox" name="fcnen_flag_disable_blocked_enqueue" id="fcnen-flag-disabled-blocked-enqueue" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_disable_blocked_enqueue' ), false ); ?>>
+                    <?php _e( 'Do not enqueue disallowed posts upon publishing', 'fcnen' ); ?>
                   </label>
                 </fieldset>
               </td>
