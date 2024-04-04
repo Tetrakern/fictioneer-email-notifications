@@ -17,47 +17,6 @@ defined( 'ABSPATH' ) OR exit;
 define( 'FCNEN_VERSION', '0.1.0' );
 
 // =======================================================================================
-// STUBS
-// =======================================================================================
-
-/**
- * Stubs for functions to make editor shut up
- *
- * @since 0.1.0
- */
-
-function fcnen_load_stubs() {
-  if ( ! function_exists( 'fictioneer_minify_html' ) ) {
-    function fictioneer_minify_html( $html ) {}
-  }
-
-  if ( ! function_exists( 'fictioneer_icon' ) ) {
-    function fictioneer_icon( $icon ) {}
-  }
-
-  if ( ! function_exists( 'fictioneer_get_safe_title' ) ) {
-    function fictioneer_get_safe_title( $post, $content = null ) {}
-  }
-
-  if ( ! function_exists( 'update_post_author_caches' ) ) {
-    function update_post_author_caches( $posts ) {}
-  }
-
-  if ( ! function_exists( 'fictioneer_multi_save_guard' ) ) {
-    function fictioneer_multi_save_guard( $post_id ) {}
-  }
-
-  if ( ! function_exists( 'fictioneer_get_forced_excerpt' ) ) {
-    function fictioneer_get_forced_excerpt( $post_id, $limit = 256, $default = false ) {}
-  }
-
-  if ( ! function_exists( 'fictioneer_notice' ) ) {
-    function fictioneer_notice( $message, $type = 'warning', $display = true ) {}
-  }
-}
-add_action( 'wp_loaded', 'fcnen_load_stubs' );
-
-// =======================================================================================
 // CONSTANTS & DEFAULTS
 // =======================================================================================
 
