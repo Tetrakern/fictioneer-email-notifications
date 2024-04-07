@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) OR exit;
 // =======================================================================================
 
 define(
-  'fcnen_REPLACEMENTS',
+  'FCNEN_REPLACEMENTS',
   array(
     '{{site_name}}' => get_bloginfo( 'name' ),
     '{{site_link}}' => esc_url( home_url() ),
@@ -28,7 +28,7 @@ define(
 
 function fcnen_replace_placeholders( $string, $extra = [] ) {
   // Setup
-  $replacements = array_merge( fcnen_REPLACEMENTS, $extra );
+  $replacements = array_merge( FCNEN_REPLACEMENTS, $extra );
 
   // Replace conditional placeholders {{#placeholder}}content{{/placeholder}}
   $string = preg_replace_callback( '/{{\#([\w\d_-]+)}}((?:(?!{{\/\1}}).)*){{\/\1}}/s', function( $matches ) use ( $replacements ) {
