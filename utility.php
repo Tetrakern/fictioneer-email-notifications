@@ -168,6 +168,56 @@ function fcnen_get_plugin_info() {
   return $info;
 }
 
+/**
+ * Scan a string for SQL injection patterns
+ *
+ * Note: Can produce false positives and false negatives.
+ * Good for security in depth, but should not be relied upon.
+ *
+ * @since 0.1.0
+ *
+ * @param string $string  The string to scan.
+ *
+ * @return array|false An array of matched SQL injection patterns, or false if no matches found.
+ */
+
+function fcnen_scan_for_injections( $string ) {
+  static $patterns = null;
+
+  // SQL injection patterns
+  if ( $patterns === null ) {
+    $patterns = array(
+      '/\b(select|insert|update|delete|union|drop|truncate|alter|create|exec|execute|declare)\b/i',
+      '/\bxp_\w+/i',
+      '/\bsys\./i',
+      '/\binformation_schema\b/i',
+      '/\bsleep\(/i',
+      '/\bbenchmark\(/i',
+      '/\'\s*?or\s*?\'/i',
+      '/\'\s*?or\s*?\d+\s*?=\s*?\d+/i',
+      '/\/\*\W*\w*\W*\*\//i',
+      '/\/\*/i',
+      '/--/i',
+      '/\b1=1\b/i'
+    );
+  }
+
+  // Match array
+  $matchedPatterns = [];
+
+  // Check for patterns
+  foreach ( $patterns as $pattern ) {
+    if ( preg_match( $pattern, $string, $matches ) ) {
+      if ( ! in_array( $matches[0], $matchedPatterns ) ) {
+        $matchedPatterns[] = $matches[0];
+      }
+    }
+  }
+
+  // Return matched patterns, or null if no matches found
+  return empty( $matchedPatterns ) ? false : $matchedPatterns;
+}
+
 // =======================================================================================
 // SUBSCRIBERS
 // =======================================================================================
