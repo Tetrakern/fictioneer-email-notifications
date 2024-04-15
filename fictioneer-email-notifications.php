@@ -538,6 +538,17 @@ function fcnen_get_subscription_button( $post_id = null ) {
     }
   }
 
+  // Story Page template
+  if ( $post_id && is_page_template( 'singular-story.php' ) ) {
+    $story_id = get_post_meta( $post_id, 'fictioneer_template_story_id', true );
+
+    if ( $story_id ) {
+      $attributes .= " data-story-id='{$story_id}'";
+      $attributes .= " data-story-title='" . esc_attr( get_the_title( $story_id ) ) . "'";
+    }
+  }
+
+  // Build and return HTML
   return '<button type="button" data-click-target="#fcnen-subscription-modal" data-click-action="open-dialog-modal fcnen-load-modal-form" class="_align-left" tabindex="0" ' . $attributes . '><i class="fa-solid fa-envelope"></i> <span>' . __( 'Email Subscription', 'fcnen' ) . '</span></button>';
 }
 
