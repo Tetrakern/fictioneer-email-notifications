@@ -64,7 +64,7 @@ function fcnen_check_theme() {
     require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
     // Deactivate plugin
-    deactivate_plugins( plugin_basename( __FILE__ ) );
+    deactivate_plugins( 'fictioneer-email-notifications/fictioneer-email-notifications.php' );
 
     // Display an admin notice
     add_action( 'admin_notices', 'fcnen_admin_notice_wrong_theme' );
