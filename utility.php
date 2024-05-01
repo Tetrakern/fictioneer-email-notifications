@@ -1876,6 +1876,7 @@ function fcnen_batches_completed( $batches ) {
   foreach ( $batches as $batch ) {
     if ( ! $batch['success'] ) {
       $complete = false;
+      break;
     }
   }
 
