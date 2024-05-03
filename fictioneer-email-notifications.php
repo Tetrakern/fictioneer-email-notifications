@@ -470,6 +470,7 @@ function fcnen_compare_wp_version( $version, $operator = '>=' ) {
 
 function fcnen_enqueue_frontend_scripts() {
   // Setup
+  $cache_bust = fictioneer_get_cache_bust();
   $strategy = fcnen_compare_wp_version( '6.3' ) ? array( 'strategy'  => 'defer' ) : true; // Defer or load in footer
 
   // Styles
@@ -477,7 +478,7 @@ function fcnen_enqueue_frontend_scripts() {
     'fcnen-frontend-styles',
     plugin_dir_url( __FILE__ ) . '/css/fcnen-frontend.css',
     get_option( 'fictioneer_bundle_stylesheets' ) ? ['fictioneer-complete'] : ['fictioneer-application'],
-    FCNEN_VERSION
+    $cache_bust
   );
 
   // Scripts
@@ -485,7 +486,7 @@ function fcnen_enqueue_frontend_scripts() {
     'fcnen-frontend-scripts',
     plugin_dir_url( __FILE__ ) . 'js/fcnen-frontend.min.js',
     [],
-    FCNEN_VERSION,
+    $cache_bust,
     $strategy
   );
 }

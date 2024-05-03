@@ -113,3 +113,13 @@ function fictioneer_notice( $message, $type = 'warning', $display = true ) {}
  */
 
 function fictioneer_explode_list( $value ) {}
+
+/**
+ * Returns saved random cache busting string
+ *
+ * @since Fictioneer 5.12.5
+ *
+ * @return string Cache busting string.
+ */
+
+function fictioneer_get_cache_bust() {}
