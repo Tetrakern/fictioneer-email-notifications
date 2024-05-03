@@ -1570,7 +1570,7 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
     $queue['batches'][ $index ]['response'] = $response_body;
     $queue['batches'][ $index ]['code'] = $response_code;
 
-    if ( $response_code == 200 ) {
+    if ( $response_code >= 200 && $response_code < 300 ) {
       $queue['batches'][ $index ]['success'] = true;
       $queue['batches'][ $index ]['status'] = 'transmitted';
     } else {
