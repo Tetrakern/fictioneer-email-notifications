@@ -476,7 +476,7 @@ function fcnen_enqueue_frontend_scripts() {
   wp_enqueue_style(
     'fcnen-frontend-styles',
     plugin_dir_url( __FILE__ ) . '/css/fcnen-frontend.css',
-    ['fictioneer-application'],
+    get_option( 'fictioneer_bundle_stylesheets' ) ? ['fictioneer-complete'] : ['fictioneer-application'],
     FCNEN_VERSION
   );
 
