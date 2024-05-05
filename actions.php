@@ -595,12 +595,7 @@ function fcnen_check_mailersend_bulk_status() {
 
   // Setup
   $api_key = get_option( 'fcnen_api_key' ) ?: 0;
-  $api_endpoint = FCNEN_API['mailersend']['bulk_status'];
   $bulk_id = $_GET['id'] ?? 0;
-  $headers = array(
-    'Authorization' => "Bearer {$api_key}",
-    'Content-Type' => 'application/json'
-  );
 
   // API key missing
   if ( empty( $api_key ) ) {
@@ -609,51 +604,38 @@ function fcnen_check_mailersend_bulk_status() {
 
   // ID missing
   if ( empty( $bulk_id ) ) {
-    return new WP_Error( 'mailersend_bulk_id_missing', __( 'Bulk ID missing.', 'fcnen' ) );
+    return new WP_Error( 'bulk_id_missing', __( 'Bulk ID missing.', 'fcnen' ) );
   }
 
   // Request
   $response = wp_remote_get(
-    str_replace( '{bulk_email_id}', $bulk_id, $api_endpoint ),
+    str_replace( '{bulk_email_id}', $bulk_id, FCNEN_API['mailersend']['bulk_status'] ),
     array(
-      'headers' => $headers
+      'headers' => array(
+        'Authorization' => "Bearer {$api_key}",
+        'Content-Type' => 'application/json'
+      )
     )
   );
 
-  // Result
-  $response_code = wp_remote_retrieve_response_code( $response );
+  // Response
   $message = '';
 
-  if ( ! is_wp_error( $response ) && $response_code === 200 ) {
-    $result = json_decode( wp_remote_retrieve_body( $response ), true );
-    $message = fcnen_print_array( $result );
+  if ( ! is_wp_error( $response ) ) {
+    $response_body = @json_decode( wp_remote_retrieve_body( $response ), true );
+
+    if ( empty( $response_body ) || json_last_error() !== JSON_ERROR_NONE ) {
+      wp_die( wp_remote_retrieve_body( $response ) );
+    } else {
+      $message = fcnen_array_to_html( $response_body );
+    }
   } else {
-    $message = 'foobar';
+    wp_die( $response->get_error_message() );
   }
 
-  echo '<html><head><title>API Response</title></head><style>body{font: 14px/1.5 "Helvetica Neue", Arial, sans-serif; margin: 20px;}.fcnen-message{background: rgb(0 0 0 / 5%); padding: 12px;}.fcnen-node:not(:first-child){margin-top:12px;}.fcnen-nested{background: rgb(0 0 0 / 5%); padding: 12px; margin-top: 12px;}</style><body><h1>' . __( 'Bulk Request Status', 'fcnen' ) . '</h1><div class="fcnen-message">' . $message . '</div></body></html>';
+  echo '<html><head><title>API Response</title></head><style>body{font: 14px/1.5 "Helvetica Neue", Arial, sans-serif; margin: 20px;}.fcnen-array{background: rgb(0 0 0 / 5%); padding: 12px;}.fcnen-array-node:not(:first-child){margin-top:12px;}.fcnen-array-nested{background: rgb(0 0 0 / 5%); padding: 12px; margin-top: 12px;}</style><body><h1>' . __( 'Bulk Request Status', 'fcnen' ) . '</h1>' . $message . '</body></html>';
 
   // Terminate
   exit();
 }
 add_action( 'admin_post_fcnen_check_mailersend_bulk_status', 'fcnen_check_mailersend_bulk_status' );
-
-
-function fcnen_print_array( $array ) {
-  if ( ! is_array( $array ) ) {
-    return '';
-  }
-
-  $content = '';
-
-  foreach ( $array as $key => $value ) {
-    if ( is_array( $value ) ) {
-      $content .= '<div class="fcnen-node"><strong>' . esc_html( $key ) . ':</strong></div>';
-      $content .= '<div class="fcnen-nested">' . fcnen_print_array( $value ) . '</div>';
-    } else {
-      $content .= '<div class="fcnen-node"><strong>' . esc_html( $key ) . ':</strong> <span>' . esc_html( $value ) . '</span></div>';
-    }
-  }
-
-  return $content;
-}
