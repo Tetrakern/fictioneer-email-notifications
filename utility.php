@@ -1815,11 +1815,11 @@ function fcnen_build_queue_html( $batches ) {
   // Setup
   $html = '';
   $translations = array(
-    'pending' => _x( 'Pending', 'Email queue status.', 'fcnen' ),
-    'transmitted' => _x( 'Transmitted', 'Email queue status.', 'fcnen' ),
-    'working' => _x( 'Working', 'Email queue status.', 'fcnen' ),
-    'error' => _x( 'Error', 'Email queue status.', 'fcnen' ),
-    'failure' => _x( 'Failure', 'Email queue status.', 'fcnen' )
+    'pending' => _x( 'Pending', 'Email queue response.', 'fcnen' ),
+    'transmitted' => _x( 'Transmitted', 'Email queue response.', 'fcnen' ),
+    'working' => _x( 'Working', 'Email queue response.', 'fcnen' ),
+    'error' => _x( 'Error', 'Email queue response.', 'fcnen' ),
+    'failure' => _x( 'Failure', 'Email queue response.', 'fcnen' )
   );
 
   // Build HTML
@@ -1829,8 +1829,12 @@ function fcnen_build_queue_html( $batches ) {
     $icon = '';
 
     $html .= "<div class='fcnen-queue-batch' data-batch-id='{$key}' data-status='{$status}'>";
-    $html .= '<span class="fcnen-queue-batch__id">' . sprintf( __( 'Batch #%s', 'fcnen' ), $key + 1 ) . '</span> | ';
-    $html .= '<span class="fcnen-queue-batch__items">' . sprintf( __( '%s Emails', 'fcnen' ), $email_count ) . '</span> | ';
+
+    $html .= '<span class="fcnen-queue-batch__id">' .
+      sprintf( _x( 'Batch #%s', 'Email queue response.', 'fcnen' ), $key + 1 ) . '</span> | ';
+
+    $html .= '<span class="fcnen-queue-batch__items">' .
+      sprintf( _x( '%s Email(s)', 'Email queue response.', 'fcnen' ), $email_count ) . '</span> | ';
 
     if ( $status === 'working' ) {
       $icon = ' <i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i>';
@@ -1839,11 +1843,38 @@ function fcnen_build_queue_html( $batches ) {
     $html .= '<span class="fcnen-queue-batch__status"><span>' . $translations[ $status ] . '</span>' . $icon . '</span>';
 
     if ( $batch['code'] ?? 0 ) {
-      $html .= ' | <span class="fcnen-queue-batch__code">' . sprintf( __( 'Code: %s', 'fcnen' ), $batch['code'] ) . '</span>';
+      $html .= ' | <span class="fcnen-queue-batch__code">' .
+        sprintf( _x( 'Code: %s', 'Email queue response.', 'fcnen' ), $batch['code'] ) . '</span>';
     }
 
     if ( $batch['response'] ?? 0 ) {
-      $html .= ' | <span class="fcnen-queue-batch__response">' . $batch['response'] . '</span>';
+      $decoded = @json_decode( $batch['response'] );
+      $note = '';
+
+      if (
+        empty( $decoded ) ||
+        json_last_error() !== JSON_ERROR_NONE ||
+        ! isset( $decoded->message ) ||
+        ! isset( $decoded->bulk_email_id )
+      ) {
+        $note = esc_html( $batch['response'] );
+      } else {
+        $note = sprintf(
+          _x( '%s | ID: %s', 'Email queue response.', 'fcnen' ),
+          esc_html( $decoded->message ),
+          sprintf(
+            '<a href="%s" target="_blank">%s</a>',
+            wp_nonce_url(
+              admin_url( "admin-post.php?action=fcnen_check_mailersend_bulk_status&id={$decoded->bulk_email_id}" ),
+              'fcnen-mailersend-bulk-status',
+              'fcnen-nonce'
+            ),
+            $decoded->bulk_email_id
+          )
+        );
+      }
+
+      $html .= ' | <span class="fcnen-queue-batch__response">' . $note . '</span>';
     }
 
     if ( $batch['date'] ?? 0 ) {
