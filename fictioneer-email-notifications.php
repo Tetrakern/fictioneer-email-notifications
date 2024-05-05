@@ -1522,7 +1522,7 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
         // Update notification
         fcnen_mark_notification_as_sent( $post_id );
 
-        // // Update fcnen post meta
+        // Update fcnen post meta
         $meta = fcnen_get_meta( $post_id );
         $meta['sent'][] = current_time( 'mysql', 1 );
         fcnen_set_meta( $post_id, $meta );

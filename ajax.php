@@ -1,5 +1,9 @@
 <?php
 
+// =============================================================================
+// FRONTEND
+// =============================================================================
+
 /**
  * AJAX callback to retrieve the modal content
  *
@@ -314,6 +318,10 @@ function fictioneer_ajax_fcnen_search_content() {
 add_action( 'wp_ajax_fictioneer_ajax_fcnen_search_content', 'fictioneer_ajax_fcnen_search_content' );
 add_action( 'wp_ajax_nopriv_fictioneer_ajax_fcnen_search_content', 'fictioneer_ajax_fcnen_search_content' );
 
+// =============================================================================
+// ADMIN
+// =============================================================================
+
 /**
  * AJAX callback to process email queue
  *
@@ -339,7 +347,7 @@ function fictioneer_ajax_fcnen_process_email_queue() {
 
   if ( ! current_user_can( 'manage_options' ) ) {
     wp_send_json_error(
-      array( 'error' => __( 'Insufficient permission', 'fcnen' ) )
+      array( 'error' => __( 'Insufficient permissions.', 'fcnen' ) )
     );
   }
 
@@ -351,10 +359,10 @@ function fictioneer_ajax_fcnen_process_email_queue() {
   $result = fcnen_process_email_queue( $index, $fresh );
 
   // Response
-  if ( ! ( $result['error'] ?? 0 ) ) {
-    wp_send_json_success( $result );
-  } else {
+  if ( $result['error'] ?? 0 ) {
     wp_send_json_error( $result );
+  } else {
+    wp_send_json_success( $result );
   }
 }
 add_action( 'wp_ajax_fictioneer_ajax_fcnen_process_email_queue', 'fictioneer_ajax_fcnen_process_email_queue' );
