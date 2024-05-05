@@ -581,6 +581,12 @@ add_action( 'admin_post_fcnen_clear_queue', 'fcnen_clear_queue' );
 // BULK STATUS
 // =======================================================================================
 
+/**
+ * Check status of bulk email request
+ *
+ * @since 0.1.0
+ */
+
 function fcnen_check_mailersend_bulk_status() {
   // Verify
   if ( ! isset( $_GET['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-mailersend-bulk-status', 'fcnen-nonce' ) ) {
@@ -588,13 +594,11 @@ function fcnen_check_mailersend_bulk_status() {
   }
 
   if ( ! current_user_can( 'manage_options' ) ) {
-    wp_send_json_error(
-      array( 'error' => __( 'Insufficient permissions.', 'fcnen' ) )
-    );
+    wp_die( __( 'Insufficient permissions.', 'fcnen' ) );
   }
 
   // Setup
-  $api_key = get_option( 'fcnen_api_key' ) ?: 0;
+  $api_key = get_option( 'fcnen_api_key' );
   $bulk_id = $_GET['id'] ?? 0;
 
   // API key missing
@@ -633,7 +637,20 @@ function fcnen_check_mailersend_bulk_status() {
     wp_die( $response->get_error_message() );
   }
 
-  echo '<html><head><title>API Response</title></head><style>body{font: 14px/1.5 "Helvetica Neue", Arial, sans-serif; margin: 20px;}.fcnen-array{background: rgb(0 0 0 / 5%); padding: 12px;}.fcnen-array-node:not(:first-child){margin-top:12px;}.fcnen-array-nested{background: rgb(0 0 0 / 5%); padding: 12px; margin-top: 12px;}</style><body><h1>' . __( 'Bulk Request Status', 'fcnen' ) . '</h1>' . $message . '</body></html>';
+  // Start HTML ---> ?>
+  <html>
+    <head>
+      <meta charset="<?php echo get_bloginfo( 'charset' ); ?>">
+      <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+      <title><?php _e( 'API Response', 'fcnen' ); ?></title>
+      <style>body{font: 14px/1.5 "-apple-system", "Segoe UI", Roboto, "Oxygen-Sans", Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif; margin: 20px;}.fcnen-array{background: rgb(0 0 0 / 5%); padding: 12px;}.fcnen-array-node:not(:first-child){margin-top:12px;}.fcnen-array-nested{background: rgb(0 0 0 / 5%); padding: 12px; margin-top: 12px;}</style>
+    </head>
+    <body>
+      <h1><?php _e( 'Bulk Request Status', 'fcnen' ); ?></h1>
+      <?php echo $message; ?>
+    </body>
+  </html>
+  <?php // <--- End HTML
 
   // Terminate
   exit();
