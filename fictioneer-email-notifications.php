@@ -1472,7 +1472,7 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
   // End of queue?
   if ( $index > $batch_count - 1 ) {
     // Delete Transient if batches have been completed
-    if ( fcnen_batches_completed( $queue['batches'] ) ) {
+    if ( fcnen_are_batches_completed( $queue['batches'] ) ) {
       delete_transient( 'fcnen_request_queue' );
     }
 
@@ -1601,7 +1601,7 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
   }
 
   // Update or delete Transient
-  if ( fcnen_batches_completed( $queue['batches'] ) ) {
+  if ( fcnen_are_batches_completed( $queue['batches'] ) ) {
     delete_transient( 'fcnen_request_queue' );
   } else {
     set_transient( 'fcnen_request_queue', $queue, DAY_IN_SECONDS );

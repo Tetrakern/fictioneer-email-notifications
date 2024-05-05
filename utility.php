@@ -1868,7 +1868,7 @@ function fcnen_build_queue_html( $batches ) {
  * @return bool True if completely processed, false otherwise.
  */
 
-function fcnen_batches_completed( $batches ) {
+function fcnen_are_batches_completed( $batches ) {
   // Setup
   $complete = true;
 
