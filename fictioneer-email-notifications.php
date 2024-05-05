@@ -153,7 +153,6 @@ if ( ! defined( 'FCNEN_SETTING_DEFAULTS' ) ) {
       'fcnen_flag_purge_on_deactivation' => 0,
       'fcnen_excerpt_length' => 256,
       'fcnen_max_per_term' => 10,
-      'fcnen_service_provider' => 'mailersend',
       'fcnen_api_key' => '',
       'fcnen_api_bulk_limit' => 300,
       'fcnen_template_layout_confirmation' => FCNEN_DEFAULTS['layout_confirmation'] ?? '',
@@ -1561,7 +1560,7 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
   }
 
   // Request
-  $response = fcnen_sent_bulk_notifications( $current_batch );
+  $response = fcnen_send_bulk_notifications( $current_batch );
 
   // Update queue state
   if ( ! is_wp_error( $response ) ) {
@@ -1619,7 +1618,7 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
 
 
 
-function fcnen_sent_bulk_notifications( $batch ) {
+function fcnen_send_bulk_notifications( $batch ) {
   // Setup
   $api_key = get_option( 'fcnen_api_key' ) ?: 0;
   $api_endpoint = FCNEN_API['mailersend']['bulk'];

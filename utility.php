@@ -1744,7 +1744,6 @@ function fcnen_get_queue_statistics( $queue = null ) {
   $queue = $queue ?: fcnen_get_email_queue();
   $last_sent = get_option( 'fcnen_last_sent' );
   $notifications = fcnen_get_notifications( false, false );
-  $next_queue = fcnen_get_email_queue();
   $post_ids = [];
   $sendable = [];
   $blocked = [];
@@ -1795,8 +1794,8 @@ function fcnen_get_queue_statistics( $queue = null ) {
     'sendable' => count( $sendable ),
     'blocked' => count( $blocked ),
     'last_sent' => $last_sent,
-    'emails' => $next_queue['count'] ?? 0,
-    'batches' => count( $next_queue['batches'] ?? [] ),
+    'emails' => $queue['count'] ?? 0,
+    'batches' => count( $queue['batches'] ?? [] ),
     'batch_limit' => max( absint( get_option( 'fcnen_api_bulk_limit', 300 ) ), 1 ),
     'api_limit' => 10
   );
@@ -1885,21 +1884,6 @@ function fcnen_are_batches_completed( $batches ) {
 }
 
 /**
- * Get the prepared email queue for the current provider
- *
- * @since 0.1.0
- *
- * @return array The email queue with date and batches.
- */
-
-function fcnen_get_email_queue() {
-  // Extend this to cover multiple possible providers
-  // $provider = get_option( 'fcnen_service_provider', 'mailersend' );
-
-  return fcnen_get_mailersend_email_queue();
-}
-
-/**
  * Get the prepared email queue for MailerSend
  *
  * @since 0.1.0
@@ -1907,7 +1891,7 @@ function fcnen_get_email_queue() {
  * @return array The email queue with date and batches.
  */
 
-function fcnen_get_mailersend_email_queue() {
+function fcnen_get_email_queue() {
   // Setup
   $api_bulk_limit = max( absint( get_option( 'fcnen_api_bulk_limit', 300 ) ), 1 );
   $emails = fcnen_get_notification_emails();

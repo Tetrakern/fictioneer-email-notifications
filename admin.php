@@ -113,7 +113,6 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_general_group', 'fcnen_flag_purge_on_deactivation', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_excerpt_length', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_max_per_term', 'absint' );
-  register_setting( 'fcnen_general_group', 'fcnen_service_provider', 'sanitize_text_field' );
   register_setting( 'fcnen_general_group', 'fcnen_api_key', 'sanitize_text_field' );
   register_setting( 'fcnen_general_group', 'fcnen_api_bulk_limit', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_excluded_posts', 'fcnen_sanitize_comma_separated_list' );
@@ -1357,7 +1356,7 @@ function fcnen_settings_page() {
               </th>
               <td>
                 <input type="email" name="fcnen_from_email_address" id="fcnen-from-email-address" class="regular-text ltr" placeholder="<?php _ex( 'noreply@your-site.com', 'From email address placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $from ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
-                <p class="description"><?php _e( 'The sender email address of all outgoing notifications. Defaults to noreply@* or admin email address.', 'fcnen' ); ?></p>
+                <p class="description"><?php _e( 'Sender email address of notifications. Defaults to noreply@* or admin email address.', 'fcnen' ); ?></p>
               </td>
             </tr>
             <tr>
@@ -1366,7 +1365,7 @@ function fcnen_settings_page() {
               </th>
               <td>
                 <input type="text" name="fcnen_from_email_name" id="fcnen-from-email-name" class="regular-text" placeholder="<?php _ex( 'Your Site', 'From email name placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $name ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
-                <p class="description"><?php _e( 'The sender name of all outgoing notifications. Defaults to site name.', 'fcnen' ); ?></p>
+                <p class="description"><?php _e( 'Sender name of notifications. Defaults to site name.', 'fcnen' ); ?></p>
               </td>
             </tr>
             <tr>
@@ -1459,28 +1458,22 @@ function fcnen_settings_page() {
             </tr>
           </tbody>
         </table>
-        <h2 class="title"><?php _e( 'Email Service', 'fcnen' ); ?></h2>
-        <p><?php _e( 'You require an external account with an email service provider. The plugin composes the emails and pushes them in batches to the service, which in turn will send the email notifications.', 'fcnen' ); ?></p>
+        <h2 class="title"><?php _e( 'MailerSend', 'fcnen' ); ?></h2>
+        <p><?php _e( 'The plugin composes the emails and pushes them in batches to the service, which in turn sends the email notifications.', 'fcnen' ); ?></p>
         <table class="form-table" role="presentation">
           <tbody>
-            <tr>
-              <th scope="row">
-                <label for="fcnen-select-service-provider"><?php _e( 'Provider', 'fcnen' ); ?></label>
-              </th>
-              <td>
-                <select name="fcnen_service_provider" id="fcnen-select-service-provider" disabled>
-                  <option value="mailersend" disabled selected><?php _e( 'MailerSend', 'fcnen' ); ?></option>
-                </select>
-                <p class="description"><?php _e( 'Currently only MailerSend available.', 'fcnen' ); ?></p>
-              </td>
-            </tr>
             <tr>
               <th scope="row">
                 <label for="fcnen-api-key"><?php _e( 'API Key', 'fcnen' ); ?></label>
               </th>
               <td>
                 <input type="text" name="fcnen_api_key" id="fcnen-api-key" class="regular-text" value="<?php echo esc_attr( $api_key ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
-                <p class="description"><?php _e( 'You can get that from your provider account.', 'fcnen' ); ?></p>
+                <p class="description"><?php
+                  printf(
+                    __( 'You can get that from your <a href="%s" target="_blank">MailerSend</a> account.', 'fcnen' ),
+                    'https://www.mailersend.com/'
+                  );
+                ?></p>
               </td>
             </tr>
             <tr>
