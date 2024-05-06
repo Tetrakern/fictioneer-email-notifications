@@ -756,7 +756,7 @@ function fcnen_send_emails_page() {
       <div class="fcnen-queue-stats__item">
         <div class="fcnen-queue-stats__item-value _batches"><?php
           printf(
-            _x( '%s / %s', 'Queue statistics: Batches/Size.', 'fcnen' ),
+            _x( '%s | %s', 'Queue statistics: Batches | Size.', 'fcnen' ),
             $statistics['batches'],
             $statistics['batch_limit']
           )

@@ -1560,7 +1560,7 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
   }
 
   // Request
-  $response = fcnen_send_bulk_notifications( $current_batch );
+  $response = fcnen_send_bulk_notifications( $current_batch['payload'] );
 
   // Update queue state
   if ( ! is_wp_error( $response ) ) {
@@ -1615,28 +1615,34 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
   );
 }
 
+/**
+ * Send bulk email request for payload
+ *
+ * @since 0.1.0
+ *
+ * @param array $payload  Emails to be sent.
+ *
+ * @return array|WP_Error The response or WP_Error on failure.
+ */
 
-
-
-function fcnen_send_bulk_notifications( $batch ) {
+function fcnen_send_bulk_notifications( $payload ) {
   // Setup
   $api_key = get_option( 'fcnen_api_key' ) ?: 0;
-  $api_endpoint = FCNEN_API['mailersend']['bulk'];
-  $headers = array(
-    'Authorization' => "Bearer {$api_key}",
-    'Content-Type' => 'application/json'
-  );
 
   // API key missing
   if ( empty( $api_key ) ) {
     return new WP_Error( 'api_key_missing', __( 'API key has not been set.', 'fcnen' ) );
   }
 
-  // TEST
-  $response = wp_remote_get(
-    FCNEN_API['mailersend']['quota'],
-    array( 'headers' => $headers )
+  // Send and return response
+  return wp_remote_post(
+    FCNEN_API['mailersend']['bulk'],
+    array(
+      'headers' => array(
+        'Authorization' => "Bearer {$api_key}",
+        'Content-Type' => 'application/json'
+      ),
+      'body' => json_encode( $payload )
+    )
   );
-
-  return $response;
 }
