@@ -124,7 +124,7 @@ function fcnen_templatePreview(html, height = null) {
 // QUEUE
 // =============================================================================
 
-const fcnen_queueWrapper = document.querySelector('[data-target="fcnen-email-queue"]');
+const fcnen_queueWrapper = document.querySelector('[data-finder="fcnen-email-queue"]');
 const fcnen_apiLimit = parseInt(fcnen_queueWrapper?.dataset.apiLimit ?? 10);
 const fcnen_apiInterval = parseInt(fcnen_queueWrapper?.dataset.apiInterval ?? 60000);
 
@@ -157,19 +157,14 @@ function fcnen_handleRateLimiting() {
   return Promise.resolve();
 }
 
-function fcnen_processQueue(index = 0, fresh = 0, count = 0) {
-  // Check if the queue has finished processing
-  if (index >= count && count > 0) {
-    return;
-  }
-
+function fcnen_processQueue(button, index = 0, start = 0) {
   // Rate limit for max. 10 requests per minute...
   fcnen_handleRateLimiting().then(() => {
     // Prepare payload
     const payload = {
       'action': 'fictioneer_ajax_fcnen_process_email_queue',
       'index': index,
-      'fresh': fresh,
+      'new': start,
       'fcnen_queue_nonce': document.getElementById('fcnen_queue_nonce').value ?? ''
     };
 
@@ -177,28 +172,42 @@ function fcnen_processQueue(index = 0, fresh = 0, count = 0) {
     fcn_ajaxPost(payload)
     .then(response => {
       if (response.success) {
-        const container = document.querySelector('[data-target="fcnen-email-queue"]');
+        // Check result of queue processing...
+        switch (response.data.result) {
+          // Empty queue
+          case 'empty':
+            fcnen_queueWrapper.innerHTML = response.data.message;
+            break;
+          // Anything else
+          default:
+            fcnen_queueWrapper.innerHTML = response.data.html;
+        }
 
-        container.innerHTML = response.data.html;
-
-        if (!response.data.finished) {
-          fcnen_processQueue(response.data.index + 1, 0, response.data.count);
+        // Continue queue if not finished
+        if (response.data.next > -1) {
+          fcnen_processQueue(button, response.data.next);
         }
       } else {
-        console.error('Error:', response.data.error)
+        // Request received but stopped because...
+        fcnen_queueWrapper.innerHTML = response.data.error;
       }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+      // Something went very wrong
+      console.error('Error:', error)
+    });
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('[data-click-target="fcnen-work-queue"]').forEach(button => {
-    button.addEventListener('click', () => {
+  document.querySelectorAll('[data-click-action*="fcnen-work-queue"]').forEach(button => {
+    button.addEventListener('click', event => {
+      event.currentTarget.disabled = true;
+
       fcnen_apiStartTime = Date.now();
       fcnen_apiRequests = 0;
 
-      fcnen_processQueue(0, 1);
+      fcnen_processQueue(event.currentTarget, 0, 1);
     });
   });
 });

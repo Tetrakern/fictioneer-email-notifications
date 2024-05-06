@@ -353,16 +353,12 @@ function fictioneer_ajax_fcnen_process_email_queue() {
 
   // Setup
   $index = absint( $_REQUEST['index'] ?? 0 );
-  $fresh = absint( $_REQUEST['fresh'] ?? 0 );
+  $new = absint( $_REQUEST['new'] ?? 0 );
 
   // Process
-  $result = fcnen_process_email_queue( $index, $fresh );
+  $result = fcnen_process_email_queue( $index, $new );
 
   // Response
-  if ( $result['error'] ?? 0 ) {
-    wp_send_json_error( $result );
-  } else {
-    wp_send_json_success( $result );
-  }
+  wp_send_json_success( $result );
 }
 add_action( 'wp_ajax_fictioneer_ajax_fcnen_process_email_queue', 'fictioneer_ajax_fcnen_process_email_queue' );

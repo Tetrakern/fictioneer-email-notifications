@@ -1811,20 +1811,20 @@ function fcnen_get_queue_statistics( $queue = null ) {
  * @return string The HTML.
  */
 
-function fcnen_build_queue_html( $batches ) {
+function fcnen_build_queue_html( $batches, $index = -1 ) {
   // Setup
   $html = '';
   $translations = array(
-    'pending' => _x( 'Pending', 'Email queue response.', 'fcnen' ),
-    'transmitted' => _x( 'Transmitted', 'Email queue response.', 'fcnen' ),
-    'working' => _x( 'Working', 'Email queue response.', 'fcnen' ),
-    'error' => _x( 'Error', 'Email queue response.', 'fcnen' ),
-    'failure' => _x( 'Failure', 'Email queue response.', 'fcnen' )
+    'pending' => _x( 'Pending', 'Email queue batch status.', 'fcnen' ),
+    'transmitted' => _x( 'Transmitted', 'Email queue batch status.', 'fcnen' ),
+    'working' => _x( 'Working', 'Email queue batch status.', 'fcnen' ),
+    'error' => _x( 'Error', 'Email queue batch status.', 'fcnen' ),
+    'failure' => _x( 'Failure', 'Email queue batch status.', 'fcnen' )
   );
 
   // Build HTML
   foreach ( $batches as $key => $batch ) {
-    $status = $batch['status'];
+    $status = ( $index == $key ) ? 'working' : $batch['status'];
     $email_count = count( $batch['payload'] );
     $icon = '';
 
@@ -1844,7 +1844,11 @@ function fcnen_build_queue_html( $batches ) {
 
     if ( $batch['code'] ?? 0 ) {
       $html .= ' | <span class="fcnen-queue-batch__code">' .
-        sprintf( _x( 'Code: %s', 'Email queue response.', 'fcnen' ), $batch['code'] ) . '</span>';
+        sprintf(
+          _x( 'Code: <a href="%s" target="_blank">%s</a>', 'Email queue response.', 'fcnen' ),
+          'https://www.mailersend.com/help/rest-api-response-codes',
+          $batch['code']
+        ) . '</span>';
     }
 
     if ( $batch['response'] ?? 0 ) {
@@ -1857,7 +1861,11 @@ function fcnen_build_queue_html( $batches ) {
         ! isset( $decoded->message ) ||
         ! isset( $decoded->bulk_email_id )
       ) {
-        $note = esc_html( $batch['response'] );
+        if ( isset( $decoded->message ) ) {
+          $note = esc_html( $decoded->message );
+        } else {
+          $note = esc_html( $batch['response'] );
+        }
       } else {
         $note = sprintf(
           _x( '%s | ID: %s', 'Email queue response.', 'fcnen' ),

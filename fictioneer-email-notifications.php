@@ -1456,57 +1456,58 @@ function fcnen_send_edit_email( $args ) {
  * @return array Response data for use in AJAX requests.
  */
 
-function fcnen_process_email_queue( $index = 0, $fresh = false ) {
+function fcnen_process_email_queue( $index = 0, $new = false ) {
   // Setup
   $queue = get_transient( 'fcnen_request_queue' ) ?: fcnen_get_email_queue();
   $batch_count = count( $queue['batches'] );
-  $current_batch = null;
+  $current_batch = $queue['batches'][ $index ] ?? null;
+  $next_index = ( $batch_count - 1 > $index ) ? $index + 1 : -1;
 
   // Empty?
   if ( empty( $queue ) || empty( $queue['batches'] ) ) {
-    // Response data
-    return array( 'error' => __( 'Queue is empty.', 'fcnen' ) );
-  }
-
-  // End of queue?
-  if ( $index > $batch_count - 1 ) {
-    // Delete Transient if batches have been completed
-    if ( fcnen_are_batches_completed( $queue['batches'] ) ) {
-      delete_transient( 'fcnen_request_queue' );
-    }
-
-    // Response data
+    // Response
     return array(
-      'html' => fcnen_build_queue_html( $queue['batches'] ),
-      'index' => $index,
-      'finished' => true,
-      'count' => $batch_count
+      'result' => 'empty',
+      'message' => __( 'Queue is empty.', 'fcnen' ),
+      'index' => $index
     );
   }
 
-  // First HTML for fresh queue
-  if ( $fresh ) {
-    // Cleanup previous iterations (if any)
-    foreach ( $queue['batches'] as $key => $batch ) {
-      if ( $batch['status'] !== 'transmitted' ) {
-        $queue['batches'][ $key ]['status'] = 'pending';
-      }
-    }
+  // Complete?
+  if ( fcnen_are_batches_completed( $queue['batches'] ) ) {
+    delete_transient( 'fcnen_request_queue' );
 
-    // Mark first incomplete batch as 'working'
-    foreach ( $queue['batches'] as $key => $batch ) {
-      if ( ! $batch['success'] ) {
-        $queue['batches'][ $key ]['status'] = 'working';
-        break;
-      }
-    }
-
-    // Response data
+    // Response
     return array(
-      'html' => fcnen_build_queue_html( $queue['batches'] ),
-      'index' => -1, // Restart from the beginning
-      'finished' => false,
-      'count' => $batch_count
+      'result' => 'complete',
+      'index' => $index,
+      'next' => -1,
+      'count' => $batch_count,
+      'html' => fcnen_build_queue_html( $queue['batches'] )
+    );
+  }
+
+  // End?
+  if ( $index > $batch_count - 1 ) {
+    // Response
+    return array(
+      'result' => 'finished',
+      'index' => $index,
+      'next' => -1,
+      'count' => $batch_count,
+      'html' => fcnen_build_queue_html( $queue['batches'] )
+    );
+  }
+
+  // New
+  if ( $new ) {
+    // Response
+    return array(
+      'result' => 'new',
+      'index' => 0,
+      'next' => 0,
+      'count' => $batch_count,
+      'html' => fcnen_build_queue_html( $queue['batches'], 0 )
     );
   }
 
@@ -1515,7 +1516,7 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
     // Update plugin info
     update_option( 'fcnen_last_sent', current_time( 'mysql', 1 ), 'no' );
 
-    // Mark unsent notifications and posts as 'sent' (once per queue)
+    // Mark unsent notifications and posts as 'sent'
     foreach ( $queue['post_ids'] as $post_id ) {
       if ( fcnen_unsent_notification_exists( $post_id ) ) {
         // Update notification
@@ -1529,34 +1530,18 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
     }
   }
 
-  // Extract current batch
-  $current_batch = $queue['batches'][ $index ];
-
-  // Batch already completed?
+  // Current batch already completed?
   if ( $current_batch['success'] ?? 0 ) {
     $current_batch = null;
 
-    // Search for incomplete batch
-    foreach ( $queue['batches'] as $key => $batch ) {
-      if ( ! $batch['success'] ) {
-        $current_batch = $batch;
-        $index = $key;
-        break;
-      }
-    }
-
-    // No incomplete batch found?
-    if ( ! $current_batch ) {
-      delete_transient( 'fcnen_request_queue' );
-
-      // Response data
-      return array(
-        'html' => __( 'All emails have been transmitted.', 'fcnen' ),
-        'index' => $index,
-        'finished' => true,
-        'count' => $batch_count
-      );
-    }
+    // Response data
+    return array(
+      'result' => 'skipped_successful',
+      'index' => $index,
+      'next' => $next_index,
+      'count' => $batch_count,
+      'html' => fcnen_build_queue_html( $queue['batches'], $next_index )
+    );
   }
 
   // Request
@@ -1589,16 +1574,6 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
   $queue['batches'][ $index ]['date'] = current_time( 'mysql', 1 );
   $queue['batches'][ $index ]['attempts'] += 1;
 
-  // Mark next incomplete batch as 'working' but ignore previous
-  if ( $index + 1 <= $batch_count - 1 ) {
-    for ( $i = $index + 1; $i <= $batch_count - 1; $i++ ) {
-      if ( ! $queue['batches'][ $i ]['success'] ) {
-        $queue['batches'][ $i ]['status'] = 'working';
-        break;
-      }
-    }
-  }
-
   // Update or delete Transient
   if ( fcnen_are_batches_completed( $queue['batches'] ) ) {
     delete_transient( 'fcnen_request_queue' );
@@ -1606,12 +1581,13 @@ function fcnen_process_email_queue( $index = 0, $fresh = false ) {
     set_transient( 'fcnen_request_queue', $queue, DAY_IN_SECONDS );
   }
 
-  // Response data
+  // Response
   return array(
-    'html' => fcnen_build_queue_html( $queue['batches'] ),
+    'result' => 'processed',
     'index' => $index,
-    'finished' => ( $index >= $batch_count - 1 ),
-    'count' => $batch_count
+    'next' => $next_index,
+    'count' => $batch_count,
+    'html' => fcnen_build_queue_html( $queue['batches'], $next_index )
   );
 }
 

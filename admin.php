@@ -709,14 +709,6 @@ function fcnen_send_emails_page() {
 
   // Incomplete queue?
   if ( $queue_incomplete ) {
-    // Clean up entires
-    foreach ( $queue_incomplete['batches'] as $key => $batch ) {
-      if ( $batch['status'] !== 'transmitted' ) {
-        $queue_incomplete['batches'][ $key ]['status'] = 'pending';
-      }
-    }
-
-    // Build HTML
     $queue_html = fcnen_build_queue_html( $queue_incomplete['batches'] );
   }
 
@@ -775,17 +767,16 @@ function fcnen_send_emails_page() {
 
     <?php if ( $queue_incomplete ) : ?>
       <h2 class="title"><?php _e( 'Previous Queue (Incomplete)', 'fcnen' ); ?></h2>
+      <p><?php _e( 'An incomplete queue has been found. You can try to resend unsuccessful batches or clear the queue to start the next set of notifications. Incomplete queues are stored for 24 hours.', 'fcnen' ); ?></p>
     <?php else : ?>
       <h2 class="title"><?php _e( 'Queue', 'fcnen' ); ?></h2>
     <?php endif; ?>
 
-    <div class="fcnen-queue-wrapper" data-target="fcnen-email-queue" data-api-limit="<?php echo FCNEN_API_LIMIT; ?>" data-api-interval="<?php echo FCNEN_API_INTERVAL; ?>" data-pause-message="<?php esc_attr_e( 'Waiting for API reset', 'fcnen' ); ?>"><?php
-      echo $queue_html;
-    ?></div>
+    <div class="fcnen-queue-wrapper" data-finder="fcnen-email-queue" data-api-limit="<?php echo FCNEN_API_LIMIT; ?>" data-api-interval="<?php echo FCNEN_API_INTERVAL; ?>" data-pause-message="<?php esc_attr_e( 'Waiting for API reset', 'fcnen' ); ?>"><?php echo $queue_html; ?></div>
 
     <div class="fcnen-queue-actions">
-      <button type="button" class="button button-primary" data-click-target="fcnen-work-queue" <?php echo $disabled ? 'disabled' : ''; ?>><?php
-        echo $queue_incomplete ? __( 'Retry Unsent', 'fcnen' ) : __( 'Send Emails', 'fcnen' );
+      <button type="button" class="button button-primary" data-click-action="fcnen-work-queue" <?php echo $disabled ? 'disabled' : ''; ?>><?php
+        echo $queue_incomplete ? __( 'Retry', 'fcnen' ) : __( 'Send Emails', 'fcnen' );
       ?></button>
       <?php if ( $queue_incomplete ) : ?>
         <a href="<?php echo $clear_url; ?>" class="button"><?php _e( 'Clear Queue', 'fcnen' ); ?></a>
