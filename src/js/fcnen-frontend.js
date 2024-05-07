@@ -352,8 +352,7 @@ function fcnen_search(page = 1, append = false) {
     'search': search.value,
     'filter': filter?.value ?? search.dataset.defaultFilter,
     'page': page,
-    'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? '',
-    'fcn_fast_ajax': 1
+    'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? ''
   };
 
   // Search request
@@ -439,8 +438,7 @@ function fcnen_observe() {
           'search': search.value,
           'filter': document.getElementById('fcnen-modal-search-select')?.value ?? search.dataset.defaultFilter,
           'page': entry.target.dataset.page,
-          'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? '',
-          'fcn_fast_ajax': 1
+          'nonce': fcnen_modal.querySelector('input[name="nonce"]')?.value ?? ''
         };
 
         // Remove this observer
