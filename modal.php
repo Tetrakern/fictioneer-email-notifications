@@ -96,7 +96,7 @@ function fcnen_get_modal_content() {
       'post__in' => $post_ids,
       'orderby' => 'post__in',
       'update_post_meta_cache' => true, // We might need that
-      'update_post_term_cache' => true, // Improve performance
+      'update_post_term_cache' => false, // Improve performance
       'no_found_rows' => true // Improve performance
     );
 
