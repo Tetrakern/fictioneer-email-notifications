@@ -1347,7 +1347,7 @@ function fcnen_settings_page() {
               </th>
               <td>
                 <input type="email" name="fcnen_from_email_address" id="fcnen-from-email-address" class="regular-text ltr" placeholder="<?php _ex( 'noreply@your-site.com', 'From email address placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $from ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
-                <p class="description"><?php _e( 'Sender email address of notifications. Defaults to noreply@* or admin email address.', 'fcnen' ); ?></p>
+                <p class="description"><?php _e( 'Defaults to noreply@* or admin email address.', 'fcnen' ); ?></p>
               </td>
             </tr>
             <tr>
@@ -1356,7 +1356,7 @@ function fcnen_settings_page() {
               </th>
               <td>
                 <input type="text" name="fcnen_from_email_name" id="fcnen-from-email-name" class="regular-text" placeholder="<?php _ex( 'Your Site', 'From email name placeholder.', 'fcnen' ); ?>" value="<?php echo esc_attr( $name ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
-                <p class="description"><?php _e( 'Sender name of notifications. Defaults to site name.', 'fcnen' ); ?></p>
+                <p class="description"><?php _e( 'Defaults to site name.', 'fcnen' ); ?></p>
               </td>
             </tr>
             <tr>
@@ -1378,19 +1378,19 @@ function fcnen_settings_page() {
                   <label for="fcnen-flag-allow-passwords">
                     <input type="hidden" name="fcnen_flag_allow_passwords" value="0">
                     <input type="checkbox" name="fcnen_flag_allow_passwords" id="fcnen-flag-allow-passwords" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_allow_passwords' ), false ); ?>>
-                    <?php _e( 'Allow notifications for protected posts', 'fcnen' ); ?>
+                    <?php _e( 'Unblock notifications for protected posts', 'fcnen' ); ?>
                   </label>
                   <br>
                   <label for="fcnen-flag-allow-hidden">
                     <input type="hidden" name="fcnen_flag_allow_hidden" value="0">
                     <input type="checkbox" name="fcnen_flag_allow_hidden" id="fcnen-flag-allow-hidden" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_allow_hidden' ), false ); ?>>
-                    <?php _e( 'Allow notifications for hidden posts', 'fcnen' ); ?>
+                    <?php _e( 'Unblock notifications for hidden posts', 'fcnen' ); ?>
                   </label>
                   <br>
                   <label for="fcnen-flag-disabled-blocked-enqueue">
                     <input type="hidden" name="fcnen_flag_disable_blocked_enqueue" value="0">
                     <input type="checkbox" name="fcnen_flag_disable_blocked_enqueue" id="fcnen-flag-disabled-blocked-enqueue" value="1" autocomplete="off" <?php echo checked( 1, get_option( 'fcnen_flag_disable_blocked_enqueue' ), false ); ?>>
-                    <?php _e( 'Do not enqueue disallowed posts upon publishing', 'fcnen' ); ?>
+                    <?php _e( 'Do not enqueue blocked posts upon publishing', 'fcnen' ); ?>
                   </label>
                 </fieldset>
               </td>
@@ -1401,7 +1401,7 @@ function fcnen_settings_page() {
               </th>
               <td>
                 <input type="number" name="fcnen_excerpt_length" id="fcnen-excerpt-length" class="small-text" placeholder="256" value="<?php echo esc_attr( $excerpt_length ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
-                <p class="description"><?php _e( 'Maximum number of characters for generated excerpts. Custom excerpts are unaffected.', 'fcnen' ); ?></p>
+                <p class="description"><?php _e( 'Maximum characters for generated excerpts. Custom excerpts are not limited.', 'fcnen' ); ?></p>
               </td>
             </tr>
             <tr>
@@ -1450,7 +1450,7 @@ function fcnen_settings_page() {
           </tbody>
         </table>
         <h2 class="title"><?php _e( 'MailerSend', 'fcnen' ); ?></h2>
-        <p><?php _e( 'The plugin composes the emails and pushes them in batches to the service, which in turn sends the email notifications.', 'fcnen' ); ?></p>
+        <p><?php _e( 'The plugin composes the email bodies and pushes them in batches to the service, which in turn sends the emails.', 'fcnen' ); ?></p>
         <table class="form-table" role="presentation">
           <tbody>
             <tr>
