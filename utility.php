@@ -1560,7 +1560,7 @@ function fcnen_get_notification_emails( $args = [] ) {
   $time_format = get_option( 'time_format' );
   $date_format = get_option( 'date_format' );
   $is_preview = $args['preview'] ?? 0;
-  $cached_partials = [];
+  $cached_partials = []; // Only need to be composed once (saves resources)
   $email_bodies = [];
 
   // No notifications or subscribers?

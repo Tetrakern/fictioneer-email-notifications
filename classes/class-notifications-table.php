@@ -452,11 +452,11 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     }
 
     if ( in_array( $item['post_author'], $excluded_authors ) ) {
-      return _x( 'Blocked:<br>Excluded', 'Notification list table status column.', 'fcnen' );
+      return _x( 'Blocked:<br>Excluded Author', 'Notification list table status column.', 'fcnen' );
     }
 
     if ( in_array( $item['post_id'], $excluded_posts ) ) {
-      return _x( 'Blocked:<br>Excluded', 'Notification list table status column.', 'fcnen' );
+      return _x( 'Blocked:<br>Excluded Post', 'Notification list table status column.', 'fcnen' );
     }
 
     if ( $item['status']['sendable'] ?? 0 ) {
