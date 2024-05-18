@@ -310,7 +310,7 @@ function fcnen_initializeSearch() {
     const item = event.target.closest('[data-click-action="fcnen-remove"]');
 
     if (item) {
-      fcnen_removeSelection(item);
+      fcnen_removeSelection(item.closest('li'));
     }
   });
 }
@@ -493,10 +493,12 @@ function fcnen_addSelection(source) {
     destination.querySelectorAll(`[data-type="${source.dataset.type}"]`).length >= max
   ) {
     // Show flash
-    destination.classList.add('flash-too-many');
+    source.dataset.tooMany = fcnen_modal.querySelector('[data-too-many]').dataset.tooMany;
+    source.classList.add('flash-too-many');
+
     setTimeout(() => {
-      destination.classList.remove('flash-too-many');
-    }, 500);
+      source.classList.remove('flash-too-many');
+    }, 700);
 
     return;
   }

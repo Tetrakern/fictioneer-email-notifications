@@ -227,11 +227,13 @@ function fcnen_get_modal_content() {
               </select>
             <?php endif; ?>
           </div>
-          <div class="fcnen-dialog-modal__advanced-lists">
+          <div class="fcnen-dialog-modal__advanced-lists" data-too-many="<?php esc_attr_e( 'Maximum reached!', 'fcnen' ); ?>">
             <ol class="fcnen-dialog-modal__advanced-sources" data-target="fcnen-sources">
               <li class="fcnen-dialog-modal__advanced-li _disabled _no-match"><span><?php _e( 'No search query.', 'fcnen' ); ?></span></li>
             </ol>
-            <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection" data-max="<?php echo $max_per_term; ?>" data-too-many="<?php esc_attr_e( 'Too many!', 'fcnen' ); ?>"><?php
+            <ol class="fcnen-dialog-modal__advanced-selection" data-target="fcnen-selection" data-max="<?php echo $max_per_term; ?>"><?php
+              echo '<li class="fcnen-dialog-modal__advanced-li _disabled _empty">' . __( 'Add items from your search.', 'fcnen' ) . '</li>';
+
               if ( $allow_stories && $stories ) {
                 foreach ( $stories->posts as $story ) {
                   echo fcnen_get_selection_node(

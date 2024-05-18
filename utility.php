@@ -639,7 +639,7 @@ function fcnen_get_selection_node( $args = [] ) {
   $label = $args['label'] ?? '';
   $title = $args['title'] ?? '';
 
-  return "<li class='fcnen-dialog-modal__advanced-li _selected' data-click-action='fcnen-remove' data-type='{$type}' data-compare='{$type}-{$id}' data-id='{$id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$title}</span><i class='fa-solid fa-minus fcnen-icon'></i><input type='hidden' name='{$name}[]' value='{$id}'></li>";
+  return "<li class='fcnen-dialog-modal__advanced-li _selected' data-type='{$type}' data-compare='{$type}-{$id}' data-id='{$id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$title}</span><i class='fa-solid fa-minus fcnen-icon' data-click-action='fcnen-remove'></i><input type='hidden' name='{$name}[]' value='{$id}'></li>";
 }
 
 // =======================================================================================

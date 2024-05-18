@@ -113,25 +113,6 @@
       }
     }
 
-    &-selection.flash-too-many {
-      position: relative;
-
-      &::after {
-        content: attr(data-too-many);
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        display: grid;
-        place-content: center;
-        background: var(--red-400);
-        color: var(--notice-warning-color);
-        font-weight: 400;
-        opacity: 0;
-        transition: opacity .5s;
-        animation: fcnen-flash .5s ease-out;
-      }
-    }
-
     &-li {
       cursor: pointer;
       user-select: none;
@@ -141,7 +122,7 @@
       overflow-wrap: break-word;
       padding: 4px 18px 4px 4px;
 
-      &:hover {
+      &:not(._disabled, ._no-match):hover {
         background: var(--fcnen-li-background-hover, rgb(255 255 255 / 10%));
         color: var(--fg-400);
       }
@@ -159,13 +140,38 @@
         }
       }
 
+      &._empty {
+        &:not(:last-child),
+        &:not(:first-child) {
+          display: none;
+        }
+      }
+
       .fcnen-icon {
-        pointer-events: none;
         position: absolute;
         top: 50%;
-        right: 4px;
+        right: 0;
         color: var(--fg-900);
+        padding: 5px 4px 5px 24px;
         transform: translateY(-50%);
+      }
+
+      &.flash-too-many {
+        &::after {
+          content: attr(data-too-many);
+          pointer-events: none;
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          display: grid;
+          place-content: center;
+          background: var(--red-400);
+          color: var(--notice-warning-color);
+          font-weight: 400;
+          opacity: 0;
+          transition: opacity .5s;
+          animation: fcnen-flash .7s ease-out;
+        }
       }
     }
   }
