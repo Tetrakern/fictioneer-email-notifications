@@ -173,12 +173,12 @@ define(
 // =======================================================================================
 
 require_once plugin_dir_path( __FILE__ ) . 'utility.php';
-require_once plugin_dir_path( __FILE__ ) . 'ajax.php';
 require_once plugin_dir_path( __FILE__ ) . 'modal.php';
 
 if ( is_admin() ) {
   require_once plugin_dir_path( __FILE__ ) . 'actions.php';
   require_once plugin_dir_path( __FILE__ ) . 'admin.php';
+  require_once plugin_dir_path( __FILE__ ) . 'ajax.php';
 }
 
 // =======================================================================================
