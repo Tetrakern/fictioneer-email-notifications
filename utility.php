@@ -1247,7 +1247,7 @@ function fcnen_get_confirmation_email_subject() {
   }
 
   // Return default otherwise
-  return FCNEN_DEFAULTS['subject_confirmation'];
+  return fcnen_option_defaults( 'fcnen_template_subject_confirmation' );
 }
 
 /**
@@ -1260,11 +1260,12 @@ function fcnen_get_confirmation_email_subject() {
 
 function fcnen_get_confirmation_email_body() {
   // Custom or default
-  $body = get_option( 'fcnen_template_layout_confirmation' ) ?: FCNEN_DEFAULTS['layout_confirmation'];
+  $defaults = fcnen_option_defaults();
+  $body = get_option( 'fcnen_template_layout_confirmation' ) ?: $defaults['fcnen_template_layout_confirmation'];
 
   // Check for {{code}} presence
   if ( strpos( $body, '{{code}}' ) === false ) {
-    $body = FCNEN_DEFAULTS['layout_confirmation'];
+    $body = $defaults['fcnen_template_layout_confirmation'];
   }
 
   // Return HTML
@@ -1288,7 +1289,7 @@ function fcnen_get_code_email_subject() {
   }
 
   // Return default otherwise
-  return FCNEN_DEFAULTS['subject_code'];
+  return fcnen_option_defaults( 'fcnen_template_subject_code' );
 }
 
 /**
@@ -1301,11 +1302,12 @@ function fcnen_get_code_email_subject() {
 
 function fcnen_get_code_email_body() {
   // Custom or default
-  $body = get_option( 'fcnen_template_layout_code' ) ?: FCNEN_DEFAULTS['layout_code'];
+  $defaults = fcnen_option_defaults();
+  $body = get_option( 'fcnen_template_layout_code' ) ?: $defaults['fcnen_template_layout_code'];
 
   // Check for {{code}} presence
   if ( strpos( $body, '{{code}}' ) === false ) {
-    $body = FCNEN_DEFAULTS['layout_code'];
+    $body = $defaults['fcnen_template_layout_code'];
   }
 
   // Return HTML
@@ -1329,7 +1331,7 @@ function fcnen_get_edit_email_subject() {
   }
 
   // Return default otherwise
-  return FCNEN_DEFAULTS['subject_edit'];
+  return fcnen_option_defaults( 'fcnen_template_subject_edit' );
 }
 
 /**
@@ -1342,7 +1344,7 @@ function fcnen_get_edit_email_subject() {
 
 function fcnen_get_edit_email_body() {
   // Return custom or default
-  return get_option( 'fcnen_template_layout_edit' ) ?: FCNEN_DEFAULTS['layout_edit'];
+  return get_option( 'fcnen_template_layout_edit' ) ?: fcnen_option_defaults( 'fcnen_template_layout_edit' );
 }
 
 /**
@@ -1362,7 +1364,7 @@ function fcnen_get_notification_email_subject() {
   }
 
   // Return default otherwise
-  return FCNEN_DEFAULTS['subject_notification'];
+  return fcnen_option_defaults( 'fcnen_template_subject_notification' );
 }
 
 /**
@@ -1551,6 +1553,7 @@ function fcnen_get_notification_contents( $subscribers = null ) {
 
 function fcnen_get_notification_emails( $args = [] ) {
   // Setup
+  $defaults = fcnen_option_defaults();
   $contents = fcnen_get_notification_contents( $args['subscribers'] ?? null );
   $posts = $contents['posts'];
   $subscribers = $contents['subscribers'];
@@ -1577,10 +1580,10 @@ function fcnen_get_notification_emails( $args = [] ) {
 
   // Templates
   $templates = array(
-    'notification' => get_option( 'fcnen_template_layout_notification' ) ?: FCNEN_DEFAULTS['layout_notification'],
-    'post' => get_option( 'fcnen_template_loop_part_post' ) ?: FCNEN_DEFAULTS['loop_part_post'],
-    'fcn_story' => get_option( 'fcnen_template_loop_part_story' ) ?: FCNEN_DEFAULTS['loop_part_story'],
-    'fcn_chapter' => get_option( 'fcnen_template_loop_part_chapter' ) ?: FCNEN_DEFAULTS['loop_part_chapter']
+    'notification' => get_option( 'fcnen_template_layout_notification' ) ?: $defaults['fcnen_template_layout_notification'],
+    'post' => get_option( 'fcnen_template_loop_part_post' ) ?: $defaults['fcnen_template_loop_part_post'],
+    'fcn_story' => get_option( 'fcnen_template_loop_part_story' ) ?: $defaults['fcnen_template_loop_part_story'],
+    'fcn_chapter' => get_option( 'fcnen_template_loop_part_chapter' ) ?: $defaults['fcnen_template_loop_part_chapter']
   );
 
   // Remove special characters from templates

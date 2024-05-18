@@ -43,14 +43,38 @@ define(
   )
 );
 
-define(
-  'FCNEN_DEFAULTS',
-  array(
-    'subject_confirmation' => _x( 'Please confirm your subscription', 'Email subject', 'fcnen' ),
-    'subject_code' => _x( 'Your subscription code', 'Email subject', 'fcnen' ),
-    'subject_edit' => _x( 'Your subscription has been updated', 'Email subject', 'fcnen' ),
-    'subject_notification' => _x( 'Updates on {{site_name}}', 'Email subject', 'fcnen' ),
-    'layout_confirmation' =>
+/**
+ * Returns all options and defaults or one specific default
+ *
+ * @since 0.1.0
+ *
+ * @param string|null $option  Optional. Name of the option to get the default for.
+ *
+ * @return array|mixed Returns an associative array of default options and values or the
+ *                     default value of the passed option (empty string if not defined).
+ */
+
+function fcnen_option_defaults( $option = null ) {
+  static $defaults = null;
+
+  if ( $defaults === null ) {
+    $defaults = array(
+      'fcnen_from_email_address' => '',
+      'fcnen_from_email_name' => '',
+      'fcnen_flag_subscribe_to_stories' => 0,
+      'fcnen_flag_subscribe_to_taxonomies' => 0,
+      'fcnen_flag_allow_passwords' => 0,
+      'fcnen_flag_allow_hidden' => 0,
+      'fcnen_flag_purge_on_deactivation' => 0,
+      'fcnen_excerpt_length' => 256,
+      'fcnen_max_per_term' => 10,
+      'fcnen_api_key' => '',
+      'fcnen_api_bulk_limit' => 300,
+      'fcnen_template_subject_confirmation' => _x( 'Please confirm your subscription', 'Email subject', 'fcnen' ),
+      'fcnen_template_subject_code' => _x( 'Your subscription code', 'Email subject', 'fcnen' ),
+      'fcnen_template_subject_edit' => _x( 'Your subscription has been updated', 'Email subject', 'fcnen' ),
+      'fcnen_template_subject_notification' => _x( 'Updates on {{site_name}}', 'Email subject', 'fcnen' ),
+      'fcnen_template_layout_confirmation' =>
 <<<EOT
 <p>Thank you for subscribing to <a href="{{site_link}}" target="_blank">{{site_name}}</a>.</p>
 
@@ -60,7 +84,7 @@ define(
 
 <p>If someone has subscribed you against your will or you reconsidered, worry not! Without confirmation, your subscription and email address will be deleted after 24 hours. You can also immediately <a href="{{unsubscribe_link}}" data-id="{{id}}">delete it with this link</a>.</p>
 EOT,
-    'layout_code' =>
+      'fcnen_template_layout_code' =>
 <<<EOT
 <p>Following is the edit code for your email subscription on <a href="{{site_link}}" target="_blank">{{site_name}}</a>. Do not share it. If compromised, just delete your subscription and submit a new one.</p>
 
@@ -68,7 +92,7 @@ EOT,
 
 <p>You can also directly edit your subscription with this <a href="{{edit_link}}" target="_blank" data-id="{{id}}">link</a>.</p>
 EOT,
-    'layout_edit' =>
+      'fcnen_template_layout_edit' =>
 <<<EOT
 <p>Your subscription preferences on <a href="{{site_link}}" target="_blank">{{site_name}}</a> have been updated to:</p>
 
@@ -91,7 +115,7 @@ EOT,
 
 <p>If that was not you, please <a href="{{unsubscribe_link}}" target="_blank" data-id="{{id}}">delete<a> and renew your subscription. Also make sure your email account is not compromised and never share your code.</p>
 EOT,
-    'layout_notification' =>
+      'fcnen_template_layout_notification' =>
 <<<EOT
 <p>Hello,<br><br>There are new updates on <a href="{{site_link}}" target="_blank">{{site_name}}</a> matching your preferences. You are receiving this email because you subscribed to content updates. You can <a href="{{edit_link}}" target="_blank">edit</a> your subscription at any time. If you no longer want to receive updates, you can <a href="{{unsubscribe_link}}" target="_blank" data-id="{{id}}">unsubscribe</a>.</p>
 
@@ -101,7 +125,7 @@ EOT,
 
 <div style="font-size: 75%;">Your edit code is <strong>{{code}}</strong>.</div>
 EOT,
-    'loop_part_post' =>
+      'fcnen_template_loop_part_post' =>
 <<<EOT
 <fieldset style="padding: 10px; margin: 20px 0; border: 1px solid #ccc;">
   <div>
@@ -113,7 +137,7 @@ EOT,
   <div style="margin-top: 10px">{{excerpt}}</div>
 </fieldset>
 EOT,
-    'loop_part_story' =>
+      'fcnen_template_loop_part_story' =>
 <<<EOT
 <fieldset style="padding: 10px; margin: 20px 0; border: 1px solid #ccc;">
   <div>
@@ -125,7 +149,7 @@ EOT,
   <div style="margin-top: 10px">{{excerpt}}</div>
 </fieldset>
 EOT,
-    'loop_part_chapter' =>
+      'fcnen_template_loop_part_chapter' =>
 <<<EOT
 <fieldset style="padding: 10px; margin: 20px 0; border: 1px solid #ccc;">
   <div>
@@ -137,36 +161,11 @@ EOT,
   <div style="margin-top: 10px">{{excerpt}}</div>
 </fieldset>
 EOT
-  )
-);
+    );
+  }
 
-define(
-  'FCNEN_SETTING_DEFAULTS',
-  array(
-    'fcnen_from_email_address' => '',
-    'fcnen_from_email_name' => '',
-    'fcnen_flag_subscribe_to_stories' => 0,
-    'fcnen_flag_subscribe_to_taxonomies' => 0,
-    'fcnen_flag_allow_passwords' => 0,
-    'fcnen_flag_allow_hidden' => 0,
-    'fcnen_flag_purge_on_deactivation' => 0,
-    'fcnen_excerpt_length' => 256,
-    'fcnen_max_per_term' => 10,
-    'fcnen_api_key' => '',
-    'fcnen_api_bulk_limit' => 300,
-    'fcnen_template_layout_confirmation' => FCNEN_DEFAULTS['layout_confirmation'] ?? '',
-    'fcnen_template_subject_confirmation' => FCNEN_DEFAULTS['subject_confirmation'] ?? '',
-    'fcnen_template_layout_code' => FCNEN_DEFAULTS['layout_code'] ?? '',
-    'fcnen_template_subject_code' => FCNEN_DEFAULTS['subject_code'] ?? '',
-    'fcnen_template_layout_edit' => FCNEN_DEFAULTS['layout_edit'] ?? '',
-    'fcnen_template_subject_edit' => FCNEN_DEFAULTS['subject_edit'] ?? '',
-    'fcnen_template_layout_notification' => FCNEN_DEFAULTS['layout_notification'] ?? '',
-    'fcnen_template_subject_notification' => FCNEN_DEFAULTS['subject_notification'] ?? '',
-    'fcnen_template_loop_part_post' => FCNEN_DEFAULTS['loop_part_post'] ?? '',
-    'fcnen_template_loop_part_story' => FCNEN_DEFAULTS['loop_part_story'] ?? '',
-    'fcnen_template_loop_part_chapter' => FCNEN_DEFAULTS['loop_part_chapter'] ?? ''
-  )
-);
+  return $option ? ( $defaults[ $option ] ?? '' ) : $defaults;
+}
 
 // =======================================================================================
 // INCLUDES & REQUIRES
@@ -186,17 +185,20 @@ if ( is_admin() ) {
 // =======================================================================================
 
 /**
- * Add default settings to database table
+ * Add default options to database table
  *
- * Note: These settings are not required on every page load
+ * Note: These options are not required on every page load
  * and should therefore not be auto-loaded.
  *
  * @since 0.1.0
  */
 
-function fcnen_add_default_settings() {
-  // Settings
-  foreach ( FCNEN_SETTING_DEFAULTS as $option => $default ) {
+function fcnen_add_default_options() {
+  // Setup
+  $default_options = fcnen_option_defaults();
+
+  // Options
+  foreach ( $default_options as $option => $default ) {
     if ( ! get_option( $option ) ) {
       add_option( $option, $default, '', 'no' );
     }
@@ -214,7 +216,7 @@ function fcnen_add_default_settings() {
     add_option( 'fcnen_plugin_info', $info );
   }
 }
-register_activation_hook( __FILE__, 'fcnen_add_default_settings' );
+register_activation_hook( __FILE__, 'fcnen_add_default_options' );
 
 /**
  * Create the subscriber database table
@@ -360,8 +362,11 @@ function fcnen_deactivation() {
     return;
   }
 
+  // Setup
+  $default_options = fcnen_option_defaults();
+
   // Delete options
-  foreach ( FCNEN_SETTING_DEFAULTS as $option => $values ) {
+  foreach ( $default_options as $option => $values ) {
     delete_option( $option );
   }
 
@@ -1620,3 +1625,6 @@ function fcnen_send_bulk_notifications( $payload ) {
     )
   );
 }
+
+
+// https://code.tutsplus.com/how-to-internationalize-wordpress-themes-and-plugins--wp-22779a
