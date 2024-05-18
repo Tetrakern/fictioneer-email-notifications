@@ -430,6 +430,11 @@ class FCNEN_Notifications_Table extends WP_List_Table {
    */
 
   function column_status( $item ) {
+    // Setup
+    $excluded_posts = get_option( 'fcnen_excluded_posts', [] ) ?: [];
+    $excluded_authors = get_option( 'fcnen_excluded_authors', [] ) ?: [];
+
+    // Return correct status label
     if ( $item['last_sent'] ) {
       return _x( 'Sent', 'Notification list table status column.', 'fcnen' );
     }
@@ -438,16 +443,24 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       return _x( 'Paused', 'Notification list table status column.', 'fcnen' );
     }
 
-    if ( $item['status']['sendable'] ?? 0 ) {
-      return _x( 'Ready', 'Notification list table status column.', 'fcnen' );
-    }
-
     if ( ! get_post( $item['post_id'] ) ) {
       return _x( 'Blocked:<br>Deleted', 'Notification list table status column.', 'fcnen' );
     }
 
     if ( get_post_status( $item['post_id'] ) === 'trash' ) {
       return _x( 'Blocked:<br>Trashed', 'Notification list table status column.', 'fcnen' );
+    }
+
+    if ( in_array( $item['post_author'], $excluded_authors ) ) {
+      return _x( 'Blocked:<br>Excluded', 'Notification list table status column.', 'fcnen' );
+    }
+
+    if ( in_array( $item['post_id'], $excluded_posts ) ) {
+      return _x( 'Blocked:<br>Excluded', 'Notification list table status column.', 'fcnen' );
+    }
+
+    if ( $item['status']['sendable'] ?? 0 ) {
+      return _x( 'Ready', 'Notification list table status column.', 'fcnen' );
     }
 
     $status = '';
