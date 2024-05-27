@@ -218,6 +218,40 @@ function fcnen_scan_for_injections( $string ) {
   return empty( $matchedPatterns ) ? false : $matchedPatterns;
 }
 
+/**
+ * Pretty HTML output for an array
+ *
+ * @since 0.1.0
+ *
+ * @param array $array   The array to output.
+ * @param bool  $nested  Whether this is a nested node in the array.
+ *
+ * @return string HTML for the current depth.
+ */
+
+function fcnen_array_to_html( $array, $nested = false ) {
+  if ( ! is_array( $array ) ) {
+    return '';
+  }
+
+  $content = '';
+
+  foreach ( $array as $key => $value ) {
+    if ( is_array( $value ) ) {
+      $content .= '<div class="fcnen-array-node"><strong>' . esc_html( $key ) . ':</strong></div>';
+      $content .= '<div class="fcnen-array-nested">' . fcnen_array_to_html( $value, 1 ) . '</div>';
+    } else {
+      $content .= '<div class="fcnen-array-node"><strong>' . esc_html( $key ) . ':</strong> <span>' . esc_html( $value ?? 0 ) . '</span></div>';
+    }
+  }
+
+  if ( $nested ) {
+    return $content;
+  } else {
+    return '<div class="fcnen-array">' . $content . '</div>';
+  }
+}
+
 // =======================================================================================
 // SUBSCRIBERS
 // =======================================================================================
@@ -1962,38 +1996,4 @@ function fcnen_get_email_queue() {
 
   // Return batched queue
   return $queue;
-}
-
-/**
- * Pretty HTML output for an array
- *
- * @since 0.1.0
- *
- * @param array $array   The array to output.
- * @param bool  $nested  Whether this is a nested node in the array.
- *
- * @return string HTML for the current depth.
- */
-
-function fcnen_array_to_html( $array, $nested = false ) {
-  if ( ! is_array( $array ) ) {
-    return '';
-  }
-
-  $content = '';
-
-  foreach ( $array as $key => $value ) {
-    if ( is_array( $value ) ) {
-      $content .= '<div class="fcnen-array-node"><strong>' . esc_html( $key ) . ':</strong></div>';
-      $content .= '<div class="fcnen-array-nested">' . fcnen_array_to_html( $value, 1 ) . '</div>';
-    } else {
-      $content .= '<div class="fcnen-array-node"><strong>' . esc_html( $key ) . ':</strong> <span>' . esc_html( $value ?? 0 ) . '</span></div>';
-    }
-  }
-
-  if ( $nested ) {
-    return $content;
-  } else {
-    return '<div class="fcnen-array">' . $content . '</div>';
-  }
 }
