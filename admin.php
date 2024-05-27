@@ -705,7 +705,7 @@ function fcnen_send_emails_page() {
   $queue_incomplete = get_transient( 'fcnen_request_queue' );
   $queue_html = __( 'Click the button to generate and start the next queue.', 'fcnen' );
   $clear_url = wp_nonce_url( admin_url( 'admin-post.php?action=fcnen_clear_queue' ), 'fcnen-clear-queue', 'fcnen-nonce' );
-  $disabled = $statistics['emails'] < 1 && ! $queue_incomplete;
+  $disabled = ! get_option( 'fcnen_api_key' ) || ( $statistics['emails'] < 1 && ! $queue_incomplete );
 
   // Incomplete queue?
   if ( $queue_incomplete ) {
@@ -776,7 +776,11 @@ function fcnen_send_emails_page() {
 
     <div class="fcnen-queue-actions">
       <button type="button" class="button button-primary" data-click-action="fcnen-work-queue" <?php echo $disabled ? 'disabled' : ''; ?>><?php
-        echo $queue_incomplete ? __( 'Retry', 'fcnen' ) : __( 'Send Emails', 'fcnen' );
+        if ( get_option( 'fcnen_api_key' ) ) {
+          echo $queue_incomplete ? __( 'Retry', 'fcnen' ) : __( 'Send Emails', 'fcnen' );
+        } else {
+          _e( 'API key missing', 'fcnen' );
+        }
       ?></button>
       <?php if ( $queue_incomplete ) : ?>
         <a href="<?php echo $clear_url; ?>" class="button"><?php _e( 'Clear Queue', 'fcnen' ); ?></a>
