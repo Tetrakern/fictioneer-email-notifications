@@ -1612,7 +1612,7 @@ function fcnen_send_bulk_notifications( $payload ) {
 
   // API key missing
   if ( empty( $api_key ) ) {
-    return new WP_Error( 'api_key_missing', __( 'API key has not been set.', 'fcnen' ) );
+    return new WP_Error( 'api_key_missing', __( 'API key missing.', 'fcnen' ) );
   }
 
   // Send and return response
