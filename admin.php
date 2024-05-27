@@ -1499,7 +1499,7 @@ function fcnen_settings_page() {
               </th>
               <td>
                 <input type="number" name="fcnen_api_bulk_limit" id="fcnen-api-bulk-limit" class="small-text" value="<?php echo esc_attr( $api_bulk_limit ); ?>" autocomplete="off" spellcheck="false" autocorrect="off" data-1p-ignore>
-                <p class="description"><?php _e( 'Emails per request.', 'fcnen' ); ?></p>
+                <p class="description"><?php _e( 'Emails per request (max. 500).', 'fcnen' ); ?></p>
               </td>
             </tr>
           </tbody>
