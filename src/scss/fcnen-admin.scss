@@ -362,8 +362,24 @@ details {
 .fcnen-metabox-date-info {
   background: #f0f0f0;
   font-size: 12px;
-  padding: 6px 8px;
+  padding: 6px 0;
   border-radius: 2px;
+
+  &__dates {
+    line-height: 1.75;
+    padding: 0 8px;
+    max-height: 95px;
+    overflow: auto;
+  }
+
+  &:is(p) {
+    padding: 6px 8px;
+  }
+
+  > p {
+    padding: 0 8px;
+    margin-bottom: 4px;
+  }
 
   strong {
     display: block;
@@ -371,7 +387,6 @@ details {
     font-size: 10px;
     font-weight: 500;
     text-transform: uppercase;
-    margin-bottom: 4px;
   }
 }
 

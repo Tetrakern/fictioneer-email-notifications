@@ -1639,6 +1639,8 @@ function fcnen_render_metabox( $post ) {
         )
       );
     }
+
+    $dates = array_reverse( $dates );
   }
 
   if ( $notification ) {
@@ -1655,9 +1657,10 @@ function fcnen_render_metabox( $post ) {
   // Start HTML ---> ?>
   <input type="hidden" name="fcnen-nonce" value="<?php echo esc_attr( $nonce ); ?>" autocomplete="off">
   <?php if ( ! empty( $dates ) ) : ?>
-    <p class="fcnen-metabox-date-info"><?php
-      printf( __( '<strong>Mailed on</strong>%s', 'fcnen' ), implode( '<br>', $dates ) );
-    ?></p>
+    <div class="fcnen-metabox-date-info">
+      <p><strong><?php _e( 'Mailed on', 'fcnen' ); ?></strong></p>
+      <div class="fcnen-metabox-date-info__dates"><?php echo implode( '<br>', $dates ); ?></div>
+    </div>
   <?php endif; ?>
   <?php if ( $added_at ) : ?>
     <p class="fcnen-metabox-date-info"><?php
