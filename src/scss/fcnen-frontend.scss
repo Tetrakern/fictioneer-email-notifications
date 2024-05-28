@@ -39,6 +39,7 @@
 
   &__scopes {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
 
     .checkbox-label {
