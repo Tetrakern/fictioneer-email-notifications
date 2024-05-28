@@ -603,12 +603,12 @@ function fcnen_check_mailersend_bulk_status() {
 
   // API key missing
   if ( empty( $api_key ) ) {
-    return new WP_Error( 'api_key_missing', __( 'API key has not been set.', 'fcnen' ) );
+    return wp_die( __( 'API key has not been set.', 'fcnen' ) );
   }
 
   // ID missing
   if ( empty( $bulk_id ) ) {
-    return new WP_Error( 'bulk_id_missing', __( 'Bulk ID missing.', 'fcnen' ) );
+    return wp_die( __( 'Bulk ID missing.', 'fcnen' ) );
   }
 
   // Request
