@@ -166,20 +166,12 @@ function fcnen_get_modal_content() {
       <?php else : ?>
         <div class="dialog-modal__row">
           <p class="dialog-modal__description"><?php
-            $max_per_term = absint( get_option( 'fcnen_max_per_term', 10 ) );
-
             if ( $allow_stories && $allow_taxonomies ) {
-              printf(
-                __( 'Receive email notifications about new content. Uncheck "everything" to filter for specific types, stories, tags, or taxonomies%s. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' ),
-                $max_per_term > 0 ? sprintf( __( ' (max. %s)', 'fcnen' ), $max_per_term ) : ''
-              );
+              _e( 'Receive email notifications about new content. Uncheck "everything" to filter for specific types, stories, tags, or taxonomies. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' );
             } elseif ( $allow_stories ) {
               _e( 'Receive email notifications about new content. Uncheck "everything" to filter for specific types or stories. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' );
             } elseif ( $allow_taxonomies ) {
-              printf(
-                __( 'Receive email notifications about new content. Uncheck "everything" to filter for specific types, tags, or taxonomies%s. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' ),
-                $max_per_term > 0 ? sprintf( __( ' (max. %s)', 'fcnen' ), $max_per_term ) : ''
-              );
+              _e( 'Receive email notifications about new content. Uncheck "everything" to filter for specific types, tags, or taxonomies. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' );
             } else {
               _e( 'Receive email notifications about new content. You can <button type="button" class="fcnen-inline-button" data-click-action="auth-mode">edit or cancel</button> at any time.', 'fcnen' );
             }
