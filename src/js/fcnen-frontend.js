@@ -23,6 +23,43 @@ if (fcnen_modal) {
       }, 100); // Delay to make sure utilities are loaded
     });
   }
+
+  // Shortcode input modal toggles
+  document.querySelectorAll('[data-click-action*="fcnen-input-modal-toggle"]').forEach(input => {
+    input.addEventListener('click', event => fcnen_shortcodeInputToggle(event.currentTarget));
+  });
+}
+
+/**
+ * Toggle modal from shortcode input element.
+ *
+ * @since 0.1.0
+ *
+ * @param {HTMLInputElement} input - The triggering input element.
+ */
+
+function fcnen_shortcodeInputToggle(input) {
+  // Load modal (if not already done)
+  fcnen_getModalForm('new');
+
+  // Leave input, open modal
+  input.blur();
+  fcnen_modal.showModal();
+
+  // Focus email input inside modal
+  const submitEmail = document.getElementById('fcnen-modal-submit-email');
+
+  if (!submitEmail) {
+    document.addEventListener('fcnenModalLoaded', () => {
+      setTimeout(() => {
+        document.getElementById('fcnen-modal-submit-email').focus();
+      }, 50); // Wait for modal to be set up
+    }, { once: true });
+  } else {
+    setTimeout(() => {
+      submitEmail.focus();
+    }, 50); // Wait for modal to show
+  }
 }
 
 // =============================================================================
@@ -188,7 +225,12 @@ function fcnen_getModalForm(context = 'new', args = {}) {
   fcn_ajaxPost(payload)
   .then(response => {
     if (response.success) {
+      // Add modal HTML to view
       fcnen_targetContainer.innerHTML = response.data.html;
+
+      // Fire event
+      const event = new Event('fcnenModalLoaded');
+      document.dispatchEvent(event);
     }
   })
   .then(() => {

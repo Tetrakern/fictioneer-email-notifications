@@ -224,3 +224,14 @@
   0%, 100% { opacity: 0; }
   50% { opacity: 1; }
 }
+
+.fcnen-subscription-shortcode {
+  cursor: pointer;
+  border-radius: var(--layout-border-radius-small);
+
+  &__input {
+    user-select: none;
+    pointer-events: none;
+    width: 100%;
+  }
+}

@@ -719,6 +719,19 @@ function fcnen_account_profile_section( $args ) {
 }
 add_action( 'fictioneer_account_content', 'fcnen_account_profile_section', 25 );
 
+/**
+ * Shortcode to show subscription form (opens modal)
+ *
+ * @since 0.1.0
+ *
+ * @return string The shortcode HTML.
+ */
+
+function fcnen_shortcode_subscription( $attr ) {
+  return '<div class="fcnen-subscription-shortcode" data-click-target="#fcnen-subscription-modal" data-click-action="open-dialog-modal fcnen-load-modal-form fcnen-input-modal-toggle" tabindex="0"><input type="email" class="fcnen-subscription-shortcode__input" autocomplete="off" autocorrect="off" tabindex="-1" placeholder="' . esc_attr__( 'Subscribe for email updates…', 'fcnen' ) . '"></div>';
+}
+add_shortcode( 'fictioneer_email_subscription', 'fcnen_shortcode_subscription' );
+
 // =======================================================================================
 // SUBSCRIBERS
 // =======================================================================================
