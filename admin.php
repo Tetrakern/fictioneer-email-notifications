@@ -66,29 +66,19 @@ function fcnen_check_theme() {
     // Deactivate plugin
     deactivate_plugins( 'fictioneer-email-notifications/fictioneer-email-notifications.php' );
 
-    // Display an admin notice
-    add_action( 'admin_notices', 'fcnen_admin_notice_wrong_theme' );
+    // Display admin notice
+    wp_admin_notice(
+      __( 'Fictioneer Email Notifications requires the Fictioneer theme or a child theme. The plugin has been deactivated.', 'fcnen' ),
+      array(
+        'type' => 'error',
+        'dismissible' => true
+      )
+    );
   }
 }
 
 if ( is_admin() ) {
   add_action( 'after_setup_theme', 'fcnen_check_theme' );
-}
-
-/**
- * Show admin notice if plugin has been deactivated due to wrong theme
- *
- * @since 0.1.0
- */
-
-function fcnen_admin_notice_wrong_theme() {
-  // Start HTML ---> ?>
-  <div class="notice notice-error is-dismissible">
-    <p><?php
-      _e( 'Fictioneer Email Notifications requires the Fictioneer theme or a child theme. The plugin has been deactivated.', 'fcnen' );
-    ?></p>
-  </div>
-  <?php // <--- End HTML
 }
 
 // =======================================================================================
@@ -269,7 +259,7 @@ add_filter( 'removable_query_args', 'fcnen_add_removable_admin_args' );
 function fcnen_admin_notices() {
   // Setup
   $notice = '';
-  $class = '';
+  $type = 'info';
   $message = sanitize_text_field( $_GET['fcnen-message'] ?? '' );
   $maybe_id = is_numeric( $message ) ? absint( $message ) : 0;
   $maybe_post = get_post( $maybe_id );
@@ -278,243 +268,249 @@ function fcnen_admin_notices() {
   // Default notices
   if ( ( $_GET['settings-updated'] ?? 0 ) === 'true' ) {
     $notice = __( 'Settings saved' );
-    $class = 'notice-success';
+    $type = 'success';
   }
 
   // FCNEN notices
   switch ( $_GET['fcnen-notice'] ?? 0 ) {
     case 'subscriber-already-exists':
       $notice = __( 'Error. Subscriber with that email address already exists.', 'fcnen' );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'subscriber-adding-success':
       $notice = sprintf( __( '%s added.', 'fcnen' ), $message ?: __( 'Subscriber', 'fcnen' ) );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'subscriber-adding-failure':
       $notice = sprintf( __( 'Error. %s could not be added.', 'fcnen' ), $message ?: __( 'Subscriber', 'fcnen' ) );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'confirm-subscriber-success':
       $notice = sprintf( __( 'Subscriber (#%s) confirmed.', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'confirm-subscriber-failure':
       $notice = sprintf(
         __( 'Error. Subscriber (#%s) could not be confirmed.', 'fcnen' ),
         $message ?: __( 'n/a', 'fcnen' )
       );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'unconfirm-subscriber-success':
       $notice = sprintf( __( 'Subscriber (#%s) unconfirmed.', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'unconfirm-subscriber-failure':
       $notice = sprintf(
         __( 'Error. Subscriber (#%s) could not be unconfirmed.', 'fcnen' ),
         $message ?: __( 'n/a', 'fcnen' )
       );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'trash-subscriber-success':
       $notice = sprintf( __( 'Subscriber (#%s) trashed.', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'trash-subscriber-failure':
       $notice = sprintf(
         __( 'Error. Subscriber (#%s) could not be trashed.', 'fcnen' ),
         $message ?: __( 'n/a', 'fcnen' )
       );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'restore-subscriber-success':
       $notice = sprintf( __( 'Subscriber (#%s) restored.', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'restore-subscriber-failure':
       $notice = sprintf(
         __( 'Error. Subscriber (#%s) could not be restored.', 'fcnen' ),
         $message ?: __( 'n/a', 'fcnen' )
       );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'delete-subscriber-success':
       $notice = sprintf( __( 'Subscriber (#%s) permanently deleted.', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'delete-subscriber-failure':
       $notice = sprintf(
         __( 'Error. Subscriber (#%s) could not be deleted.', 'fcnen' ),
         $message ?: __( 'n/a', 'fcnen' )
       );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'bulk-confirm-subscribers-success':
       $notice = sprintf( __( 'Confirmed %s subscribers.', 'fcnen' ), $message ?: '0' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'bulk-confirm-subscribers-failure':
       $notice = __( 'Error. Could not confirm subscribers.', 'fcnen' );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'bulk-unconfirm-subscribers-success':
       $notice = sprintf( __( 'Unconfirmed %s subscribers.', 'fcnen' ), $message ?: '0' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'bulk-unconfirm-subscribers-failure':
       $notice = __( 'Error. Could not unconfirm subscribers.', 'fcnen' );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'bulk-trash-subscribers-success':
       $notice = sprintf( __( 'Trashed %s subscribers.', 'fcnen' ), $message ?: '0' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'bulk-trash-subscribers-failure':
       $notice = __( 'Error. Could not trash subscribers.', 'fcnen' );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'bulk-restore-subscribers-success':
       $notice = sprintf( __( 'Restored %s subscribers.', 'fcnen' ), $message ?: '0' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'bulk-restore-subscribers-failure':
       $notice = __( 'Error. Could not restore subscribers.', 'fcnen' );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'bulk-delete-subscribers-success':
       $notice = sprintf( __( 'Permanently deleted %s subscribers.', 'fcnen' ), $message ?: '0' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'bulk-delete-subscribers-failure':
       $notice = __( 'Error. Could not delete subscribers.', 'fcnen' );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'confirmation-email-resent':
       $notice = sprintf( __( 'Confirmation email resent to subscriber (#%s).', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'code-email-sent':
       $notice = sprintf( __( 'Email with edit code sent to subscriber (#%s).', 'fcnen' ), $message ?: __( 'n/a', 'fcnen' ) );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'emptied-trashed-subscribers':
       $notice = __( 'Emptied trash.', 'fcnen' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'csv-imported':
       $notice = sprintf( __( '%s subscriber(s) imported from CSV.', 'fcnen' ), $message ?: 0 );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'delete-notification-success':
       $notice = sprintf( __( 'Deleted notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'delete-notification-failure':
       $notice = sprintf( __( 'Error. Could not delete notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'paused-notification-success':
       $notice = sprintf( __( 'Paused notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'paused-notification-failure':
       $notice = sprintf( __( 'Error. Could not pause notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'unpaused-notification-success':
       $notice = sprintf( __( 'Unpaused notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'unpaused-notification-failure':
       $notice = sprintf( __( 'Error. Could not unpause notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'unsent-notification-success':
       $notice = sprintf( __( 'Notification for "%s" (#%s) marked as unsent.', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'unsent-notification-failure':
       $notice = sprintf( __( 'Error. Could not mark notification for "%s" (#%s) as unsent.', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'bulk-delete-notifications-success':
       $notice = sprintf( __( 'Deleted %s notifications.', 'fcnen' ), $message ?: '0' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'bulk-delete-notifications-failure':
       $notice = __( 'Error. Could not delete notifications.', 'fcnen' );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'bulk-unsent-notifications-success':
       $notice = sprintf( __( 'Marked %s notifications as unsent.', 'fcnen' ), $message ?: '0' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'bulk-unsent-notifications-failure':
       $notice = __( 'Error. Could not mark notifications as unsent.', 'fcnen' );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'bulk-pause-notifications-success':
       $notice = sprintf( __( 'Paused %s notifications.', 'fcnen' ), $message ?: '0' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'bulk-pause-notifications-failure':
       $notice = __( 'Error. Could not pause notifications.', 'fcnen' );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'bulk-unpause-notifications-success':
       $notice = sprintf( __( 'Unpaused %s notifications.', 'fcnen' ), $message ?: '0' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'bulk-unpause-notifications-failure':
       $notice = __( 'Error. Could not unpause notifications.', 'fcnen' );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'submit-notification-successful':
       $notice = sprintf( __( 'Added notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-success';
+      $type = 'success';
       break;
     case 'submit-notification-failure':
       $notice = sprintf( __( 'Error. Could not add notification for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'submit-notification-duplicate':
       $notice = sprintf( __( 'Error. There is already an unsent notification enqueued for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'submit-notification-post-not-found':
       $notice = sprintf( __( 'Error. Post #%s not found.', 'fcnen' ), $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'submit-notification-post-unpublished':
       $notice = sprintf( __( 'Error. Post #%s is not published.', 'fcnen' ), $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'submit-notification-post-protected':
       $notice = sprintf( __( 'Error. Post #%s is protected.', 'fcnen' ), $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'submit-notification-post-invalid-type':
       $notice = sprintf( __( 'Error. Post #%s is of an invalid type.', 'fcnen' ), $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'submit-notification-post-excluded':
       $notice = sprintf( __( 'Error. Post #%s is excluded from email notifications.', 'fcnen' ), $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'submit-notification-post-hidden':
       $notice = sprintf( __( 'Error. Post #%s is hidden.', 'fcnen' ), $maybe_id );
-      $class = 'notice-error';
+      $type = 'error';
       break;
     case 'queue-cleared':
       $notice = __( 'Cleared email queue.', 'fcnen' );
-      $class = 'notice-success';
+      $type = 'success';
       break;
   }
 
   // Render notice
   if ( ! empty( $notice ) ) {
-    echo "<div class='notice {$class} is-dismissible'><p>{$notice}</p></div>";
+    wp_admin_notice(
+      $notice,
+      array(
+        'type' => $type,
+        'dismissible' => true
+      )
+    );
   }
 }
 add_action( 'admin_notices', 'fcnen_admin_notices' );
