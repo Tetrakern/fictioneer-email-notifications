@@ -511,6 +511,17 @@ function fcnen_add_removable_frontend_query_args( $args ) {
 }
 add_filter( 'fictioneer_filter_removable_query_args', 'fcnen_add_removable_frontend_query_args' );
 
+/**
+ * Load plugin textdomain
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_load_textdomain() {
+  load_plugin_textdomain( 'fcnen', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'fcnen_load_textdomain' );
+
 // =======================================================================================
 // FRONTEND
 // =======================================================================================
@@ -1627,6 +1638,3 @@ function fcnen_send_bulk_notifications( $payload ) {
     )
   );
 }
-
-
-// https://code.tutsplus.com/how-to-internationalize-wordpress-themes-and-plugins--wp-22779a
