@@ -1557,6 +1557,12 @@ function fcnen_log_page() {
         FCNEN_LOG_LIMIT
       );
     ?></p>
+    <form method="get" action="<?php echo admin_url( 'admin-post.php' ); ?>" class="fcnen-log-bulk-status-form">
+      <?php wp_nonce_field( 'fcnen-mailersend-bulk-status', 'fcnen-nonce', false ); ?>
+      <input type="hidden" name="action" value="fcnen_check_mailersend_bulk_status">
+      <input type="text" name="id" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="<?php esc_attr_e( 'Bulk Email ID', 'fcnen' ); ?>">
+      <button type="submit" class="button button-primary"><?php _e( 'Check', 'fcnen' ); ?></button>
+    </form>
     <div class="fcnen-log-wrapper" id="fcnen-log">
       <?php echo fcnen_get_log(); ?>
     </div>
