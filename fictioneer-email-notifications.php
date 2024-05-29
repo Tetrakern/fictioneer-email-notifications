@@ -724,11 +724,17 @@ add_action( 'fictioneer_account_content', 'fcnen_account_profile_section', 25 );
  *
  * @since 0.1.0
  *
+ * @param string|null $attr['placeholder']  Optional. Placeholder text override.
+ *
  * @return string The shortcode HTML.
  */
 
 function fcnen_shortcode_subscription( $attr ) {
-  return '<div class="fcnen-subscription-shortcode" data-click-target="#fcnen-subscription-modal" data-click-action="open-dialog-modal fcnen-load-modal-form fcnen-input-modal-toggle" tabindex="0"><input type="email" class="fcnen-subscription-shortcode__input" autocomplete="off" autocorrect="off" tabindex="-1" placeholder="' . esc_attr__( 'Subscribe for email updates…', 'fcnen' ) . '"></div>';
+  // Setup
+  $placeholder = sanitize_text_field( $attr['placeholder'] ?? __( 'Subscribe for email updates…', 'fcnen' ) );
+
+  // Build and return
+  return '<div class="fcnen-subscription-shortcode" data-click-target="#fcnen-subscription-modal" data-click-action="open-dialog-modal fcnen-load-modal-form fcnen-input-modal-toggle" tabindex="0"><input type="email" class="fcnen-subscription-shortcode__input" autocomplete="off" autocorrect="off" tabindex="-1" placeholder="' . $placeholder . '"></div>';
 }
 add_shortcode( 'fictioneer_email_subscription', 'fcnen_shortcode_subscription' );
 
