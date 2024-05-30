@@ -514,6 +514,7 @@ function fcnen_update_profile() {
   $current_user = wp_get_current_user();
   $email = sanitize_email( $_POST['fcnen-email'] ?? '' );
   $code = sanitize_text_field( $_POST['fcnen-code'] ?? '' );
+  $by_follow = filter_var( $_POST['fcnen_enable_subscribe_by_follow'] ?? 0, FILTER_VALIDATE_BOOLEAN );
   $updated_user_id = absint( $_POST['user_id'] ?? 0 );
 
   // User?
@@ -531,6 +532,9 @@ function fcnen_update_profile() {
 
   // Update subscriber code
   update_user_meta( $updated_user_id, 'fcnen_subscription_code', $code );
+
+  // Update subscribe by Follow
+  update_user_meta( $updated_user_id, 'fcnen_enable_subscribe_by_follow', $by_follow );
 
   // Redirect
   wp_safe_redirect(

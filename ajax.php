@@ -362,3 +362,63 @@ function fictioneer_ajax_fcnen_process_email_queue() {
   wp_send_json_success( $result );
 }
 add_action( 'wp_ajax_fictioneer_ajax_fcnen_process_email_queue', 'fictioneer_ajax_fcnen_process_email_queue' );
+
+// =============================================================================
+// FOLLOWS
+// =============================================================================
+
+/**
+ * AJAX Hook: Toggle story subscription by Follow
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param int  $story_id  ID of the toggled story Follow.
+ * @param bool $force     Whether the Follow was added or removed.
+ */
+
+function fcnen_subscribe_by_follow( $story_id, $force ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
+  $user = wp_get_current_user();
+  $auth_email = get_user_meta( $user->ID, 'fcnen_subscription_email', true );
+  $auth_code = get_user_meta( $user->ID, 'fcnen_subscription_code', true );
+
+  // Subscription linked in profile?
+  if ( ! $auth_email || ! $auth_code || ! get_user_meta( $user->ID, 'fcnen_enable_subscribe_by_follow', true ) ) {
+    return;
+  }
+
+  // Valid subscriber?
+  $subscriber = fcnen_get_subscriber_by_email_and_code( $auth_email, $auth_code );
+
+  if ( ! $subscriber ) {
+    return;
+  }
+
+  // Update subscription post IDs
+  $stories = maybe_unserialize( $subscriber->post_ids );
+
+  if ( $force ) {
+    // Add story
+    $stories[] = strval( $story_id );
+    $stories = array_unique( $stories );
+  } else {
+    // Remove story (if set)
+    if ( ( $key = array_search( $story_id, $stories ) ) !== false ) {
+      unset( $stories[ $key ] );
+    }
+  }
+
+  // Update database
+  $wpdb->update(
+    $table_name,
+    array( 'post_ids' => serialize( $stories ) ),
+    array( 'email' => $auth_email ),
+    ['%s'],
+    ['%s']
+  );
+}
+add_action( 'fictioneer_toggled_follow', 'fcnen_subscribe_by_follow', 10, 2 );

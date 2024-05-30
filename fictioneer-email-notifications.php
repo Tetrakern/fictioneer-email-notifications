@@ -704,9 +704,25 @@ function fcnen_account_profile_section( $args ) {
         <?php if ( $link_status === 'linked' ) : ?>
           <i class="fa-solid fa-circle-check checkmark"></i>
         <?php endif; ?>
-        <input type="text" name="fcnen-code" value="<?php echo esc_attr( $code ); ?>" class="profile__input-field profile__fcnen-code">
+        <input type="password" name="fcnen-code" value="<?php echo esc_attr( $code ); ?>" class="profile__input-field profile__fcnen-code">
         <p class="profile__input-note"><?php _e( 'Found in notification emails. If compromised, delete and renew subscription.', 'fcnen' ) ?></p>
       </div>
+    </div>
+
+    <div class="profile__flags">
+
+      <div class="profile__input-wrapper _checkbox">
+        <input type="hidden" name="fcnen_enable_subscribe_by_follow" value="0">
+        <input
+          id="fcnen_enable_subscribe_by_follow"
+          name="fcnen_enable_subscribe_by_follow"
+          type="checkbox"
+          value="1"
+          <?php echo checked( 1, get_the_author_meta( 'fcnen_enable_subscribe_by_follow', $current_user->ID ), false ); ?>
+        >
+        <label for="fcnen_enable_subscribe_by_follow"><?php _e( 'Toggle story subscription by Follow (not retroactive)', 'fcnen' ); ?></label>
+      </div>
+
     </div>
 
     <div class="profile__actions">
