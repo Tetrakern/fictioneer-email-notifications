@@ -719,6 +719,10 @@ function fcnen_account_profile_section( $args ) {
 }
 add_action( 'fictioneer_account_content', 'fcnen_account_profile_section', 25 );
 
+// =======================================================================================
+// SHORTCODES
+// =======================================================================================
+
 /**
  * Shortcode to show subscription form (opens modal)
  *
