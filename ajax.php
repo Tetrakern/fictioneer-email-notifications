@@ -421,4 +421,7 @@ function fcnen_subscribe_by_follow( $story_id, $force ) {
     ['%s']
   );
 }
-add_action( 'fictioneer_toggled_follow', 'fcnen_subscribe_by_follow', 10, 2 );
+
+if ( get_option( 'fictioneer_enable_follows' ) ) {
+  add_action( 'fictioneer_toggled_follow', 'fcnen_subscribe_by_follow', 10, 2 );
+}

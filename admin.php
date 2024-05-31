@@ -1791,15 +1791,19 @@ function fcnen_admin_account_profile_section( $profile_user ) {
         <input name="fcnen_subscription_code" type="password" id="fcnen_subscription_code" value="<?php echo $code; ?>" class="regular-text">
         <p class="description"><?php _e( 'Found in notification emails. If compromised, delete and renew subscription.', 'fcnen' ); ?></p>
 
-        <br>
+        <?php if ( get_option( 'fictioneer_enable_follows' ) ) : ?>
 
-        <div>
-          <label for="fcnen_enable_subscribe_by_follow" class="checkbox-group">
-            <input type="hidden" name="fcnen_enable_subscribe_by_follow" value="0">
-            <input name="fcnen_enable_subscribe_by_follow" type="checkbox" id="fcnen_enable_subscribe_by_follow" <?php echo checked( 1, get_the_author_meta( 'fcnen_enable_subscribe_by_follow', $profile_user->ID ), false ); ?> value="1">
-            <span><?php _e( 'Subscribe to Stories by Following (not retroactive)', 'fcnen' ); ?></span>
-          </label>
-        </div>
+          <br>
+
+          <div>
+            <label for="fcnen_enable_subscribe_by_follow" class="checkbox-group">
+              <input type="hidden" name="fcnen_enable_subscribe_by_follow" value="0">
+              <input name="fcnen_enable_subscribe_by_follow" type="checkbox" id="fcnen_enable_subscribe_by_follow" <?php echo checked( 1, get_the_author_meta( 'fcnen_enable_subscribe_by_follow', $profile_user->ID ), false ); ?> value="1">
+              <span><?php _e( 'Subscribe to Stories by Following (not retroactive)', 'fcnen' ); ?></span>
+            </label>
+          </div>
+
+        <?php endif; ?>
 
       </fieldset>
     </td>
@@ -1841,7 +1845,7 @@ function fcnen_update_admin_user_profile( $updated_user_id ) {
   }
 
   // Subscribe by Following
-  if ( isset( $_POST['fcnen_enable_subscribe_by_follow'] ) ) {
+  if ( get_option( 'fictioneer_enable_follows' ) && isset( $_POST['fcnen_enable_subscribe_by_follow'] ) ) {
     fictioneer_update_user_meta(
       $updated_user_id,
       'fcnen_enable_subscribe_by_follow',

@@ -709,21 +709,21 @@ function fcnen_account_profile_section( $args ) {
       </div>
     </div>
 
-    <div class="profile__flags">
-
-      <div class="profile__input-wrapper _checkbox">
-        <input type="hidden" name="fcnen_enable_subscribe_by_follow" value="0">
-        <input
-          id="fcnen_enable_subscribe_by_follow"
-          name="fcnen_enable_subscribe_by_follow"
-          type="checkbox"
-          value="1"
-          <?php echo checked( 1, get_the_author_meta( 'fcnen_enable_subscribe_by_follow', $current_user->ID ), false ); ?>
-        >
-        <label for="fcnen_enable_subscribe_by_follow"><?php _e( 'Subscribe to Stories by Following (not retroactive)', 'fcnen' ); ?></label>
+    <?php if ( get_option( 'fictioneer_enable_follows' ) ) : ?>
+      <div class="profile__flags">
+        <div class="profile__input-wrapper _checkbox">
+          <input type="hidden" name="fcnen_enable_subscribe_by_follow" value="0">
+          <input
+            id="fcnen_enable_subscribe_by_follow"
+            name="fcnen_enable_subscribe_by_follow"
+            type="checkbox"
+            value="1"
+            <?php echo checked( 1, get_the_author_meta( 'fcnen_enable_subscribe_by_follow', $current_user->ID ), false ); ?>
+          >
+          <label for="fcnen_enable_subscribe_by_follow"><?php _e( 'Subscribe to Stories by Following (not retroactive)', 'fcnen' ); ?></label>
+        </div>
       </div>
-
-    </div>
+    <?php endif; ?>
 
     <div class="profile__actions">
       <input name="submit" type="submit" value="<?php esc_attr_e( 'Save', 'fictioneer' ) ?>" class="button">
