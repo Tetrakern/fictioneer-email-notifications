@@ -1725,3 +1725,128 @@ function fcnen_save_metabox( $post_id ) {
 add_action( 'save_post_post', 'fcnen_save_metabox', 5 );
 add_action( 'save_post_fcn_story', 'fcnen_save_metabox', 5 );
 add_action( 'save_post_fcn_chapter', 'fcnen_save_metabox', 5 );
+
+// =======================================================================================
+// ADMIN PROFILE
+// =======================================================================================
+
+/**
+ * Renders HTML for the subscription section in the wp-admin user profile
+ *
+ * @since 0.1.0
+ *
+ * @param WP_User $profile_user  The profile user object. Not necessarily the one
+ *                               currently editing the profile!
+ */
+
+function fcnen_admin_account_profile_section( $profile_user ) {
+  // Only for own profile
+  if ( get_current_user_id() !== $profile_user->ID ) {
+    return;
+  }
+
+  // Setup
+  $email = get_user_meta( $profile_user->ID, 'fcnen_subscription_email', true ) ?: '';
+  $code = get_user_meta( $profile_user->ID, 'fcnen_subscription_code', true ) ?: '';
+  $subscriber = null;
+  $link_status = null;
+
+  // Subscription?
+  if ( $email && $code ) {
+    $subscriber = fcnen_get_subscriber_by_email_and_code( $email, $code );
+  }
+
+  // Linked?
+  if ( $subscriber === false ) {
+    $link_status = 'mismatch';
+  } elseif ( ! empty( $subscriber ) ) {
+    $link_status = 'linked';
+  }
+
+  // --- Start HTML ---> ?>
+  <tr class="user-fcnen-subscription-wrap">
+    <th><?php _e( 'Email Subscription', 'fcnen' ); ?></th>
+    <td>
+      <fieldset>
+
+        <p>
+          <?php _e( 'Your email subscription for selected content updates is kept separate from your account, meaning you can use a different email address. But you also need to authenticate with your code every time you wish to view or update your subscription. For convenience, you can link your subscription here.', 'fcnen' ); ?>
+        </p>
+
+        <br>
+
+        <?php
+          if ( $link_status === 'mismatch' ) {
+            echo '<p><strong>' . __( 'No matching subscription found. Please check your email address and code.', 'fcnen' ) . '</strong></p><br>';
+          } elseif ( $link_status === 'linked' ) {
+            echo '<p><strong>' . __( 'Subscription successfully linked.', 'fcnen' ) . '</strong></p><br>';
+          }
+        ?>
+
+        <input name="fcnen_subscription_email" type="email" id="fcnen_subscription_email" value="<?php echo $email; ?>" class="regular-text">
+        <p class="description"><?php _e( 'Email address used for your subscription.', 'fcnen' ); ?></p>
+
+        <br>
+
+        <input name="fcnen_subscription_code" type="password" id="fcnen_subscription_code" value="<?php echo $code; ?>" class="regular-text">
+        <p class="description"><?php _e( 'Found in notification emails. If compromised, delete and renew subscription.', 'fcnen' ); ?></p>
+
+        <br>
+
+        <div>
+          <label for="fcnen_enable_subscribe_by_follow" class="checkbox-group">
+            <input type="hidden" name="fcnen_enable_subscribe_by_follow" value="0">
+            <input name="fcnen_enable_subscribe_by_follow" type="checkbox" id="fcnen_enable_subscribe_by_follow" <?php echo checked( 1, get_the_author_meta( 'fcnen_enable_subscribe_by_follow', $profile_user->ID ), false ); ?> value="1">
+            <span><?php _e( 'Subscribe to Stories by Following (not retroactive)', 'fcnen' ); ?></span>
+          </label>
+        </div>
+
+      </fieldset>
+    </td>
+  </tr>
+  <?php // <--- End HTML
+}
+add_action( 'fictioneer_admin_user_sections', 'fcnen_admin_account_profile_section', 9 );
+
+/**
+ * Update subscription section of the wp-admin user profile
+ *
+ * @since 0.1.0
+ *
+ * @param int $updated_user_id  The ID of the updated user.
+ */
+
+function fcnen_update_admin_user_profile( $updated_user_id ) {
+  // Guard
+  if ( get_current_user_id() !== $updated_user_id || ! check_admin_referer( 'update-user_' . $updated_user_id ) ) {
+    return;
+  }
+
+  // Subscriber email
+  if ( isset( $_POST['fcnen_subscription_email'] ) ) {
+    fictioneer_update_user_meta(
+      $updated_user_id,
+      'fcnen_subscription_email',
+      sanitize_email( $_POST['fcnen_subscription_email'] ?? '' )
+    );
+  }
+
+  // Subscriber code
+  if ( isset( $_POST['fcnen_subscription_code'] ) ) {
+    fictioneer_update_user_meta(
+      $updated_user_id,
+      'fcnen_subscription_code',
+      sanitize_text_field( $_POST['fcnen_subscription_code'] ?? '' )
+    );
+  }
+
+  // Subscribe by Following
+  if ( isset( $_POST['fcnen_enable_subscribe_by_follow'] ) ) {
+    fictioneer_update_user_meta(
+      $updated_user_id,
+      'fcnen_enable_subscribe_by_follow',
+      fictioneer_sanitize_checkbox( $_POST['fcnen_enable_subscribe_by_follow'] ?? 0 )
+    );
+  }
+}
+add_action( 'personal_options_update', 'fcnen_update_admin_user_profile' );

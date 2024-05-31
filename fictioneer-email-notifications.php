@@ -653,7 +653,7 @@ function fcnen_account_profile_section( $args ) {
   $action_url = esc_url( admin_url( 'admin-post.php?action=fcnen_update_profile' ) );
 
   // Subscription?
-  if ( ! empty( $email ) && ! empty( $code ) ) {
+  if ( $email && $code ) {
     $subscription = fcnen_get_subscriber_by_email_and_code( $email, $code );
   }
 
@@ -673,7 +673,7 @@ function fcnen_account_profile_section( $args ) {
 
   <?php
     if ( $link_status === 'mismatch' ) {
-      fictioneer_notice( __( 'No matching subscription found.', 'fcnen' ) );
+      fictioneer_notice( __( 'No matching subscription found. Please check your email address and code.', 'fcnen' ) );
     }
   ?>
 
@@ -720,7 +720,7 @@ function fcnen_account_profile_section( $args ) {
           value="1"
           <?php echo checked( 1, get_the_author_meta( 'fcnen_enable_subscribe_by_follow', $current_user->ID ), false ); ?>
         >
-        <label for="fcnen_enable_subscribe_by_follow"><?php _e( 'Toggle story subscription by Follow (not retroactive)', 'fcnen' ); ?></label>
+        <label for="fcnen_enable_subscribe_by_follow"><?php _e( 'Subscribe to Stories by Following (not retroactive)', 'fcnen' ); ?></label>
       </div>
 
     </div>
