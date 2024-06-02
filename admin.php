@@ -14,6 +14,9 @@ defined( 'ABSPATH' ) OR exit;
  */
 
 function fcnen_settings_card() {
+  // Setup
+  $settings_url = esc_url( admin_url('admin.php?page=fcnen-settings') );
+
   // Start HTML ---> ?>
   <div class="fictioneer-card fictioneer-card--plugin">
     <div class="fictioneer-card__wrapper">
@@ -22,7 +25,18 @@ function fcnen_settings_card() {
 
         <div class="fictioneer-card__row">
           <p><?php
-            _e( 'Subscribe to updates via email.', 'fcnen' );
+            _e( '<strong>Allows users to subscribe to selected updates via email.</strong> You can choose to receive notifications for all new content, specific post types, or selected stories and taxonomies.', 'fcnen' );
+          ?></p>
+        </div>
+
+        <div class="fictioneer-card__row">
+          <p><?php
+            printf(
+              __( 'Active Subscribers: %d &bull; Unconfirmed Subscribers: %d &bull; Triggered Emails: %d', 'fcnen' ),
+              fcnen_get_subscribers_count(),
+              fcnen_get_subscribers_count( false ),
+              absint( get_option( 'fcnen_triggered_email_count' ) ?: 0 )
+            );
           ?></p>
         </div>
 
@@ -30,6 +44,12 @@ function fcnen_settings_card() {
           <?php printf( __( 'Version %s', 'fcnen' ), FCNEN_VERSION ); ?>
           |
           <?php printf( __( 'By <a href="%s">Tetrakern</a>', 'fcnen' ), 'https://github.com/Tetrakern' ); ?>
+          |
+          <a href="<?php echo $settings_url; ?>"><?php _e( 'Settings', 'fcnen' ); ?></a>
+          |
+          <a href="https://ko-fi.com/tetrakern"><?php _e( 'Ko-fi', 'fcnen' ); ?></a>
+          |
+          <a href="https://www.patreon.com/tetrakern"><?php _e( 'Patreon', 'fcnen' ); ?></a>
         </div>
 
       </div>

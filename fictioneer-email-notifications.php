@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Fictioneer Email Notifications
- * Description: Subscribe to updates via email.
+ * Description: Allows users to subscribe to selected updates via email. You can choose to receive notifications for all new content, specific post types, or selected stories and taxonomies.
  * Version: 0.1.0
  * Requires at least: 6.1
  * Requires PHP: 7.4
@@ -15,6 +15,28 @@ defined( 'ABSPATH' ) OR exit;
 
 // Version
 define( 'FCNEN_VERSION', '0.1.0' );
+
+/**
+ * Adds custom meta links to the meta row in the Plugins list table
+ *
+ * @since 0.1.0
+ *
+ * @param array  $links_array  An array of the plugin's metadata, including the
+ *                             version, author, author URI, and plugin URI.
+ * @param string $plugin_file  Path to the plugin file relative to the plugins directory.
+ *
+ * @return array The updated array of links for the plugin row.
+ */
+
+function fcnen_plugin_meta( $links_array, $plugin_file ) {
+  if ( strpos( $plugin_file, basename( __FILE__ ) ) ) {
+    $links_array[] = '<a href="https://ko-fi.com/tetrakern" rel="noopener" target="_blank">' . __( 'Ko-fi', 'fcnen' ) . '</a>';
+    $links_array[] = '<a href="https://www.patreon.com/tetrakern" rel="noopener" target="_blank">' . __( 'Patreon', 'fcnen' ) . '</a>';
+  }
+
+  return $links_array;
+}
+add_filter( 'plugin_row_meta', 'fcnen_plugin_meta', 10, 2 );
 
 // =======================================================================================
 // CONSTANTS & DEFAULTS
@@ -1664,6 +1686,11 @@ function fcnen_send_bulk_notifications( $payload ) {
   if ( empty( $api_key ) ) {
     return new WP_Error( 'api_key_missing', __( 'API key missing.', 'fcnen' ) );
   }
+
+  // Update statistics
+  $count = absint( get_option( 'fcnen_triggered_email_count' ) ?: 0 );
+
+  update_option( 'fcnen_triggered_email_count', $count + count( $payload ), false );
 
   // Send and return response
   return wp_remote_post(
