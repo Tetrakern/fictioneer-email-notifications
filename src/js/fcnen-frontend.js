@@ -4,6 +4,7 @@
 
 const fcnen_modal = document.getElementById('fcnen-subscription-modal');
 const fcnen_targetContainer = fcnen_modal?.querySelector('[data-target="fcnen-modal-loader"]');
+const fcnen_modalLoader = fcnen_modal?.querySelector('[data-target="fcnen-modal-loader"]').cloneNode(true);
 const fcnen_url_params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
 
 if (fcnen_modal) {
@@ -11,7 +12,7 @@ if (fcnen_modal) {
   document.querySelectorAll('[data-click-action*="fcnen-load-modal-form"]').forEach(button => {
     button.addEventListener('click', event => {
       fcnen_getModalForm('new', { id: event.currentTarget.dataset.storyId });
-    }, { once: true });
+    });
   });
 
   // Auto-open modal in edit mode
@@ -27,6 +28,13 @@ if (fcnen_modal) {
   // Shortcode input modal toggles
   document.querySelectorAll('[data-click-action*="fcnen-input-modal-toggle"]').forEach(input => {
     input.addEventListener('click', event => fcnen_shortcodeInputToggle(event.currentTarget));
+  });
+
+  // Reload modal when Follow is toggled
+  document.querySelectorAll('.button-follow-story, [data-click="card-toggle-follow"]').forEach(element => {
+    element.addEventListener('click', () => {
+      fcnen_targetContainer.innerHTML = fcnen_modalLoader.innerHTML;
+    });
   });
 }
 
