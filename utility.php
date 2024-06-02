@@ -517,6 +517,31 @@ function fcnen_get_subscribers( $confirmed = true, $trashed = false ) {
 }
 
 /**
+ * Get count of subscribers
+ *
+ * @since 0.1.0
+ * @global wpdb $wpdb  The WordPress database object.
+ *
+ * @param bool $confirmed  Whether the subscriber must be confirmed. Default true.
+ * @param bool $trashed    Whether the subscriber must be trashed. Default false.
+ *
+ * @return int Count of subscribers.
+ */
+function fcnen_get_subscribers_count( $confirmed = true, $trashed = false ) {
+  global $wpdb;
+
+  // Setup
+  $table_name = $wpdb->prefix . 'fcnen_subscribers';
+  $sql = "SELECT COUNT(*) FROM {$table_name} WHERE confirmed = %d AND trashed = %d";
+
+  // Query
+  $count = $wpdb->get_var( $wpdb->prepare( $sql, $confirmed ? 1 : 0, $trashed ? 1 : 0 ) );
+
+  // Return result
+  return (int) $count;
+}
+
+/**
  * Get array of email-ready subscribers
  *
  * @since 0.1.0
