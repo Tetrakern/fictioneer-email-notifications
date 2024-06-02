@@ -25,7 +25,7 @@ function fcnen_settings_card() {
 
         <div class="fictioneer-card__row">
           <p><?php
-            _e( '<strong>Allows users to subscribe to selected updates via email.</strong> You can choose to receive notifications for all new content, specific post types, or selected stories and taxonomies.', 'fcnen' );
+            _e( '<strong>Allows readers to subscribe to selected updates via email.</strong> You can choose to receive notifications for all new content, specific post types, or selected stories and taxonomies. Works for both guests and registered users.', 'fcnen' );
           ?></p>
         </div>
 

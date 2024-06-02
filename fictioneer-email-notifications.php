@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Fictioneer Email Notifications
- * Description: Allows users to subscribe to selected updates via email. You can choose to receive notifications for all new content, specific post types, or selected stories and taxonomies.
+ * Description: Allows readers to subscribe to selected updates via email. You can choose to receive notifications for all new content, specific post types, or selected stories and taxonomies. Works for both guests and registered users.
  * Version: 0.1.0
  * Requires at least: 6.1
  * Requires PHP: 7.4
