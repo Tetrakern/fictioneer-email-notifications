@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) OR exit;
 
 // Version
 define( 'FCNEN_VERSION', '0.1.0' );
+define( 'FCNEN_RELEASE_TAG', 'v0.0.0.1' );
 
 /**
  * Adds custom meta links to the meta row in the Plugins list table
@@ -228,17 +229,8 @@ function fcnen_add_default_options() {
     }
   }
 
-  // Plugin info
-  if ( ! get_option( 'fcnen_plugin_info' ) ) {
-    $info = array(
-      'install_date' => current_time( 'mysql', 1 ),
-      'last_update_check' => current_time( 'mysql', 1 ),
-      'found_update_version' => '',
-      'last_sent' => ''
-    );
-
-    add_option( 'fcnen_plugin_info', $info );
-  }
+  // Initialize plugin info
+  fcnen_get_plugin_info();
 }
 register_activation_hook( __FILE__, 'fcnen_add_default_options' );
 

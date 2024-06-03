@@ -154,12 +154,27 @@ function fcnen_get_plugin_info() {
   // Setup
   $info = get_option( 'fcnen_plugin_info' ) ?: [];
 
+  // Set up if missing
+  if ( ! $info || ! is_array( $info ) ) {
+    $info = array(
+      'install_date' => current_time( 'mysql', 1 ),
+      'last_update_check' => current_time( 'mysql', 1 ),
+      'found_update_version' => '',
+      'last_sent' => '',
+      'last_update_nag' => current_time( 'mysql', 1 )
+    );
+
+    update_option( 'fcnen_plugin_info', $info, 'yes' );
+  }
+
   // Merge with defaults (in case of incomplete data)
   $info = array_merge(
     array(
       'install_date' => current_time( 'mysql', 1 ),
       'last_update_check' => current_time( 'mysql', 1 ),
-      'found_update_version' => ''
+      'found_update_version' => '',
+      'last_sent' => '',
+      'last_update_nag' => ''
     ),
     $info
   );

@@ -4,6 +4,113 @@
 defined( 'ABSPATH' ) OR exit;
 
 // =======================================================================================
+// UPDATES
+// =======================================================================================
+
+/**
+ * Check Github repository for a new release
+ *
+ * @since 0.1.0
+ *
+ * @return boolean True if there is a newer version, false if not.
+ */
+
+function fcnen_check_for_updates() {
+  global $pagenow;
+
+  // Setup
+  $plugin_info = fcnen_get_plugin_info();
+  $last_check_timestamp = strtotime( $plugin_info['last_update_check'] ?? 0 );
+  $remote_version = $plugin_info['found_update_version'];
+  $is_updates_page = $pagenow === 'update-core.php';
+
+  // Only call API every 12 hours, otherwise check database (except on Updates page)
+  if (
+    $remote_version &&
+    ! $is_updates_page &&
+    current_time( 'timestamp', true ) < $last_check_timestamp + HOUR_IN_SECONDS * 12
+  ) {
+    return version_compare( $remote_version, FCNEN_RELEASE_TAG, '>' );
+  }
+
+  // Remember this check
+  $plugin_info['last_update_check'] = current_time( 'mysql', 1 );
+
+  // Request to repository
+  $response = wp_remote_get(
+    'https://api.github.com/repos/Tetrakern/fictioneer-email-notifications/releases/latest',
+    array( 'headers' => array( 'User-Agent' => 'FICTIONEER_EMAIL_NOTIFICATIONS' ) )
+  );
+
+  // Abort if request failed or is not a 2xx success status code
+  if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) >= 300 ) {
+    return false;
+  }
+
+  // Decode JSON to array
+  $release = json_decode( wp_remote_retrieve_body( $response ), true );
+
+  // Abort if request did not return expected data
+  if ( ! isset( $release['tag_name'] ) ) {
+    return false;
+  }
+
+  // Remember latest version
+  $plugin_info['found_update_version'] = $release['tag_name'];
+
+  // Update info in database
+  update_option( 'fcnen_plugin_info', $plugin_info );
+
+  // Compare with currently installed version
+  return version_compare( $release['tag_name'], FCNEN_RELEASE_TAG, '>' );
+}
+
+/**
+ * Show notice when a newer version is available
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_admin_update_notice() {
+  // Guard
+  if ( ! current_user_can( 'install_themes' ) || ! fcnen_check_for_updates() ) {
+    return;
+  }
+
+  global $pagenow;
+
+  // Setup
+  $plugin_info = fcnen_get_plugin_info();
+  $last_update_nag = strtotime( $plugin_info['last_update_nag'] ?? 0 );
+  $is_updates_page = $pagenow == 'update-core.php';
+
+  // Show only once every hour (except on Updates page)
+  if ( ! $is_updates_page && current_time( 'timestamp', true ) < $last_update_nag + HOUR_IN_SECONDS ) {
+    return;
+  }
+
+  // Render notice
+  wp_admin_notice(
+    sprintf(
+      __( '<strong>Fictioneer Email Notifications %1$s</strong> is available. Please <a href="%2$s" target="_blank">download</a> and install the latest version at your next convenience.', 'fcnen' ),
+      $plugin_info['found_update_version'],
+      'https://api.github.com/repos/Tetrakern/fictioneer-email-notifications/releases/'
+    ),
+    array(
+      'type' => 'warning',
+      'dismissible' => true
+    )
+  );
+
+  // Remember notice
+  $plugin_info['last_update_nag'] = current_time( 'mysql', 1 );
+
+  // Update info in database
+  update_option( 'fcnen_plugin_info', $plugin_info );
+}
+add_action( 'admin_notices', 'fcnen_admin_update_notice' );
+
+// =======================================================================================
 // REGISTER WITH THEME
 // =======================================================================================
 
