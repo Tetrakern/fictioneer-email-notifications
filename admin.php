@@ -94,8 +94,8 @@ function fcnen_admin_update_notice() {
   $last_update_nag = strtotime( $plugin_info['last_update_nag'] ?? 0 );
   $is_updates_page = $pagenow == 'update-core.php';
 
-  // Show only once every 5 minutes (except on Updates page)
-  if ( ! $is_updates_page && current_time( 'timestamp', true ) < $last_update_nag + 300 ) {
+  // Show only once every minute (except on Updates page)
+  if ( ! $is_updates_page && current_time( 'timestamp', true ) < $last_update_nag + 60 ) {
     return;
   }
 
