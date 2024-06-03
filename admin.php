@@ -39,7 +39,13 @@ function fcnen_check_for_updates() {
   // Request to repository
   $response = wp_remote_get(
     'https://api.github.com/repos/Tetrakern/fictioneer-email-notifications/releases/latest',
-    array( 'headers' => array( 'User-Agent' => 'FICTIONEER_EMAIL_NOTIFICATIONS' ) )
+    array(
+      'headers' => array(
+        'User-Agent' => 'FICTIONEER_EMAIL_NOTIFICATIONS',
+        'Accept' => 'application/vnd.github+json',
+        'X-GitHub-Api-Version' => '2022-11-28'
+      )
+    )
   );
 
   // Abort if request failed or is not a 2xx success status code
