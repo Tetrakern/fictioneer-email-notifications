@@ -55,14 +55,18 @@ function fcnen_check_for_updates() {
 
   // Decode JSON to array
   $release = json_decode( wp_remote_retrieve_body( $response ), true );
+  $release_tag = sanitize_text_field( $release['tag_name'] ?? '' );
 
   // Abort if request did not return expected data
-  if ( ! isset( $release['tag_name'] ) ) {
+  if ( ! $release_tag ) {
     return false;
   }
 
   // Remember latest version
-  $plugin_info['found_update_version'] = $release['tag_name'];
+  $plugin_info['found_update_version'] = $release_tag;
+
+  // Get update notes
+  $plugin_info['update_notes'] = sanitize_textarea_field( $release['body'] ?? '' );
 
   // Update info in database
   update_option( 'fcnen_plugin_info', $plugin_info );
@@ -90,8 +94,8 @@ function fcnen_admin_update_notice() {
   $last_update_nag = strtotime( $plugin_info['last_update_nag'] ?? 0 );
   $is_updates_page = $pagenow == 'update-core.php';
 
-  // Show only once every hour (except on Updates page)
-  if ( ! $is_updates_page && current_time( 'timestamp', true ) < $last_update_nag + HOUR_IN_SECONDS ) {
+  // Show only once every 5 minutes (except on Updates page)
+  if ( ! $is_updates_page && current_time( 'timestamp', true ) < $last_update_nag + 300 ) {
     return;
   }
 

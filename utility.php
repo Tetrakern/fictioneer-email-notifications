@@ -161,7 +161,8 @@ function fcnen_get_plugin_info() {
       'last_update_check' => current_time( 'mysql', 1 ),
       'found_update_version' => '',
       'last_sent' => '',
-      'last_update_nag' => current_time( 'mysql', 1 )
+      'last_update_nag' => current_time( 'mysql', 1 ),
+      'update_notes' => ''
     );
 
     update_option( 'fcnen_plugin_info', $info, 'yes' );
@@ -174,7 +175,8 @@ function fcnen_get_plugin_info() {
       'last_update_check' => current_time( 'mysql', 1 ),
       'found_update_version' => '',
       'last_sent' => '',
-      'last_update_nag' => ''
+      'last_update_nag' => '',
+      'update_notes' => ''
     ),
     $info
   );
