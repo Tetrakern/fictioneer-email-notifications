@@ -62,17 +62,16 @@ function fcnen_check_for_updates() {
     return false;
   }
 
-  // Remember latest version
+  // Add to plugin info
   $plugin_info['found_update_version'] = $release_tag;
-
-  // Get update notes
   $plugin_info['update_notes'] = sanitize_textarea_field( $release['body'] ?? '' );
+  $plugin_info['last_update_nag'] = '';
 
   // Update info in database
   update_option( 'fcnen_plugin_info', $plugin_info );
 
   // Compare with currently installed version
-  return version_compare( $release['tag_name'], FCNEN_RELEASE_TAG, '>' );
+  return version_compare( $release_tag, FCNEN_RELEASE_TAG, '>' );
 }
 
 /**
@@ -100,15 +99,19 @@ function fcnen_admin_update_notice() {
   }
 
   // Render notice
+  $notes = fcnen_prepare_release_notes( $plugin_info['update_notes'] ?? '' );
+
   wp_admin_notice(
     sprintf(
-      __( '<strong>Fictioneer Email Notifications %1$s</strong> is available. Please <a href="%2$s" target="_blank">download</a> and install the latest version at your next convenience.', 'fcnen' ),
+      __( '<strong>Fictioneer Email Notifications %1$s</strong> is available. Please <a href="%2$s" target="_blank">download</a> and install the latest version at your next convenience.%3$s', 'fcnen' ),
       $plugin_info['found_update_version'],
-      'https://api.github.com/repos/Tetrakern/fictioneer-email-notifications/releases/'
+      'https://api.github.com/repos/Tetrakern/fictioneer-email-notifications/releases/',
+      $notes ? '<br><details><summary>' . __( 'Release Notes', 'fcnen' ) . '</summary>' . $notes . '</details>' : ''
     ),
     array(
       'type' => 'warning',
-      'dismissible' => true
+      'dismissible' => true,
+      'additional_classes' => ['fictioneer-update-notice']
     )
   );
 
@@ -119,6 +122,44 @@ function fcnen_admin_update_notice() {
   update_option( 'fcnen_plugin_info', $plugin_info );
 }
 add_action( 'admin_notices', 'fcnen_admin_update_notice' );
+
+/**
+ * Extracts the release notes from the update message
+ *
+ * @since 0.1.0
+ *
+ * @param string $message  Update message received.
+ *
+ * @return string The release notes or original message if not found.
+ */
+
+function fcnen_prepare_release_notes( $message ) {
+  $pos = strpos( $message, '### Release Notes' );
+
+  if ( $pos !== false ) {
+    $message = trim( substr( $message, $pos + strlen( '### Release Notes' ) ) );
+    $lines = explode( "\n", $message );
+    $notes = '';
+
+    foreach ( $lines as $line ) {
+      $line = trim( $line );
+
+      if ( strpos( $line, '* ' ) === 0 ) {
+        $notes .= '<li>' . substr( $line, 2 ) . '</li>';
+      } else {
+        $notes .= $line;
+      }
+    }
+
+    if ( strpos( $notes, '<li>' ) !== false ) {
+      return "<ul>{$notes}</ul>";
+    } else {
+      return "<p>{$notes}</p>";
+    }
+  }
+
+  return "<p>{$message}</p>";
+}
 
 // =======================================================================================
 // REGISTER WITH THEME
