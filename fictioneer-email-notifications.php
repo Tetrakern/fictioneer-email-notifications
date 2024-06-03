@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) OR exit;
 
 // Version
 define( 'FCNEN_VERSION', '0.1.0' );
-define( 'FCNEN_RELEASE_TAG', 'v0.0.0.1' );
+define( 'FCNEN_RELEASE_TAG', 'v0.1.0' );
 
 /**
  * Adds custom meta links to the meta row in the Plugins list table
