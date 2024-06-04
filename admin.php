@@ -105,7 +105,7 @@ function fcnen_admin_update_notice() {
     sprintf(
       __( '<strong>Fictioneer Email Notifications %1$s</strong> is available. Please <a href="%2$s" target="_blank">download</a> and install the latest version at your next convenience.%3$s', 'fcnen' ),
       $plugin_info['found_update_version'],
-      'https://api.github.com/repos/Tetrakern/fictioneer-email-notifications/releases/',
+      'https://github.com/Tetrakern/fictioneer-email-notifications/releases',
       $notes ? '<br><details><summary>' . __( 'Release Notes', 'fcnen' ) . '</summary>' . $notes . '</details>' : ''
     ),
     array(
