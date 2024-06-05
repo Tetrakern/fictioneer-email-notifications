@@ -89,6 +89,7 @@ function fcnen_option_defaults( $option = null ) {
       'fcnen_flag_allow_passwords' => 0,
       'fcnen_flag_allow_hidden' => 0,
       'fcnen_flag_purge_on_deactivation' => 0,
+      'fcnen_flag_disable_blocked_enqueue' => 0,
       'fcnen_excerpt_length' => 256,
       'fcnen_max_per_term' => 10,
       'fcnen_excluded_posts' => [],
