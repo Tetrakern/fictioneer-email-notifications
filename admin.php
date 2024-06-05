@@ -21,7 +21,7 @@ function fcnen_check_for_updates() {
   // Setup
   $plugin_info = fcnen_get_plugin_info();
   $last_check_timestamp = strtotime( $plugin_info['last_update_check'] ?? 0 );
-  $remote_version = $plugin_info['found_update_version'];
+  $remote_version = $plugin_info['last_update_version'];
   $is_updates_page = $pagenow === 'update-core.php';
 
   // Only call API every 12 hours, otherwise check database (except on Updates page)
@@ -63,8 +63,8 @@ function fcnen_check_for_updates() {
   }
 
   // Add to plugin info
-  $plugin_info['found_update_version'] = $release_tag;
-  $plugin_info['update_notes'] = sanitize_textarea_field( $release['body'] ?? '' );
+  $plugin_info['last_update_version'] = $release_tag;
+  $plugin_info['last_update_notes'] = sanitize_textarea_field( $release['body'] ?? '' );
   $plugin_info['last_update_nag'] = '';
 
   // Update info in database
@@ -99,12 +99,12 @@ function fcnen_admin_update_notice() {
   }
 
   // Render notice
-  $notes = fcnen_prepare_release_notes( $plugin_info['update_notes'] ?? '' );
+  $notes = fcnen_prepare_release_notes( $plugin_info['last_update_notes'] ?? '' );
 
   wp_admin_notice(
     sprintf(
       __( '<strong>Fictioneer Email Notifications %1$s</strong> is available. Please <a href="%2$s" target="_blank">download</a> and install the latest version at your next convenience.%3$s', 'fcnen' ),
-      $plugin_info['found_update_version'],
+      $plugin_info['last_update_version'],
       'https://github.com/Tetrakern/fictioneer-email-notifications/releases',
       $notes ? '<br><details><summary>' . __( 'Release Notes', 'fcnen' ) . '</summary>' . $notes . '</details>' : ''
     ),
