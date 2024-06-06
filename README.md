@@ -43,6 +43,10 @@ Additionally, you can use the `[fictioneer_email_subscription]` shortcode to ren
 
 ### Notifications
 
+This page provides a list table of all notifications, both unsent and sent (if not cleared). Blog posts, stories, and chapters are automatically enqueued when published for the first time. You also have the option to add them manually using their ID, which can be found in the URL of the post edit screen. Duplicates and ineligible posts are either skipped or marked accordingly if already present in the table. The status column indicates the current state of each notification, while other columns provide additional information.
+
+Each post features a meta box in the sidebar with related information, such as the dates when it has been enqueued and sent. You can send notifications multiple times if desired. Two convenient checkbox flags allow you to re-enqueue a post once when updated or exclude it entirely. This is currently limited to administrators.
+
 ### Send Emails
 
 ### Subscribers
