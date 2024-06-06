@@ -154,6 +154,12 @@
       "rFN" : 0,
       "uCM" : 0
     },
+    "\/repo" : {
+      "ft" : 65536,
+      "oA" : 1,
+      "oAP" : "\/repo",
+      "oF" : 0
+    },
     "\/src\/js\/fcnen-admin.js" : {
       "bF" : 0,
       "ft" : 64,
@@ -1798,7 +1804,7 @@
     ],
     "rollupTreeshakingEnabled" : 1,
     "rollupTreeshakingModuleSideEffects" : 1,
-    "skippedFoldersString" : "log, _logs, logs, _cache, cache, .idea, \/storage\/framework\/sessions, node_modules",
+    "skippedFoldersString" : ".idea,node_modules,_logs,_cache,log,cache,\/storage\/framework\/sessions,\/repo,logs",
     "sourceFolderName" : "source",
     "susyVersion" : 3,
     "tsAllowArbitraryExtensions" : 0,

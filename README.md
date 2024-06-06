@@ -11,6 +11,8 @@ This WordPress plugin is built exclusively for the Fictioneer theme, version 5.1
 
 Currently, the plugin is integrated with the [MailerSend](https://www.mailersend.com/) email service provider. MailerSend offers a generous free plan of 3,000 emails per month and bulk emails. This should last you a long time before you need a paid plan, at which point you should have the support to afford it.
 
+![Modal Preview](repo/assets/fcnen_modal_preview.gif?raw=true)
+
 ## Installation
 
 Same as the Fictioneer theme, the plugin is not available from the official library and needs to be installed and updated manually.
@@ -27,9 +29,12 @@ After installing the plugin, follow these steps to set up MailerSend:
 2. [Add your domain for API access](https://www.mailersend.com/help/how-to-verify-and-authenticate-a-sending-domain). This step may seem intimidating if you are not experienced with such things, but MailerSend provides a comprehensive guide with examples for different hosts. If you are on a managed host, you should be able to ask the support for help.
 3. Once your domain is set up, add your API key in your WordPress dashboard under **Notifications > Settings**.
 
-MailerSend also offers a [WordPress plugin](https://www.mailersend.com/integrations/official-smtp-plugin) for your day-to-day transactional emails, such as email change confirmations. Please note that it is not required for this notification plugin and does not assist with its functionality. But if you already have a MailerSend account, you might as well use it.
+MailerSend also offers a [WordPress plugin](https://www.mailersend.com/integrations/official-smtp-plugin) for your day-to-day transactional emails, such as email change confirmations. Please note that it is not required for this notification plugin and does not assist with its functionality. But if you already have a MailerSend account, you may as well use it.
 
 ## Configuration
+
+
+
 
 
 
