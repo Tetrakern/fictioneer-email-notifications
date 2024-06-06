@@ -1776,6 +1776,11 @@ function fcnen_log_page() {
  */
 
 function fcnen_register_metabox() {
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) ) {
+    return;
+  }
+
   add_meta_box(
     'fcnen-email-notifications',
     __( 'Email Notifications', 'fcnen' ),
@@ -1798,6 +1803,11 @@ add_action( 'add_meta_boxes', 'fcnen_register_metabox' );
  */
 
 function fcnen_add_metabox_classes( $classes ) {
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) ) {
+    return;
+  }
+
   // Add class
   $classes[] = 'fcnen-metabox';
 
@@ -1817,6 +1827,11 @@ add_filter( 'postbox_classes_fcn_chapter_fcnen-email-notifications', 'fcnen_add_
  */
 
 function fcnen_render_metabox( $post ) {
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) ) {
+    return;
+  }
+
   // Setup
   $nonce = wp_create_nonce( 'fcnen-metabox-nonce' );
   $meta = fcnen_get_meta( $post->ID );
@@ -1896,6 +1911,11 @@ function fcnen_render_metabox( $post ) {
 function fcnen_save_metabox( $post_id ) {
   // Verify request
   if ( ! wp_verify_nonce( $_POST['fcnen-nonce'] ?? '', 'fcnen-metabox-nonce' ) ) {
+    return;
+  }
+
+  // Guard
+  if ( ! current_user_can( 'manage_options' ) ) {
     return;
   }
 
