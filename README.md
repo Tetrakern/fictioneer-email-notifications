@@ -21,9 +21,13 @@ Same as the Fictioneer theme, the plugin is not available from the official libr
 4. Select the downloaded zip file and click **Install Now**.
 5. Activate the plugin once the installation is complete.
 
+After installing the plugin, follow these steps to set up MailerSend:
 
+1. Register with [MailerSend](https://www.mailersend.com/help/getting-started).
+2. [Add your domain for API access](https://www.mailersend.com/help/how-to-verify-and-authenticate-a-sending-domain). This step may seem intimidating if you are not experienced with such things, but MailerSend provides a comprehensive guide with examples for different hosts.
+3. Once your domain is set up, add your API key in your WordPress dashboard under **Notifications > Settings**.
 
-
+MailerSend also offers a [WordPress plugin](https://www.mailersend.com/integrations/official-smtp-plugin) for your day-to-day transactional emails. Please note that it is not required for this notification plugin and does not assist with its functionality.
 
 ## Configuration
 
