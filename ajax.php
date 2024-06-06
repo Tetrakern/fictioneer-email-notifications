@@ -60,7 +60,7 @@ function fictioneer_ajax_fcnen_subscribe_or_update() {
   $categories = fcnen_get_array_from_post_string( 'categories' );
   $tags = fcnen_get_array_from_post_string( 'tags' );
   $taxonomies = fcnen_get_array_from_post_string( 'taxonomies' );
-  $default_notice = __( 'Submission successful. If everything was in order, you will get an email.', 'fcnen' );
+  $default_notice = __( 'Submission successful. If everything is in order, you will get an email.', 'fcnen' );
   $result = false;
 
   // Validate email
