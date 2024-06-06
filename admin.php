@@ -221,12 +221,12 @@ if ( is_admin() ) {
 }
 
 /**
- * Checks for the Fictioneer (parent) theme, deactivates plugin if not found
+ * Checks whether the requirements are fulfilled, deactivates plugin if not
  *
  * @since 0.1.0
  */
 
-function fcnen_check_theme() {
+function fcnen_check_plugin_requirements() {
   // Setup
   $current_theme = wp_get_theme();
 
@@ -253,10 +253,27 @@ function fcnen_check_theme() {
       )
     );
   }
+
+  // Must be Fictioneer 5.19.0 or higher
+  if ( version_compare( $current_theme->get('Version'), '5.19.0', '<' ) ) {
+    require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
+    // Deactivate plugin
+    deactivate_plugins( 'fictioneer-email-notifications/fictioneer-email-notifications.php' );
+
+    // Display admin notice
+    wp_admin_notice(
+      __( 'Fictioneer Email Notifications requires the Fictioneer theme, version 5.19.0 or higher. The plugin has been deactivated.', 'fcnen' ),
+      array(
+        'type' => 'error',
+        'dismissible' => true
+      )
+    );
+  }
 }
 
 if ( is_admin() ) {
-  add_action( 'after_setup_theme', 'fcnen_check_theme' );
+  add_action( 'after_setup_theme', 'fcnen_check_plugin_requirements' );
 }
 
 // =======================================================================================
