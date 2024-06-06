@@ -173,7 +173,7 @@ function fcnen_prepare_release_notes( $message ) {
 
 function fcnen_settings_card() {
   // Setup
-  $settings_url = esc_url( admin_url('admin.php?page=fcnen-settings') );
+  $settings_url = esc_url( admin_url( 'admin.php?page=fcnen-settings' ) );
 
   // Start HTML ---> ?>
   <div class="fictioneer-card fictioneer-card--plugin">

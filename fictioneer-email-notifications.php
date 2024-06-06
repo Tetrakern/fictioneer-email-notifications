@@ -17,27 +17,6 @@ defined( 'ABSPATH' ) OR exit;
 define( 'FCNEN_VERSION', '0.1.0' );
 define( 'FCNEN_RELEASE_TAG', 'v0.1.0' );
 
-/**
- * Adds custom meta links to the meta row in the Plugins list table
- *
- * @since 0.1.0
- *
- * @param array  $links_array  An array of the plugin's metadata, including the
- *                             version, author, author URI, and plugin URI.
- * @param string $plugin_file  Path to the plugin file relative to the plugins directory.
- *
- * @return array The updated array of links for the plugin row.
- */
-
-function fcnen_plugin_meta( $links_array, $plugin_file ) {
-  if ( strpos( $plugin_file, basename( __FILE__ ) ) ) {
-    $links_array[] = '<a data-fcn-dialog-target="fcn-sponsor-modal"><span class="dashicons dashicons-star-filled" style="font-size: 1em; line-height: 1; height: auto; width: auto; vertical-align: baseline; transform: translateY(0.1em);"></span> ' . __( 'Support the Development', 'fictioneer' ) . '</a>';
-  }
-
-  return $links_array;
-}
-add_filter( 'plugin_row_meta', 'fcnen_plugin_meta', 10, 2 );
-
 // =======================================================================================
 // CONSTANTS & DEFAULTS
 // =======================================================================================
@@ -203,6 +182,55 @@ if ( is_admin() ) {
   require_once plugin_dir_path( __FILE__ ) . 'actions.php';
   require_once plugin_dir_path( __FILE__ ) . 'admin.php';
   require_once plugin_dir_path( __FILE__ ) . 'ajax.php';
+}
+
+// =======================================================================================
+// PLUGINS PAGE
+// =======================================================================================
+
+/**
+ * Adds custom meta links to the meta row in the Plugins list table
+ *
+ * @since 0.1.0
+ *
+ * @param array  $links_array  An array of the plugin's metadata, including the
+ *                             version, author, author URI, and plugin URI.
+ * @param string $plugin_file  Path to the plugin file relative to the plugins directory.
+ *
+ * @return array The updated array of links for the plugin row.
+ */
+
+function fcnen_plugin_meta( $links_array, $plugin_file ) {
+  if ( strpos( $plugin_file, basename( __FILE__ ) ) ) {
+    $links_array[] = '<a data-fcn-dialog-target="fcn-sponsor-modal"><span class="dashicons dashicons-star-filled" style="font-size: 1em; line-height: 1; height: auto; width: auto; vertical-align: baseline; transform: translateY(0.1em);"></span> ' . __( 'Support the Development', 'fictioneer' ) . '</a>';
+  }
+
+  // Continue filter
+  return $links_array;
+}
+
+/**
+ * Add action link to settings page on Plugins page
+ *
+ * @since 0.1.0
+ *
+ * @param array  $actions  An array of plugin action links.
+ *
+ * @return array The updated array of action links.
+ */
+
+function fcnen_add_plugin_page_settings_link( $actions ) {
+  // Setup
+  $settings_url = esc_url( admin_url( 'admin.php?page=fcnen-settings' ) );
+  $settings = ['<a href="' . $settings_url . '">' . __( 'Settings', 'fcnen' ) . '</a>'];
+
+  // Continue filter
+  return array_merge( $settings, $actions );
+}
+
+if ( is_admin() ) {
+  add_filter( 'plugin_row_meta', 'fcnen_plugin_meta', 10, 2 );
+  add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'fcnen_add_plugin_page_settings_link' );
 }
 
 // =======================================================================================
