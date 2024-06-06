@@ -31,8 +31,7 @@ define( 'FCNEN_RELEASE_TAG', 'v0.1.0' );
 
 function fcnen_plugin_meta( $links_array, $plugin_file ) {
   if ( strpos( $plugin_file, basename( __FILE__ ) ) ) {
-    $links_array[] = '<a href="https://ko-fi.com/tetrakern" rel="noopener" target="_blank">' . __( 'Ko-fi', 'fcnen' ) . '</a>';
-    $links_array[] = '<a href="https://www.patreon.com/tetrakern" rel="noopener" target="_blank">' . __( 'Patreon', 'fcnen' ) . '</a>';
+    $links_array[] = '<a data-fcn-dialog-target="fcn-sponsor-modal"><span class="dashicons dashicons-star-filled" style="font-size: 1em; line-height: 1; height: auto; width: auto; vertical-align: baseline; transform: translateY(0.1em);"></span> ' . __( 'Support the Development', 'fictioneer' ) . '</a>';
   }
 
   return $links_array;
