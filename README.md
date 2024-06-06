@@ -28,16 +28,29 @@ Same as the Fictioneer theme, the plugin is not available from the official libr
 After installing the plugin, follow these steps to set up MailerSend:
 
 1. Register with [MailerSend](https://www.mailersend.com/help/getting-started).
-2. [Add your domain for API access](https://www.mailersend.com/help/how-to-verify-and-authenticate-a-sending-domain). This step may seem intimidating if you are not experienced with such things, but MailerSend provides a comprehensive guide with examples for different hosts. If you are on a managed host, you should be able to ask the support for help.
+2. [Add your domain for API access](https://www.mailersend.com/help/how-to-verify-and-authenticate-a-sending-domain). This step may seem intimidating if you are not experienced with such things, but MailerSend provides a comprehensive guide with examples for different hosts. If you are on a managed host, you should be able to ask the support for help as well.
 3. Once your domain is set up, add your API key in your WordPress dashboard under **Notifications > Settings**.
 
-MailerSend also offers a [WordPress plugin](https://www.mailersend.com/integrations/official-smtp-plugin) for your day-to-day transactional emails, such as email change confirmations. Please note that it is not required for this notification plugin and does not assist with its functionality. But if you already have a MailerSend account, you may as well use it.
+MailerSend also offers a [WordPress plugin](https://www.mailersend.com/integrations/official-smtp-plugin) for your day-to-day transactional emails, such as email confirmations. Please note that it is not required for this notification plugin and does not assist with its functionality. But if you already have a MailerSend account, you may as well use it.
 
-## Configuration
+## Integration
 
+The plugin integrates seamlessly into the Fictioneer theme. You’ll find a new option in the \[Subscribe] popup menu, the user menu, and the mobile menu to open the subscription modal. The user profile is extended with a new section to link your subscription, which can use a different email address, and enable Follows to automatically subscribe to a story.
 
+Additionally, you can use the `[fictioneer_email_subscription]` shortcode to render an email input field that serves as a toggle for the modal. The optional `placeholder=""` parameter allows you to customize the text. Beyond this, there is nothing else to do on the frontend.
 
+## Dashboard
 
+### Notifications
 
+### Send Emails
 
-## Limitations
+### Subscribers
+
+### Templates
+
+### Settings
+
+### Log
+
+## Frequently Asked Question
