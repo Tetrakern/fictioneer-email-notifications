@@ -11,7 +11,9 @@ This WordPress plugin is built exclusively for the Fictioneer theme, version 5.1
 
 Currently, the plugin is integrated with the [MailerSend](https://www.mailersend.com/) email service provider. MailerSend offers a generous free plan of 3,000 emails per month and bulk emails. This should last you a long time before you need a paid plan, at which point you should have the support to afford it.
 
-![Modal Preview](repo/assets/fcnen_modal_preview.gif?raw=true)
+<p align="center">
+  <img src="repo/assets/fcnen_modal_preview.gif?raw=true" alt="Modal Preview" />
+</p>
 
 ## Installation
 
