@@ -50,6 +50,9 @@ function fcnen_check_for_updates() {
 
   // Abort if request failed or is not a 2xx success status code
   if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) >= 300 ) {
+    // Remember check to avoid continuous tries on each page load
+    update_option( 'fcnen_plugin_info', $plugin_info );
+
     return false;
   }
 
