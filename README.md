@@ -42,6 +42,7 @@ Additionally, you can use the `[fictioneer_email_subscription]` shortcode to ren
 ![User Menu Entry](repo/assets/frontend_2.png?raw=true)
 ![Subscribe Button](repo/assets/frontend_1.png?raw=true)
 ![Profile Section](repo/assets/frontend_3.png?raw=true)
+![Shortcode](repo/assets/shortcode.png?raw=true)
 
 ## Dashboard
 
