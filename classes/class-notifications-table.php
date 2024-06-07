@@ -9,6 +9,22 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 /**
+ * Adds post_id to the list of removable query arguments
+ *
+ * @since 0.1.0
+ *
+ * @param array $args  The list of removable query arguments.
+ *
+ * @return array The modified list of removable query arguments.
+ */
+
+function fcnen_removable_args( $args ) {
+  $args[] = 'post_id';
+
+  return $args;
+}
+
+/**
  * Class FCNEN_Notifications_Table
  *
  * @since 0.1.0
@@ -52,6 +68,9 @@ class FCNEN_Notifications_Table extends WP_List_Table {
         wp_die( __( 'Nonce verification failed. Please try again.', 'fcnen' ) );
       }
     }
+
+    // Remove post_id query arg
+    add_filter( 'removable_query_args', 'fcnen_removable_args' );
 
     // Initialize
     $table_name = $wpdb->prefix . 'fcnen_notifications';
