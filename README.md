@@ -100,11 +100,13 @@ The basic setup and options.
 
 * **Sender Email:** The email address used for outgoing emails. Defaults to noreply@* or admin email address.
 * **Sender Name:** The name used for outgoing emails. Defaults to site name.
-* **Options: Allow subscriptions to stories:** Enables subscribers to subscribe directly to stories.
-* **Options: Allow subscriptions to taxonomies:** Enables subscribers to subscribe directly to taxonomies (tags, genres, etc.).
-* **Options: Unblock notifications for protected posts:** Allow notification about password-protected posts.
-* **Options: Unblock notifications for hidden posts:** Allow notification about hidden (unlisted) posts.
-* **Options: Do not enqueue blocked posts upon publishing:** By default, blocked posts are still enqueued but cannot be sent. This option prevents blocked posts from being enqueued upon publishing.
+* **Option: Allow subscriptions to stories:** Enables subscribers to subscribe directly to stories.
+* **Option: Allow subscriptions to taxonomies:** Enables subscribers to subscribe directly to taxonomies.
+* **Option: Unblock notifications for protected posts:** Allow notification about password-protected posts.
+* **Option: Unblock notifications for hidden posts:** Allow notification about hidden (unlisted) posts.
+* **Option: Do not enqueue blocked posts upon publishing:** By default, blocked posts are still enqueued but cannot be sent. This option prevents blocked posts from being enqueued upon publishing.
+* **Excerpts:** The maximum characters for generated excerpts (default 256). Custom excerpts are not limited.
+* **Maximums:** The maximum subscription items per category, tag, and taxonomies (default 10). Disable with 0.
 
 ### Log
 
