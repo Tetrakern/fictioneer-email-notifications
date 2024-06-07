@@ -1664,6 +1664,7 @@ function fcnen_process_email_queue( $index = 0, $new = false ) {
   } else {
     $queue['batches'][ $index ]['success'] = false;
     $queue['batches'][ $index ]['status'] = 'error';
+    $queue['batches'][ $index ]['error'] = $response->get_error_message();
 
     fcnen_log( sprintf( __( 'Sending Error: %s', 'fcnen' ), $response->get_error_message() ) );
   }

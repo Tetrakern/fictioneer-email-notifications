@@ -1921,7 +1921,17 @@ function fcnen_build_queue_html( $batches, $index = -1 ) {
       $icon = ' <i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i>';
     }
 
-    $html .= '<span class="fcnen-queue-batch__status"><span>' . $translations[ $status ] . '</span>' . $icon . '</span>';
+    if ( $status === 'error' ) {
+      $status_html = ( $batch['error'] ?? 0 ) ?
+        sprintf(
+          _x( 'Error: %s', 'Queue error message.', 'fcnen' ),
+          $batch['error']
+        ) : $translations[ $status ];
+    } else {
+      $status_html = $translations[ $status ];
+    }
+
+    $html .= '<span class="fcnen-queue-batch__status"><span>' . $status_html . '</span>' . $icon . '</span>';
 
     if ( $batch['code'] ?? 0 ) {
       $html .= ' | <span class="fcnen-queue-batch__code">' .
@@ -2034,7 +2044,8 @@ function fcnen_get_email_queue() {
       'payload' => $chunk,
       'attempts' => 0,
       'code' => null,
-      'response' => null
+      'response' => null,
+      'error' => null
     );
   }
 
