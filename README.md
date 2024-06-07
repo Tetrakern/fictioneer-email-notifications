@@ -67,13 +67,19 @@ The queue is processed via Fetch API requests, providing you with real-time info
 
 To reduce the number of emails sent, multiple notifications are aggregated into a single email. This ensures that subscribers receive a concise summary of updates rather than individual ones, minimizing email clutter and reducing the risk of being classified as spam.
 
-Note that the MailerSend API has a rate limit of 10 requests per minute and 1,000 requests per day, at least for the free tier. The queue script ensures that you do not exceed this rate limit. If something goes wrong, you can retry again later — successful batches are not sent again. Incomplete queues are stored for 24 hours.
+Note that the MailerSend API has a [rate limit](https://developers.mailersend.com/general.html#rate-limits) of 10 requests per minute and 1,000 requests per day, at least for the free tier. The queue script ensures that you do not exceed this rate limit. If something goes wrong, you can retry again later — successful batches are not sent again. Incomplete queues are stored for 24 hours.
 
 ![Start New Queue](repo/assets/queue_1.png?raw=true)
 ![Processed Queue](repo/assets/queue_2.png?raw=true)
 ![Retry Queue](repo/assets/queue_3.png?raw=true)
 
 ### Subscribers
+
+This page provides a list table of all subscribers along with their selected scopes. Aside from administrative actions, the most useful feature is the option to display an email preview for the current queue. This allows you to see how your emails will look to the recipient.
+
+You can manually add or remove subscribers, confirm or unconfirm them, and resend them their edit code (which should be included in any email anyway). Unconfirmed subscribers will be deleted after 24-36 hours, as soon as the cron job runs.
+
+![Start New Queue](repo/assets/subscribers_table.png?raw=true)
 
 ### Templates
 
