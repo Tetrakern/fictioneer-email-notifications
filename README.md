@@ -67,10 +67,11 @@ The queue is processed via Fetch API requests, providing you with real-time info
 
 To reduce the number of emails sent, multiple notifications are aggregated into a single email. This ensures that subscribers receive a concise summary of updates rather than individual ones, minimizing email clutter and reducing the risk of being classified as spam.
 
-Note that the MailerSend API has a rate limit of 10 requests per minute and 1,000 requests per day, at least for the free tier. The queue ensures that you do not exceed this rate limit. If something goes wrong, you can retry processing the queue — successful batches are not sent again. Incomplete queues are stored for 24 hours.
+Note that the MailerSend API has a rate limit of 10 requests per minute and 1,000 requests per day, at least for the free tier. The queue script ensures that you do not exceed this rate limit. If something goes wrong, you can retry again later — successful batches are not sent again. Incomplete queues are stored for 24 hours.
 
 ![Start New Queue](repo/assets/queue_1.png?raw=true)
 ![Processed Queue](repo/assets/queue_2.png?raw=true)
+![Retry Queue](repo/assets/queue_3.png?raw=true)
 
 ### Subscribers
 
