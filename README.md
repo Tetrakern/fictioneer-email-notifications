@@ -39,6 +39,10 @@ The plugin integrates seamlessly into the Fictioneer theme. You’ll find a new 
 
 Additionally, you can use the `[fictioneer_email_subscription]` shortcode to render an email input field that serves as a toggle for the modal. The optional `placeholder=""` parameter allows you to customize the text. Beyond this, there is nothing else to do on the frontend.
 
+![User Menu Entry](repo/assets/frontend_2.png?raw=true)
+![Subscribe Button](repo/assets/frontend_1.png?raw=true)
+![Profile Section](repo/assets/frontend_3.png?raw=true)
+
 ## Dashboard
 
 ### Notifications
