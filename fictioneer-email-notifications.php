@@ -762,7 +762,7 @@ function fcnen_account_profile_section( $args ) {
             value="1"
             <?php echo checked( 1, get_the_author_meta( 'fcnen_enable_subscribe_by_follow', $current_user->ID ), false ); ?>
           >
-          <label for="fcnen_enable_subscribe_by_follow"><?php _e( 'Subscribe to Stories by Following (not retroactive)', 'fcnen' ); ?></label>
+          <label for="fcnen_enable_subscribe_by_follow"><?php _e( 'Subscribe to stories by Following (not retroactive)', 'fcnen' ); ?></label>
         </div>
       </div>
     <?php endif; ?>
