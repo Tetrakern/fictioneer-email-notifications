@@ -126,4 +126,4 @@ While this could technically be achieved, the plugin does not provide a function
 
 ### What if someone makes a subscription for someone else?
 
-Subscriptions must be confirmed within 24 hours or they will be deleted. No notification emails are sent to unconfirmed email addresses, so this issue will resolve itself when ignored. In case of repeating offenders, you can add the victim’s email address to the exclusion list in the settings.
+Subscriptions must be confirmed within 24 hours or they will be deleted. No notifications are sent to unconfirmed email addresses, so this issue will resolve itself when ignored. In case of repeating offenders, you can add the victim’s email address to the exclusion list in the settings.
