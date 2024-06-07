@@ -18,7 +18,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * @return array The modified list of removable query arguments.
  */
 
-function fcnen_removable_args( $args ) {
+function fcnen_remove_post_id_query_arg( $args ) {
   $args[] = 'post_id';
 
   return $args;
@@ -70,7 +70,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
     }
 
     // Remove post_id query arg
-    add_filter( 'removable_query_args', 'fcnen_removable_args' );
+    add_filter( 'removable_query_args', 'fcnen_remove_post_id_query_arg' );
 
     // Initialize
     $table_name = $wpdb->prefix . 'fcnen_notifications';
