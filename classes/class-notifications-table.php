@@ -746,7 +746,7 @@ class FCNEN_Notifications_Table extends WP_List_Table {
           $query_args['fcnen-notice'] = 'unsent-notification-success';
           fcnen_log( "Marked notification for \"{$title}\" (#{$post_id}) as unsent." );
         } else {
-          $query_args['fcnen-notice'] = 'unsent-notification-success';
+          $query_args['fcnen-notice'] = 'unsent-notification-failure';
         }
 
         $query_args['fcnen-message'] = $post_id;
