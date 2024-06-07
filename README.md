@@ -55,7 +55,7 @@ This page provides a list table of all notifications, both unsent and sent (if n
 Each eligible post features a meta box in the sidebar with related information, such as the dates when it has been enqueued and sent. You can send notifications multiple times if desired. Two convenient checkbox flags allow you to re-enqueue a post once when updated or exclude it entirely. This is currently limited to administrators.
 
 <p align="center">
-  <img src="repo/assets/list_table.png?raw=true" height="185" alt="List Table" />
+  <img src="repo/assets/notifications_table.png?raw=true" height="185" alt="List Table" />
   <img src="repo/assets/meta_box.png?raw=true" height="185" alt="Meta Box" />
 </p>
 
