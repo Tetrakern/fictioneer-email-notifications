@@ -61,6 +61,15 @@ Each eligible post features a meta box in the sidebar with related information, 
 
 ### Send Emails
 
+This is where you can send notifications to subscribers. The plugin does not send notifications automatically, as it prioritizes control over convenience. Sending notifications requires just the push of a button, which is considered manageable.
+
+The queue is processed via Fetch API requests, providing you with real-time information about the status. Since the plugin pushes emails in bulk to the MailerSend service, you can use the ID link to monitor the progress on their end.
+
+Note that the MailerSend API has a rate limit of 10 requests per minute and 1,000 requests per day, at least for the free tier. The queue ensures that you do not exceed this rate limit. If something goes wrong, you can retry processing the queue — successful batches are not sent again. Incomplete queues are stored for 24 hours.
+
+![Start New Queue](repo/assets/queue_1.png?raw=true)
+![Processed Queue](repo/assets/queue_2.png?raw=true)
+
 ### Subscribers
 
 ### Templates
