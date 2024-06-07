@@ -115,4 +115,6 @@ The basic setup and options.
 
 ### Log
 
+The log records all plugin actions and allows you to check the status of a bulk request using the request ID.
+
 ## Frequently Asked Question
