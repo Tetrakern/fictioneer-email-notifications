@@ -65,6 +65,8 @@ This is where you can send notifications to subscribers. The plugin does not sen
 
 The queue is processed via Fetch API requests, providing you with real-time information about the status. Since the plugin pushes emails in bulk to the MailerSend service, you can use the ID link to monitor the progress on their end.
 
+To reduce the number of emails sent, multiple notifications are aggregated into a single email. This ensures that subscribers receive a concise summary of updates rather than individual ones, minimizing email clutter and reducing the risk of being classified as spam.
+
 Note that the MailerSend API has a rate limit of 10 requests per minute and 1,000 requests per day, at least for the free tier. The queue ensures that you do not exceed this rate limit. If something goes wrong, you can retry processing the queue — successful batches are not sent again. Incomplete queues are stored for 24 hours.
 
 ![Start New Queue](repo/assets/queue_1.png?raw=true)
