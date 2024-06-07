@@ -107,6 +107,11 @@ The basic setup and options.
 * **Option: Do not enqueue blocked posts upon publishing:** By default, blocked posts are still enqueued but cannot be sent. This option prevents blocked posts from being enqueued upon publishing.
 * **Excerpts:** The maximum characters for generated excerpts (default 256). Custom excerpts are not limited.
 * **Maximums:** The maximum subscription items per category, tag, and taxonomies (default 10). Disable with 0.
+* **Excluded Posts:** Comma-separated list of post IDs to exclude from notifications.
+* **Excluded Authors:** Comma-separated list of author IDs to exclude from notifications.
+* **Deactivation:** Deletes all plugin data on deactivation (irreversible) if checked.
+* **API Key:** Your MailerSend API key.
+* **Batch Limit:** The maximum number of emails per bulk request (default 300, max. 500).
 
 ### Log
 
