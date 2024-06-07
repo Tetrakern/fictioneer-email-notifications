@@ -118,3 +118,11 @@ The basic setup and options.
 The log records all plugin actions and allows you to check the status of a bulk request using the request ID.
 
 ## Frequently Asked Question
+
+### Can I automate the sending of emails?
+
+While this could technically be achieved, the plugin does not provide a function suitable for automation. WordPress cron jobs are not particularly reliable, and if something goes wrong, you might not notice. Instead, you can simply push a single button occasionally to send the emails. It’s a small effort for the assurance of proper functionality.
+
+### What if someone makes a subscription for someone else?
+
+Subscriptions must be confirmed within 24 hours or they will be deleted. No notification emails are sent to unconfirmed email addresses, so this issue will resolve itself when ignored.
