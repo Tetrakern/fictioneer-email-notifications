@@ -90,6 +90,10 @@ Tokens can be used as conditionals with a specific syntax:
 * `{{#token}}content{{/token}}`: The content is only rendered if the token is not empty.
 * `{{^token}}content{{/token}}`: The content is only rendered if the token is empty.
 
+As an email is essentially just a small website, you can technically design and style it as you like. However, emails are quite limited in the HTML/CSS they allow — or rather, what the email clients support. This is why the defaults are plain and simple. It’s best to consult one of the many guides available online for best practices in email design.
+
+![Confirmation Email Layout](repo/assets/templates_1.png?raw=true)
+
 ### Settings
 
 ### Log
