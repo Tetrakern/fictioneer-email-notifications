@@ -109,6 +109,7 @@ The basic setup and options.
 * **Maximums:** The maximum subscription items per category, tag, and taxonomies (default 10). Disable with 0.
 * **Excluded Posts:** Comma-separated list of post IDs to exclude from notifications.
 * **Excluded Authors:** Comma-separated list of author IDs to exclude from notifications.
+* **Excluded Emails:** List of email addresses to never receive notifications, one per line.
 * **Deactivation:** Deletes all plugin data on deactivation (irreversible) if checked.
 * **API Key:** Your MailerSend API key.
 * **Batch Limit:** The maximum number of emails per bulk request (default 300, max. 500).
@@ -125,4 +126,4 @@ While this could technically be achieved, the plugin does not provide a function
 
 ### What if someone makes a subscription for someone else?
 
-Subscriptions must be confirmed within 24 hours or they will be deleted. No notification emails are sent to unconfirmed email addresses, so this issue will resolve itself when ignored.
+Subscriptions must be confirmed within 24 hours or they will be deleted. No notification emails are sent to unconfirmed email addresses, so this issue will resolve itself when ignored. In case of repeating offenders, you can add the victim’s email address to the exclusion list in the settings.

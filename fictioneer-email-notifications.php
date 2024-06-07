@@ -72,6 +72,7 @@ function fcnen_option_defaults( $option = null ) {
       'fcnen_max_per_term' => 10,
       'fcnen_excluded_posts' => [],
       'fcnen_excluded_authors' => [],
+      'fcnen_excluded_emails' => [],
       'fcnen_api_key' => '',
       'fcnen_api_bulk_limit' => 300,
       'fcnen_template_subject_confirmation' => _x( 'Please confirm your subscription', 'Email subject', 'fcnen' ),
@@ -840,9 +841,16 @@ function fcnen_add_subscriber( $email, $args = [] ) {
   $subscriber_id = false;
   $email = sanitize_email( $email );
   $max_per_term = get_option( 'fcnen_max_per_term', 10 );
+  $excluded_emails = get_option( 'fcnen_excluded_emails', [] );
+  $excluded_emails = is_array( $excluded_emails ) ? $excluded_emails : [];
 
   // Valid and new email?
-  if ( empty( $email ) || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) || fcnen_subscriber_exists( $email ) )  {
+  if (
+    empty( $email ) ||
+    ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ||
+    fcnen_subscriber_exists( $email ) ||
+    in_array( $email, $excluded_emails )
+  )  {
     return false;
   }
 

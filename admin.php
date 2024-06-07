@@ -305,6 +305,7 @@ function fcnen_register_settings() {
   register_setting( 'fcnen_general_group', 'fcnen_api_bulk_limit', 'absint' );
   register_setting( 'fcnen_general_group', 'fcnen_excluded_posts', 'fcnen_sanitize_comma_separated_list' );
   register_setting( 'fcnen_general_group', 'fcnen_excluded_authors', 'fcnen_sanitize_comma_separated_list' );
+  register_setting( 'fcnen_general_group', 'fcnen_excluded_emails', 'fcnen_sanitize_email_list' );
 
   // Templates
   register_setting( 'fcnen_template_group', 'fcnen_template_layout_confirmation', 'wp_kses_post' );
@@ -346,6 +347,37 @@ function fcnen_sanitize_comma_separated_list( $value ) {
   $value = array_map( 'strval', $value );
 
   return array_unique( $value );
+}
+
+/**
+ * Sanitizes and returns an email list as array
+ *
+ * @since 0.1.0
+ *
+ * @param string $value  The value to sanitize.
+ *
+ * @return array The value as array.
+ */
+
+function fcnen_sanitize_email_list( $value ) {
+  if ( is_array( $value ) ) {
+    return $value;
+  }
+
+  $value = sanitize_textarea_field( $value ); // Initial sanitization
+  $value = str_replace( ["\n", "\r"], "\n", $value ); // Unify line breaks
+  $emails = array_filter( explode( "\n", $value ) ); // Explode and filter out empty
+  $sanitized_emails = [];
+
+  foreach ( $emails as $email ) {
+    $email = sanitize_email( $email );
+
+    if ( is_email( $email ) ) {
+      $sanitized_emails[] = $email;
+    }
+  }
+
+  return array_unique( $sanitized_emails );
 }
 
 // =======================================================================================
@@ -1554,6 +1586,7 @@ function fcnen_settings_page() {
   $max_per_term = absint( get_option( 'fcnen_max_per_term', 10 ) );
   $excluded_posts = implode( ', ', get_option( 'fcnen_excluded_posts', [] ) ?: [] );
   $excluded_authors = implode( ', ', get_option( 'fcnen_excluded_authors', [] ) ?: [] );
+  $excluded_emails = implode( "\n", get_option( 'fcnen_excluded_emails', [] ) ?: [] );
   $api_key = get_option( 'fcnen_api_key' );
   $api_bulk_limit = get_option( 'fcnen_api_bulk_limit', 300 );
 
@@ -1660,6 +1693,17 @@ function fcnen_settings_page() {
                 <fieldset>
                   <p><label for="fcnen-excluded-authors"><?php _e( 'Comma-separated list of excluded author IDs.', 'fcnen' ); ?></label></p>
                   <p><textarea name="fcnen_excluded_authors" id="fcnen-excluded-authors" class="code" cols="50" rows="5" autocomplete="off" spellcheck="false" autocorrect="off"><?php echo $excluded_authors; ?></textarea></p>
+                </fieldset>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">
+                <label for="fcnen-excluded-emails"><?php _e( 'Excluded Emails', 'fcnen' ); ?></label>
+              </th>
+              <td>
+                <fieldset>
+                  <p><label for="fcnen-excluded-emails"><?php _e( 'List of excluded email addresses, one per line.', 'fcnen' ); ?></label></p>
+                  <p><textarea name="fcnen_excluded_emails" id="fcnen-excluded-emails" class="code" cols="50" rows="5" autocomplete="off" spellcheck="false" autocorrect="off"><?php echo $excluded_emails; ?></textarea></p>
                 </fieldset>
               </td>
             </tr>

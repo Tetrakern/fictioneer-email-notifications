@@ -573,11 +573,17 @@ function fcnen_get_subscribers_count( $confirmed = true, $trashed = false ) {
 
 function fcnen_get_email_subscribers( $subscribers = null ) {
   // Setup
-  $prepared = [];
+  $excluded_emails = get_option( 'fcnen_excluded_emails', [] );
+  $excluded_emails = is_array( $excluded_emails ) ? $excluded_emails : [];
   $subscribers = $subscribers ? $subscribers : fcnen_get_subscribers();
+  $prepared = [];
 
   // Prepare subscribers
   foreach ( $subscribers as $subscriber ) {
+    if ( in_array( $subscriber->email, $excluded_emails ) ) {
+      continue;
+    }
+
     $data = array(
       'id' => $subscriber->id,
       'email' => $subscriber->email,
