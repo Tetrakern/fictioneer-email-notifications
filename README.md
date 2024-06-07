@@ -83,6 +83,13 @@ You can manually add or remove subscribers, confirm or unconfirm them, and resen
 
 ### Templates
 
+Templates allow you to customize the emails, split into layouts and partials. Each email is based on a single layout, while partials are snippets that can be included in certain layouts via tokens. Tokens are replacement keys within double curly brackets that are substituted with dynamic content related to the subscriber and the selected scopes. You can also decide on the subject of each email.
+
+Tokens can be used as conditionals with a specific syntax:
+
+* `{{#token}}content{{/token}}`: The content is only rendered if the token is not empty.
+* `{{^token}}content{{/token}}`: The content is only rendered if the token is empty.
+
 ### Settings
 
 ### Log
