@@ -626,6 +626,14 @@ function fcnen_admin_notices() {
       $notice = sprintf( __( 'Error. Could not mark notification for "%s" (#%s) as unsent.', 'fcnen' ), $post_title, $maybe_id );
       $type = 'error';
       break;
+    case 'remove-sent-notification-success':
+      $notice = __( 'Deleted sent notifications.', 'fcnen' );
+      $type = 'success';
+      break;
+    case 'remove-sent-notification-failure':
+      $notice = __( 'Error. Could not delete sent notifications.', 'fcnen' );
+      $type = 'error';
+      break;
     case 'bulk-delete-notifications-success':
       $notice = sprintf( __( 'Deleted %s notifications.', 'fcnen' ), $message ?: '0' );
       $type = 'success';

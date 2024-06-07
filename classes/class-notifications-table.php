@@ -596,6 +596,26 @@ class FCNEN_Notifications_Table extends WP_List_Table {
    */
 
   function extra_tablenav( $which ) {
+    if ( $this->total_items > 0 ) {
+      // Start HTML ---> ?>
+      <div class="alignleft actions">
+        <?php
+          printf(
+            '<a href="%s" class="button action">%s</a>',
+            wp_nonce_url(
+              add_query_arg(
+                array( 'action' => 'remove_sent' ),
+                remove_query_arg( ['paged'], $this->uri )
+              ),
+              'fcnen-table-action',
+              'fcnen-nonce'
+            ),
+            __( 'Remove Sent', 'fcnen' )
+          );
+        ?>
+      </div>
+      <?php // <--- End HTML
+    }
   }
 
   /**
@@ -697,6 +717,16 @@ class FCNEN_Notifications_Table extends WP_List_Table {
       $post_id = absint( $_GET['post_id'] ?? 0 );
       $post = get_post( $post_id );
       $title = empty( $post ) ? __( 'UNAVAILABLE', 'fcnen' ) : $post->post_title;
+
+      // Remove sent notifications
+      if ( $_GET['action'] === 'remove_sent' ) {
+        if ( $wpdb->query( $wpdb->prepare( "DELETE FROM $table_name WHERE last_sent IS NOT NULL" ) ) ) {
+          $query_args['fcnen-notice'] = 'remove-sent-notification-success';
+          fcnen_log( 'Removed sent notification.' );
+        } else {
+          $query_args['fcnen-notice'] = 'remove-sent-notification-failure';
+        }
+      }
 
       // Abort if...
       if ( empty( $post_id ) ) {
