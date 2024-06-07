@@ -17,7 +17,7 @@ Currently, the plugin is integrated with the [MailerSend](https://www.mailersend
 
 ## Installation
 
-Same as the Fictioneer theme, the plugin is not available from the official library and needs to be installed and updated manually.
+Same as the Fictioneer theme, the plugin is not available in the official WordPress library and needs to be installed and updated manually.
 
 1. Download the zip file from the [latest release](https://github.com/Tetrakern/fictioneer-email-notifications/releases).
 2. In your WordPress dashboard, go to **Plugins > Add New Plugin**.
@@ -50,7 +50,12 @@ Additionally, you can use the `[fictioneer_email_subscription]` shortcode to ren
 
 This page provides a list table of all notifications, both unsent and sent (if not cleared). Blog posts, stories, and chapters are automatically enqueued when published for the first time. You also have the option to add them manually using their ID, which can be found in the URL of the post edit screen. Duplicates and ineligible posts are either skipped or marked accordingly if already present in the table. The status column indicates the current state of each notification, while other columns provide additional information.
 
-Each post features a meta box in the sidebar with related information, such as the dates when it has been enqueued and sent. You can send notifications multiple times if desired. Two convenient checkbox flags allow you to re-enqueue a post once when updated or exclude it entirely. This is currently limited to administrators.
+Each eligible post features a meta box in the sidebar with related information, such as the dates when it has been enqueued and sent. You can send notifications multiple times if desired. Two convenient checkbox flags allow you to re-enqueue a post once when updated or exclude it entirely. This is currently limited to administrators.
+
+<p align="center">
+  <img src="repo/assets/list_table.png?raw=true" height="220" alt="List Table" />
+  <img src="repo/assets/meta_box.png?raw=true" height="220" alt="Meta Box" />
+</p>
 
 ### Send Emails
 
