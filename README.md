@@ -46,7 +46,7 @@ Additionally, you can use the `[fictioneer_email_subscription]` shortcode to ren
 
 ## Admin
 
-The plugin menu is added low in the admin sidebar as **Notifications** with a letter icon.
+The plugin menus are added low in the admin sidebar under **Notifications** with a letter icon.
 
 ### Notifications
 
