@@ -7,9 +7,9 @@
   <a href="https://www.php.net/"><img alt="PHP: 7.4+" src="https://img.shields.io/badge/php-%3E%3D7.4-blue?logoColor=white&style=flat" /></a>
 </p>
 
-This WordPress plugin is built exclusively for the Fictioneer theme, version 5.19.0 or higher. It enables guests and users to subscribe to selected content updates via email. You can choose to receive notifications for all new content, specific post types, or individual stories and taxonomies. Multiple notifications per subscriber are aggregated into a single email. The plugin is compatible with all cache plugins.
+This WordPress plugin is built exclusively for the [Fictioneer](https://github.com/Tetrakern/fictioneer) theme, version 5.19.0 or higher. It enables guests and users to subscribe to selected content updates via email. You can choose to receive notifications for all new content, specific post types, or individual stories and taxonomies. Multiple notifications per subscriber are aggregated into a single email. The plugin is compatible with all cache plugins.
 
-Currently, the plugin is integrated with the [MailerSend](https://www.mailersend.com/) email service provider. MailerSend offers a generous free plan of 3,000 emails per month and bulk emails. This should last you a long time before you need a paid plan, at which point you should have the support to afford it.
+Currently, the plugin is integrated with the [MailerSend](https://www.mailersend.com/) email sending service. MailerSend offers a generous free plan of 3,000 emails per month and bulk emails. This should last you a long time before you need a paid plan, at which point you should have the support to afford it.
 
 <p align="center">
   <img src="repo/assets/fcnen_modal_preview.gif?raw=true" alt="Modal Preview" />
@@ -122,8 +122,12 @@ The log records all plugin actions and allows you to check the status of a bulk 
 
 ### Can I automate the sending of emails?
 
-While this could technically be achieved, the plugin does not provide a function suitable for automation. WordPress cron jobs are not particularly reliable, and if something goes wrong, you might not notice. Instead, you can simply push a single button occasionally to send the emails. It’s a small effort for the assurance of proper functionality.
+While this could be achieved, the plugin does not provide a function suitable for automation. WordPress cron jobs are not particularly reliable, and if something goes wrong, you might not notice. Instead, you can simply push a single button occasionally to send the emails. It’s a small effort for the assurance of proper functionality.
 
 ### What if someone makes a subscription for someone else?
 
 Subscriptions must be confirmed within 24 hours or they will be deleted. No notifications are sent to unconfirmed email addresses, so this issue will resolve itself when ignored. In case of repeating offenders, you can add the victim’s email address to the exclusion list in the settings.
+
+### Can I use other email sending services?
+
+Currently not. Implementing support for multiple email sending services is a lot of work, as each has its own unique requirements. Additionally, many services offer a meager free tier that is virtually useless, followed by a pricing model that can be quite expensive. MailerSend was chosen for its generous free tier, reasonable upgrade prices, and because they once offered 12,000 emails for free, which was honestly insane. Be happy if you got such a legacy account.
