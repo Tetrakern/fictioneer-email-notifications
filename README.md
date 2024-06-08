@@ -130,4 +130,4 @@ Subscriptions must be confirmed within 24 hours or they will be deleted. No noti
 
 ### Can I use other email sending services?
 
-Currently not. Implementing support for multiple email sending services is a lot of work, as each has its own unique requirements. Additionally, many services offer a meager free tier that is virtually useless, followed by a pricing model that can be quite expensive. MailerSend was chosen for its generous free tier, reasonable upgrade prices, and because they once offered 12,000 emails for free, which was honestly insane. Be happy if you got such a legacy account.
+Currently not. Implementing support for multiple email sending services is a lot of work, as each has its own unique requirements. Additionally, many services offer a meager free tier that is virtually useless, followed by a pricing model that can be quite expensive. MailerSend was chosen for its generous free tier, reasonable upgrade prices, and because they once offered 12,000 emails for free. Be happy if you got such a legacy account.
