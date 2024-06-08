@@ -119,6 +119,12 @@
       "sC" : 3,
       "tS" : 0
     },
+    "\/languages" : {
+      "ft" : 65536,
+      "oA" : 1,
+      "oAP" : "\/languages",
+      "oF" : 0
+    },
     "\/LICENSE" : {
       "cB" : 0,
       "ft" : 8192,
@@ -1804,7 +1810,7 @@
     ],
     "rollupTreeshakingEnabled" : 1,
     "rollupTreeshakingModuleSideEffects" : 1,
-    "skippedFoldersString" : ".idea,node_modules,_logs,_cache,log,cache,\/storage\/framework\/sessions,\/repo,logs",
+    "skippedFoldersString" : "cache,\/languages,\/storage\/framework\/sessions,node_modules,_logs,_cache,.idea,log,\/repo,logs",
     "sourceFolderName" : "source",
     "susyVersion" : 3,
     "tsAllowArbitraryExtensions" : 0,
