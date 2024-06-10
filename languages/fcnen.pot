@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fictioneer Email Notifications\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-08 09:03+0000\n"
+"POT-Creation-Date: 2024-06-10 14:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -1660,7 +1660,8 @@ msgstr ""
 #: modal.php:163
 msgid ""
 "Update your subscription or <button type=\"button\" class=\"fcnen-inline-"
-"button\" data-click-action=\"fcnen-delete-subscription\">delete</button> it."
+"button\" data-click-action=\"fcnen-delete-subscription\">delete</button> it. "
+"Do not forget to save."
 msgstr ""
 
 #: admin.php:205
