@@ -134,4 +134,4 @@ Currently not. Implementing support for multiple email sending services is a lot
 
 ### What is the benefit of email subscriptions?
 
-Compared to monetization platforms or community archives with their own dedicated email services? Independence. As convenient and easy as relying on these third-party distributors may be, it always leaves you at their mercy. If they decide to drop you for any reason, you could lose your entire support base in an instant. They might even decide to blackmail or censor you under the threat of cutting you off. As long as you have your subscriber list, you can always reach out to your supporters, even if it means contacting them one by one.
+Compared to membership platforms or community sites with their own dedicated email service? Independence. As convenient and easy as relying on these third-party distributors may be, it always leaves you at their mercy. If they decide to drop you for any reason, you could lose your entire support base in an instant. But as long as you have your subscriber list, you can always reach out to your supporters, even if it means contacting them one by one.
