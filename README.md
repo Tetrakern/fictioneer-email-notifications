@@ -83,7 +83,7 @@ You can manually add or remove subscribers, confirm or unconfirm them, and resen
 
 ### Templates
 
-Templates allow you to customize the emails, split into layouts and partials. Each email is based on a single layout, while partials are snippets that can be included in certain layouts via tokens. Tokens are replacement keys within double curly brackets that are substituted with dynamic content related to the subscriber and the selected scopes. You can also decide on the subject of each email.
+Templates allow you to customize the emails, split into layouts and partials. Each email is based on a single layout, while partials are snippets that can be included in certain layouts via tokens. Tokens are replacement keys within double curly brackets that are substituted with dynamic content related to the subscriber and their selected scopes. You can also decide on the subject of each email.
 
 Tokens can be used as conditionals with a specific syntax:
 
@@ -102,8 +102,8 @@ The basic setup and options.
 * **Sender Name:** The name used for outgoing emails. Defaults to site name.
 * **Option: Allow subscriptions to stories:** Enables subscribers to subscribe directly to stories.
 * **Option: Allow subscriptions to taxonomies:** Enables subscribers to subscribe directly to taxonomies.
-* **Option: Unblock notifications for protected posts:** Allow notification about password-protected posts.
-* **Option: Unblock notifications for hidden posts:** Allow notification about hidden (unlisted) posts.
+* **Option: Unblock notifications for protected posts:** Allow notifications about password-protected posts.
+* **Option: Unblock notifications for hidden posts:** Allow notifications about hidden (unlisted) posts.
 * **Option: Do not enqueue blocked posts upon publishing:** By default, blocked posts are still enqueued but cannot be sent. This option prevents blocked posts from being enqueued upon publishing.
 * **Excerpts:** The maximum characters for generated excerpts (default 256). Custom excerpts are not limited.
 * **Maximums:** The maximum subscription items per category, tag, and taxonomies (default 10). Disable with 0.
