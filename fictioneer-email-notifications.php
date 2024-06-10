@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Fictioneer Email Notifications
  * Description: Allows readers to subscribe to selected updates via email. You can choose to receive notifications for all new content, specific post types, or selected stories and taxonomies. Works for both guests and registered users.
- * Version: 0.1.0
+ * Version: 1.0.0
  * Requires at least: 6.1
  * Requires PHP: 7.4
  * Author: Tetrakern
@@ -14,8 +14,8 @@
 defined( 'ABSPATH' ) OR exit;
 
 // Version
-define( 'FCNEN_VERSION', '0.1.0' );
-define( 'FCNEN_RELEASE_TAG', 'v0.1.0' );
+define( 'FCNEN_VERSION', '1.0.0' );
+define( 'FCNEN_RELEASE_TAG', 'v1.0.0' );
 
 // =======================================================================================
 // CONSTANTS & DEFAULTS
