@@ -26,10 +26,13 @@ function fcnen_check_for_updates() {
 
   // Only call API every 12 hours, otherwise check database (except on Updates page)
   if (
-    $remote_version &&
     ! $is_updates_page &&
     current_time( 'timestamp', true ) < $last_check_timestamp + HOUR_IN_SECONDS * 12
   ) {
+    if ( ! $remote_version ) {
+      return false;
+    }
+
     return version_compare( $remote_version, FCNEN_RELEASE_TAG, '>' );
   }
 
