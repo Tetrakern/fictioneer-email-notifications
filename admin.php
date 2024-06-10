@@ -708,7 +708,7 @@ function fcnen_admin_notices() {
       $type = 'error';
       break;
     case 'submit-notification-duplicate':
-      $notice = sprintf( __( 'Error. There is already an unsent notification enqueued for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
+      $notice = sprintf( __( 'Error. There is already an unsent notification queued for "%s" (#%s).', 'fcnen' ), $post_title, $maybe_id );
       $type = 'error';
       break;
     case 'submit-notification-post-not-found':

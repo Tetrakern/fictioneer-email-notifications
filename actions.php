@@ -453,7 +453,7 @@ function fcnen_preview_notification() {
 
   // Nothing?
   if ( empty( $notification['email_bodies'] ) ) {
-    wp_die( __( 'No matching notifications enqueued.', 'fcnen' ) );
+    wp_die( __( 'No matching notifications queued.', 'fcnen' ) );
   }
 
   // Render
