@@ -160,7 +160,7 @@ function fcnen_get_modal_content() {
         <input type="hidden" name="code" id="fcnen-modal-submit-code" value="<?php echo $auth_code; ?>" autocomplete="off">
         <div class="dialog-modal__row">
           <p class="dialog-modal__description"><?php
-            _e( 'Update your subscription or <button type="button" class="fcnen-inline-button" data-click-action="fcnen-delete-subscription">delete</button> it.', 'fcnen' );
+            _e( 'Update your subscription or <button type="button" class="fcnen-inline-button" data-click-action="fcnen-delete-subscription">delete</button> it. Do not forget to save.', 'fcnen' );
           ?></p>
         </div>
       <?php else : ?>
