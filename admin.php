@@ -232,12 +232,13 @@ if ( is_admin() ) {
 function fcnen_check_plugin_requirements() {
   // Setup
   $current_theme = wp_get_theme();
+  $theme_name = $current_theme->get( 'Name' );
+  $current_version = $current_theme->get( 'Version' );
 
   // Child or parent theme?
   if ( $current_theme->parent() ) {
     $theme_name = $current_theme->parent()->get( 'Name' );
-  } else {
-    $theme_name = $current_theme->get( 'Name' );
+    $current_version = $current_theme->parent()->get( 'Version' );
   }
 
   // Theme name must be Fictioneer!
@@ -258,7 +259,7 @@ function fcnen_check_plugin_requirements() {
   }
 
   // Must be Fictioneer 5.19.0 or higher
-  if ( version_compare( $current_theme->get('Version'), '5.19.0', '<' ) ) {
+  if ( version_compare( $current_version, '5.19.0', '<' ) ) {
     require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
     // Deactivate plugin
