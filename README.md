@@ -106,7 +106,7 @@ The basic setup and options.
 * **Option: Unblock notifications for hidden posts:** Allow notifications about hidden (unlisted) posts.
 * **Option: Do not enqueue blocked posts upon publishing:** By default, blocked posts are still enqueued but cannot be sent. This option prevents blocked posts from being enqueued upon publishing.
 * **Excerpts:** The maximum characters for generated excerpts (default 256). Custom excerpts are not limited.
-* **Maximums:** The maximum subscription items per category, tag, and taxonomies (default 10). Disable with 0.
+* **Maximums:** The maximum subscription items per category, tag, and taxonomy (default 10 each). Disable with 0.
 * **Excluded Posts:** Comma-separated list of post IDs to exclude from notifications.
 * **Excluded Authors:** Comma-separated list of author IDs to exclude from notifications.
 * **Excluded Emails:** List of email addresses to never receive notifications, one per line.
