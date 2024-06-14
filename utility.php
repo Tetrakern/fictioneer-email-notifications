@@ -410,7 +410,7 @@ function fcnen_get_subscriber_scopes( $subscriber ) {
 
   // Stories
   $story_names = [];
-  $stories = get_posts(
+  $stories = empty( $post_ids ) ? [] : get_posts(
     array(
       'post_type'=> 'fcn_story',
       'post_status'=> ['publish', 'private', 'future'],
@@ -450,13 +450,13 @@ function fcnen_get_subscriber_scopes( $subscriber ) {
   $character_names = [];
   $warning_names = [];
 
-  $terms = get_terms(
+  $terms = $all_term_ids ? get_terms(
     array(
       'taxonomy' => ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],
-      'include' => $all_term_ids,
+      'include' => $all_term_ids ?: [0],
       'hide_empty' => false
     )
-  );
+  ) : [];
 
   foreach ( $terms as $term ) {
     switch ( $term->taxonomy ) {
