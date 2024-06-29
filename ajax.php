@@ -235,19 +235,23 @@ function fictioneer_ajax_fcnen_search_content() {
 
   // Query stories
   if ( $filter === 'story' && get_option( 'fcnen_flag_subscribe_to_stories' ) ) {
-    $stories = new WP_Query(
-      array(
-        'post_type' => 'fcn_story',
-        'post_status' => 'publish',
-        'orderby' => 'date',
-        'order' => 'desc',
-        'posts_per_page' => 10,
-        'paged' => $page,
-        's' => $search,
-        'update_post_meta_cache' => true, // We might need that
-        'update_post_term_cache' => false // Improve performance
-      )
+    $search_args = array(
+      'post_type' => 'fcn_story',
+      'post_status' => 'publish',
+      'orderby' => 'relevance modified',
+      'order' => 'desc',
+      'posts_per_page' => 25,
+      'paged' => $page,
+      's' => $search,
+      'update_post_meta_cache' => true, // We might need that
+      'update_post_term_cache' => false // Improve performance
     );
+
+    if ( ! $search ) {
+      $search_args['orderby'] = 'modified';
+    }
+
+    $stories = new WP_Query( $search_args );
 
     // Build and add items
     foreach ( $stories->posts as $item ) {

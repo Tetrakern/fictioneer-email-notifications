@@ -389,13 +389,6 @@ function fcnen_search(page = 1, append = false) {
     search.value = search.value.slice(0, 200);
   }
 
-  // Search empty?
-  if (search.value == '' && filter?.value == 'story') {
-    sourceList.innerHTML = '';
-    sourceList.appendChild(fcnen_modal.querySelector('[data-target="fcnen-no-matches-item"]').content.cloneNode(true));
-    return;
-  }
-
   // Prepare payload
   const payload = {
     'action': 'fictioneer_ajax_fcnen_search_content',
