@@ -390,7 +390,7 @@ function fcnen_search(page = 1, append = false) {
   }
 
   // Search empty?
-  if (search.value == '') {
+  if (search.value == '' && filter?.value == 'story') {
     sourceList.innerHTML = '';
     sourceList.appendChild(fcnen_modal.querySelector('[data-target="fcnen-no-matches-item"]').content.cloneNode(true));
     return;

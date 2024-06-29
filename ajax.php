@@ -230,6 +230,7 @@ function fictioneer_ajax_fcnen_search_content() {
   $search = sanitize_text_field( $_REQUEST['search'] ?? '' );
   $page = absint( $_REQUEST['page'] ?? 1 );
   $stories = null;
+  $terms = null;
   $output = [];
 
   // Query stories
@@ -270,7 +271,8 @@ function fictioneer_ajax_fcnen_search_content() {
         'taxonomy' => ['category', 'post_tag', 'fcn_genre', 'fcn_fandom', 'fcn_character', 'fcn_content_warning'],
         'name__like' => $search,
         'hide_empty' => false,
-        'number' => 25, // Paginate
+        'number' => 51, // Paginate (if >50, this means there are still terms to query)
+        'offset' => ( $page - 1 ) * 50, // Paginate
         'update_term_meta_cache' => false // Improve performance
       )
     );
@@ -293,7 +295,10 @@ function fictioneer_ajax_fcnen_search_content() {
   }
 
   // Add observer?
-  if ( $stories && $page < $stories->max_num_pages ) {
+  if (
+    ( $stories && $page < $stories->max_num_pages ) ||
+    ( $terms && count( $terms ) > 50 )
+  ) {
     $page++;
 
     $observer = '<li class="fcnen-dialog-modal__advanced-li _observer" data-target="fcnen-observer-item" data-page="' . $page . '"><i class="fa-solid fa-spinner fa-spin" style="--fa-animation-duration: .8s;"></i> ' . __( 'Loading…', 'fcnen' ) . '<span></span></li>';

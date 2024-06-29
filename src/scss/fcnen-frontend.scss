@@ -123,12 +123,12 @@
       overflow-wrap: break-word;
       padding: 4px 18px 4px 4px;
 
-      &:not(._disabled, ._no-match):hover {
+      &:not(._disabled, ._no-match, ._change-search):hover {
         background: var(--fcnen-li-background-hover, rgb(255 255 255 / 10%));
         color: var(--fg-400);
       }
 
-      &:is(._disabled, ._no-match) {
+      &:is(._disabled, ._no-match, ._change-search) {
         cursor: default;
         opacity: .6;
 
