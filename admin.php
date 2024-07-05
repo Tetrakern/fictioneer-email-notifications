@@ -742,6 +742,14 @@ function fcnen_admin_notices() {
       $notice = __( 'Cleared email queue.', 'fcnen' );
       $type = 'success';
       break;
+    case 'mailersend-api-quota-received':
+      $notice = $message;
+      $type = 'success';
+      break;
+    case 'mailersend-api-quota-error':
+      $notice = $message;
+      $type = 'error';
+      break;
   }
 
   // Render notice
@@ -1754,7 +1762,11 @@ function fcnen_settings_page() {
             </tr>
           </tbody>
         </table>
-        <p class="submit"><?php submit_button( __( 'Save Changes', 'fcnen' ), 'primary', 'submit', false ); ?></p>
+        <p class="submit"><?php
+          submit_button( __( 'Save Changes', 'fcnen' ), 'primary', 'submit', false );
+
+          echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=fcnen_check_mailersend_api_quota' ), 'fcnen-mailersend-api-quota', 'fcnen-nonce' ) . '" class="button" rel="noopener" ' . ( $api_key ? '' : 'disabled' ) . '>' . __( 'Check Quota', 'fcnen' ) . '</a>';
+        ?></p>
       </form>
     </div>
   </div>

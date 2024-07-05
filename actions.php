@@ -115,7 +115,6 @@ function fcnen_empty_trashed_subscribers() {
     )
   );
 
-  // Terminate
   exit();
 }
 add_action( 'admin_post_fcnen_empty_trashed_subscribers', 'fcnen_empty_trashed_subscribers' );
@@ -342,7 +341,7 @@ function fcnen_import_subscribers_csv() {
   // Log
   fcnen_log( 'Imported CSV.' );
 
-  // Success!
+  // Redirect
   wp_safe_redirect(
     add_query_arg(
       array( 'fcnen-notice' => 'csv-imported', 'fcnen-message' => $count ),
@@ -350,7 +349,6 @@ function fcnen_import_subscribers_csv() {
     )
   );
 
-  // Terminate
   exit();
 }
 add_action( 'admin_post_fcnen_import_subscribers_csv', 'fcnen_import_subscribers_csv' );
@@ -544,7 +542,6 @@ function fcnen_update_profile() {
     ) . '#fcnen'
   );
 
-  // Terminate
   exit();
 }
 add_action( 'admin_post_fcnen_update_profile', 'fcnen_update_profile' );
@@ -576,7 +573,6 @@ function fcnen_clear_queue() {
     )
   );
 
-  // Terminate
   exit();
 }
 add_action( 'admin_post_fcnen_clear_queue', 'fcnen_clear_queue' );
@@ -660,3 +656,74 @@ function fcnen_check_mailersend_bulk_status() {
   exit();
 }
 add_action( 'admin_post_fcnen_check_mailersend_bulk_status', 'fcnen_check_mailersend_bulk_status' );
+
+// =======================================================================================
+// QUOTA
+// =======================================================================================
+
+/**
+ * Check API quota
+ *
+ * @since 0.1.0
+ */
+
+function fcnen_check_mailersend_api_quota() {
+  // Verify
+  if ( ! isset( $_GET['fcnen-nonce'] ) || ! check_admin_referer( 'fcnen-mailersend-api-quota', 'fcnen-nonce' ) ) {
+    wp_die( __( 'Nonce verification failed. Please try again.', 'fcnen' ) );
+  }
+
+  if ( ! current_user_can( 'manage_options' ) ) {
+    wp_die( __( 'Insufficient permissions.', 'fcnen' ) );
+  }
+
+  // Setup
+  $api_key = get_option( 'fcnen_api_key' );
+
+  // API key missing
+  if ( empty( $api_key ) ) {
+    return wp_die( __( 'API key has not been set.', 'fcnen' ) );
+  }
+
+  // Request
+  $response = wp_remote_get(
+    FCNEN_API['mailersend']['quota'],
+    array(
+      'headers' => array(
+        'Authorization' => "Bearer {$api_key}",
+        'Content-Type' => 'application/json'
+      )
+    )
+  );
+
+  // Response
+  if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+    // Success
+    $json = json_decode( wp_remote_retrieve_body( $response ), true );
+    $message = sprintf(
+      __( 'Quota: %s | Remaining: %s | Reset: %s', 'fcnen' ),
+      $json['quota'] ?? __( 'Error', 'fcnen' ),
+      $json['remaining'] ?? __( 'Error', 'fcnen' ),
+      $json['reset'] ?? __( 'Error', 'fcnen' )
+    );
+    $notice = 'mailersend-api-quota-received';
+  } else {
+    // Error
+    $message = is_wp_error( $response ) ? $response->get_error_message() : __( 'API request failed.', 'fcnen' );
+    $notice = 'mailersend-api-quota-error';
+  }
+
+  // Log
+  fcnen_log( "MailerSend API Quota request: {$message}." );
+
+  // Redirect
+  wp_safe_redirect(
+    add_query_arg(
+      array( 'fcnen-notice' => $notice, 'fcnen-message' => urlencode( $message ) ),
+      wp_get_referer()
+    )
+  );
+
+  exit();
+}
+add_action( 'admin_post_fcnen_check_mailersend_api_quota', 'fcnen_check_mailersend_api_quota' );

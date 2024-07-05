@@ -21,8 +21,17 @@
     }
   }
 
+  p.submit {
+    display: flex;
+    gap: 12px;
+  }
+
   .hidden {
     display: none !important;
+  }
+
+  a[disabled] {
+    pointer-events: none;
   }
 }
 
