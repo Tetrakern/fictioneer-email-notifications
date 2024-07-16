@@ -518,7 +518,7 @@ function fcnen_compare_wp_version( $version, $operator = '>=' ) {
 
 function fcnen_enqueue_frontend_scripts() {
   // Setup
-  $cache_bust = fictioneer_get_cache_bust();
+  $cache_bust = function_exists( 'fictioneer_get_cache_bust' ) ? fictioneer_get_cache_bust() : '1.0.1';
   $strategy = fcnen_compare_wp_version( '6.3' ) ? array( 'strategy'  => 'defer' ) : true; // Defer or load in footer
 
   // Styles
