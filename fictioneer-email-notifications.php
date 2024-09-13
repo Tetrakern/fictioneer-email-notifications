@@ -430,7 +430,7 @@ function fcnen_deactivation() {
   }
 
   // Delete log file
-  $log_file = WP_CONTENT_DIR . '/fcnen-log.log';
+  $log_file = ABSPATH . '/fcnen-log.log';
 
   if ( file_exists( $log_file ) ) {
     unlink( $log_file );

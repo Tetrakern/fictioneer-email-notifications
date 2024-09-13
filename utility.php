@@ -741,7 +741,7 @@ function fcnen_get_selection_node( $args = [] ) {
 function fcnen_log( $message ) {
   // Setup
   $current_user = wp_get_current_user();
-  $log_file = WP_CONTENT_DIR . '/fcnen-log.log';
+  $log_file = ABSPATH . '/fcnen-log.log';
   $date = current_time( 'mysql', 1 );
 
   // Acting user?
@@ -787,7 +787,7 @@ function fcnen_log( $message ) {
 
 function fcnen_get_log() {
   // Setup
-  $log_file = WP_CONTENT_DIR . '/fcnen-log.log';
+  $log_file = ABSPATH . '/fcnen-log.log';
 
   // Check whether log file exists
   if ( ! file_exists( $log_file ) ) {
