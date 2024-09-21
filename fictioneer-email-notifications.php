@@ -430,10 +430,14 @@ function fcnen_deactivation() {
   }
 
   // Delete log file
-  $log_file = ABSPATH . '/fcnen-log.log';
+  $log_hash = strval( get_option( 'fictioneer_log_hash' ) );
 
-  if ( file_exists( $log_file ) ) {
-    unlink( $log_file );
+  if ( ! empty( $log_hash ) ) {
+    $log_file = WP_CONTENT_DIR . "/fcnen-{$log_hash}-log.log";
+
+    if ( file_exists( $log_file ) ) {
+      unlink( $log_file );
+    }
   }
 }
 register_deactivation_hook( __FILE__, 'fcnen_deactivation' );

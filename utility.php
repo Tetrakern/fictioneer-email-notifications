@@ -731,6 +731,28 @@ function fcnen_get_selection_node( $args = [] ) {
 // =======================================================================================
 
 /**
+ * Returns (or creates) secret log hash used to obscure the log file name
+ *
+ * @since 1.0.2
+ *
+ * @return string  The log hash.
+ */
+
+function fcnen_get_log_hash() {
+  $hash = strval( get_option( 'fictioneer_log_hash' ) );
+
+  if ( ! empty( $hash ) ) {
+    return $hash;
+  }
+
+  $hash = wp_generate_password( 32, false );
+
+  update_option( 'fictioneer_log_hash', $hash, 'no' );
+
+  return $hash;
+}
+
+/**
  * Logs a message to the plugin log file
  *
  * @since 0.1.0
@@ -741,7 +763,8 @@ function fcnen_get_selection_node( $args = [] ) {
 function fcnen_log( $message ) {
   // Setup
   $current_user = wp_get_current_user();
-  $log_file = ABSPATH . '/fcnen-log.log';
+  $log_hash = fcnen_get_log_hash();
+  $log_file = WP_CONTENT_DIR . "/fcnen-{$log_hash}-log.log";
   $date = current_time( 'mysql', 1 );
 
   // Acting user?
@@ -771,10 +794,13 @@ function fcnen_log( $message ) {
   $log_entries = array_slice( $log_entries, -( FCNEN_LOG_LIMIT + 1 ) );
 
   // Add new entry
-  $log_entries[] = "[{$date}] [#{$user_id}|{$username}] $message";
+  $log_entries[] = "[{$date} UTC] [#{$user_id}|{$username}] $message";
 
   // Concatenate and save
   file_put_contents( $log_file, implode( "\n", $log_entries ) );
+
+  // Set file permissions
+  chmod( $log_file, 0600 );
 }
 
 /**
@@ -787,7 +813,8 @@ function fcnen_log( $message ) {
 
 function fcnen_get_log() {
   // Setup
-  $log_file = ABSPATH . '/fcnen-log.log';
+  $log_hash = fcnen_get_log_hash();
+  $log_file = WP_CONTENT_DIR . "/fcnen-{$log_hash}-log.log";
 
   // Check whether log file exists
   if ( ! file_exists( $log_file ) ) {
