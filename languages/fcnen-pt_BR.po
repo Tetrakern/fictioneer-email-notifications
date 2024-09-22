@@ -1,0 +1,1845 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Fictioneer Email Notifications\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-07-06 14:32+0000\n"
+"PO-Revision-Date: 2024-09-22 14:10-0300\n"
+"Last-Translator: Cochise César <cochise@vivaldi.net>\n"
+"Language-Team: Português do Brasil\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Loco-Version: 2.6.11; wp-6.6.2\n"
+"X-Domain: fcnen\n"
+
+#: fictioneer-email-notifications.php:1443
+msgid "####"
+msgstr "####"
+
+#: admin.php:515
+#, php-format
+msgid "%s added."
+msgstr "%s adicionado."
+
+#: admin.php:630
+#, php-format
+msgid "%s subscriber(s) imported from CSV."
+msgstr "%s assinante(s) importado(s) do CSV."
+
+#: admin.php:192
+msgid ""
+"<strong>Allows readers to subscribe to selected updates via email.</strong> "
+"You can choose to receive notifications for all new content, specific post "
+"types, or selected stories and taxonomies. Works for both guests and "
+"registered users."
+msgstr ""
+"<strong>Permite que os leitores se inscrevam para receber as atualizações "
+"selecionadas por e-mail.</strong> Você pode optar por receber notificações "
+"de todo o conteúdo novo, de tipos de posts específicos ou de histórias e "
+"taxonomias selecionadas. Funciona tanto para convidados quanto para usuários "
+"registrados."
+
+#: admin.php:1953
+#, php-format
+msgid "<strong>Enqueued again on</strong>%s"
+msgstr "<strong>Enfileirado novamente em</strong>%s"
+
+#: admin.php:1951
+#, php-format
+msgid "<strong>Enqueued on</strong>%s"
+msgstr "<strong>Enfileirado em</strong>%s"
+
+#: admin.php:112
+#, php-format
+msgid ""
+"<strong>Fictioneer Email Notifications %1$s</strong> is available. Please <a "
+"href=\"%2$s\" target=\"_blank\">download</a> and install the latest version "
+"at your next convenience.%3$s"
+msgstr ""
+"o <strong>Fictioneer Email Notifications %1$s</strong> está disponível. Faça "
+"o <a href=\"%2$s\" target=\"_blank\">download</a> e instale a versão mais "
+"recente quando lhe for conveniente.%3$s"
+
+#: actions.php:470
+#, php-format
+msgid "<strong>From:</strong> %s"
+msgstr "<strong>De:</strong> %s"
+
+#: actions.php:476
+#, php-format
+msgid "<strong>Name:</strong> %s"
+msgstr "<strong>Nome:</strong> %s"
+
+#: actions.php:479
+#, php-format
+msgid "<strong>Subject:</strong> %s"
+msgstr "<strong>Assunto:</strong> %s"
+
+#: actions.php:473
+#, php-format
+msgid "<strong>To:</strong> %s"
+msgstr "<strong>Para:</strong> %s"
+
+#: admin.php:199
+msgid ""
+"Active Subscribers: %d &bull; Unconfirmed Subscribers: %d &bull; Triggered "
+"Emails: %d"
+msgstr ""
+"Assinantes ativos: %d &bull; Assinantes não confirmados: %d &bull; E-mails "
+"acionados: %d"
+
+#: admin.php:902 admin.php:1165
+msgid "Add"
+msgstr "Adicionar"
+
+#: admin.php:1136
+msgid "Add a subscriber, optionally already confirmed."
+msgstr "Adicionar um assinante, opcionalmente já confirmado."
+
+#: modal.php:227
+msgid "Add items from your search."
+msgstr "Adicione os itens da pesquisa."
+
+#: admin.php:877 admin.php:893
+msgid "Add Notification"
+msgstr "Adicionar notificação"
+
+#: admin.php:897
+msgctxt "Add notification input placeholder."
+msgid "Post ID"
+msgstr "ID do Post"
+
+#: admin.php:1118 admin.php:1134
+msgid "Add Subscriber"
+msgstr "Adicionar assinante"
+
+#: admin.php:706
+#, php-format
+msgid "Added notification for \"%s\" (#%s)."
+msgstr "Adicionada notificação para \"%s\" (#%s)."
+
+#: admin.php:456
+#, php-format
+msgctxt "Admin page footer text."
+msgid "Fictioneer Email Notifications %s"
+msgstr "Notificações por e-mail do Fictioneer %s"
+
+#: classes/class-notifications-table.php:661
+#: classes/class-subscribers-table.php:597
+#, php-format
+msgid "All <span class=\"count\">(%s)</span>"
+msgstr "Todos os <span class=\"count\">(%s)</span>"
+
+#: admin.php:1642
+msgid "Allow subscriptions to stories"
+msgstr "Permitir assinaturas de histórias"
+
+#: admin.php:1648
+msgid "Allow subscriptions to taxonomies"
+msgstr "Permitir assinaturas de taxonomias"
+
+#. Description of the plugin
+msgid ""
+"Allows readers to subscribe to selected updates via email. You can choose to "
+"receive notifications for all new content, specific post types, or selected "
+"stories and taxonomies. Works for both guests and registered users."
+msgstr ""
+"Permite que os leitores se inscrevam para receber atualizações selecionadas "
+"por e-mail. Você pode optar por receber notificações de todo o conteúdo "
+"novo, de tipos de posts específicos ou de histórias e taxonomias "
+"selecionadas. Funciona tanto para convidados quanto para usuários "
+"registrados."
+
+#: admin.php:1016
+msgid ""
+"An incomplete queue has been found. You can try to resend unsuccessful "
+"batches or clear the queue to start the next set of notifications. "
+"Incomplete queues are stored for 24 hours."
+msgstr ""
+"Foi encontrada uma fila incompleta. Você pode tentar reenviar os lotes "
+"malsucedidos ou limpar a fila para iniciar o próximo conjunto de "
+"notificações. As filas incompletas são armazenadas por 24 horas."
+
+#: admin.php:1742
+msgid "API Key"
+msgstr "Chave da API"
+
+#: actions.php:606 actions.php:685
+msgid "API key has not been set."
+msgstr "Chave da API não foi definida."
+
+#: admin.php:1028
+msgid "API key missing"
+msgstr "Falta a chave de API"
+
+#: fictioneer-email-notifications.php:1717
+msgid "API key missing."
+msgstr "Falta a chave de API."
+
+#: actions.php:712
+msgid "API request failed."
+msgstr "Falha na solicitação da API."
+
+#: actions.php:645
+msgid "API Response"
+msgstr "Resposta da API"
+
+#: classes/class-notifications-table.php:123
+msgid "Author"
+msgstr "Autor"
+
+#: admin.php:1756
+msgid "Batch Limit"
+msgstr "Limite de lote"
+
+#: admin.php:1151 modal.php:196
+msgid "Blogs"
+msgstr "Blogs"
+
+#: admin.php:1829
+msgid "Bulk Email ID"
+msgstr "ID de e-mail em massa"
+
+#: actions.php:611
+msgid "Bulk ID missing."
+msgstr "Falta o ID de e-mail em massa."
+
+#: actions.php:649
+msgid "Bulk Request Status"
+msgstr "Status da solicitação em massa"
+
+#: admin.php:210
+#, php-format
+msgid "By <a href=\"%s\">Tetrakern</a>"
+msgstr "Por <a href=\"%s\">Tetrakern</a>"
+
+#: admin.php:901 admin.php:1164 admin.php:1187
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: classes/class-subscribers-table.php:417
+msgid "Categories"
+msgstr "Categorias"
+
+#: utility.php:1662
+msgid "Chapter"
+msgstr "Capítulo"
+
+#: admin.php:1314
+msgid "Chapter Loop Partial"
+msgstr "Loop Parcial de Capítulo"
+
+#: admin.php:1159 modal.php:206
+msgid "Chapters"
+msgstr "Capítulos"
+
+#: admin.php:1830
+msgid "Check"
+msgstr "Verificar"
+
+#: admin.php:1768
+msgid "Check Quota"
+msgstr "Verificar Cota"
+
+#: admin.php:1178
+msgid "Choose File"
+msgstr "Selecionar Arquivo"
+
+#: admin.php:1032
+msgid "Clear Queue"
+msgstr "Limpar Fila"
+
+#: admin.php:742
+msgid "Cleared email queue."
+msgstr "Fila de e-mails limpa."
+
+#: admin.php:952
+msgid "Click the button to generate and start the next queue."
+msgstr "Clique no botão para gerar e iniciar a próxima fila."
+
+#: modal.php:149
+msgid "Code"
+msgstr "Código"
+
+#: ajax.php:121
+msgid "Code did not match email."
+msgstr "O código não corresponde ao do e-mail."
+
+#: admin.php:1309
+msgid "Code Layout"
+msgstr "Layout do código"
+
+#: ajax.php:112
+msgid "Code missing."
+msgstr "Falta o Código."
+
+#: admin.php:1706
+msgid "Comma-separated list of excluded author IDs."
+msgstr "Lista separada por vírgulas de IDs de autores excluídos."
+
+#: admin.php:1695
+msgid "Comma-separated list of excluded post IDs."
+msgstr "Lista separada por vírgulas de IDs de posts excluídos."
+
+#: classes/class-subscribers-table.php:305
+#: classes/class-subscribers-table.php:486
+#: classes/class-subscribers-table.php:496
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: admin.php:618
+#, php-format
+msgid "Confirmation email resent to subscriber (#%s)."
+msgstr "E-mail de confirmação reenviado ao assinante (#%s)."
+
+#: admin.php:1308
+msgid "Confirmation Layout"
+msgstr "Layout de confirmação"
+
+#: admin.php:1143 classes/class-subscribers-table.php:246
+msgid "Confirmed"
+msgstr "Confirmado"
+
+#: admin.php:578
+#, php-format
+msgid "Confirmed %s subscribers."
+msgstr "Assinantes %s confirmados."
+
+#: classes/class-subscribers-table.php:605
+#, php-format
+msgid "Confirmed <span class=\"count\">(%s)</span>"
+msgstr "Confirmado <span class=\"count\">(%s)</span>"
+
+#: ajax.php:133
+msgid "Could not create or update subscription."
+msgstr "Não foi possível criar ou atualizar a assinatura."
+
+#: ajax.php:198
+msgid "Could not delete subscription."
+msgstr "Não foi possível excluir a assinatura."
+
+#: classes/class-notifications-table.php:126
+#: classes/class-subscribers-table.php:121
+msgid "Date"
+msgstr "Data"
+
+#: admin.php:1724
+msgid "Deactivation"
+msgstr "Desativação"
+
+#: admin.php:1336 admin.php:1365 admin.php:1402 admin.php:1431 admin.php:1459
+#: admin.php:1492 admin.php:1527
+msgid "Default HTML"
+msgstr "HTML padrão"
+
+#: utility.php:91
+msgctxt "Default term label."
+msgid "Tax"
+msgstr "Taxa"
+
+#: admin.php:1623
+msgid "Defaults to noreply@* or admin email address."
+msgstr "O padrão é noreply@* ou o endereço de e-mail do administrador."
+
+#: admin.php:1632
+msgid "Defaults to site name."
+msgstr "O padrão é o nome do site."
+
+#: admin.php:1730
+msgid "Delete all plugin data on deactivation (irreversible)"
+msgstr "Excluir todos os dados do plug-in na desativação (irreversível)"
+
+#: classes/class-subscribers-table.php:492
+msgid "Delete Permanently"
+msgstr "Excluir Permanentemente"
+
+#: classes/class-subscribers-table.php:383
+msgid "Delete permanently"
+msgstr "Excluir permanentemente"
+
+#: admin.php:674
+#, php-format
+msgid "Deleted %s notifications."
+msgstr "%s Notificações excluídas."
+
+#: admin.php:634
+#, php-format
+msgid "Deleted notification for \"%s\" (#%s)."
+msgstr "Notificação excluída para \"%s\" (#%s)."
+
+#: admin.php:666
+msgid "Deleted sent notifications."
+msgstr "Notificações enviadas excluídas."
+
+#: admin.php:1666
+msgid "Do not enqueue blocked posts upon publishing"
+msgstr "Não enfileirar postagens bloqueadas ao publicá-las"
+
+#: modal.php:150
+msgid "Edit"
+msgstr "Editar"
+
+#: admin.php:1310
+msgid "Edit Layout"
+msgstr "Editar Layout"
+
+#: classes/class-subscribers-table.php:118
+msgid "Email"
+msgstr "E-mail"
+
+#: admin.php:1138 modal.php:144 modal.php:183
+msgid "Email Address"
+msgstr "Endereço de e-mail"
+
+#: admin.php:2073
+msgid "Email address used for your subscription."
+msgstr "Endereço de e-mail usado na sua assinatura."
+
+#: admin.php:1857
+msgid "Email Notifications"
+msgstr "Notificações por e-mail"
+
+#: ajax.php:176
+msgid "Email or code missing."
+msgstr "E-mail ou código ausente."
+
+#: utility.php:1908
+msgctxt "Email queue batch status."
+msgid "Error"
+msgstr "Erro"
+
+#: utility.php:1909
+msgctxt "Email queue batch status."
+msgid "Failure"
+msgstr "Falha"
+
+#: utility.php:1905
+msgctxt "Email queue batch status."
+msgid "Pending"
+msgstr "Pendente"
+
+#: utility.php:1906
+msgctxt "Email queue batch status."
+msgid "Transmitted"
+msgstr "Transmitido"
+
+#: utility.php:1907
+msgctxt "Email queue batch status."
+msgid "Working"
+msgstr "Trabalhando"
+
+#: utility.php:1924
+#, php-format
+msgctxt "Email queue response."
+msgid "%s Email(s)"
+msgstr "%s E-mail(s)"
+
+#: utility.php:1968
+#, php-format
+msgctxt "Email queue response."
+msgid "%s | ID: %s"
+msgstr "%s | ID: %s"
+
+#: utility.php:1921
+#, php-format
+msgctxt "Email queue response."
+msgid "Batch #%s"
+msgstr "Lote #%s"
+
+#: utility.php:1945
+#, php-format
+msgctxt "Email queue response."
+msgid "Code: <a href=\"%s\" target=\"_blank\">%s</a>"
+msgstr "Código: <a href=\"%s\" target=\"_blank\">%s</a>"
+
+#: fictioneer-email-notifications.php:79
+msgctxt "Email subject"
+msgid "Please confirm your subscription"
+msgstr "Por favor, confirme sua assinatura"
+
+#: fictioneer-email-notifications.php:82
+msgctxt "Email subject"
+msgid "Updates on {{site_name}}"
+msgstr "Atualizações em {{site_name}}"
+
+#: fictioneer-email-notifications.php:80
+msgctxt "Email subject"
+msgid "Your subscription code"
+msgstr "Seu código de assinatura"
+
+#: fictioneer-email-notifications.php:81
+msgctxt "Email subject"
+msgid "Your subscription has been updated"
+msgstr "Sua assinatura foi atualizada"
+
+#: fictioneer-email-notifications.php:612
+#: fictioneer-email-notifications.php:712 admin.php:2054 modal.php:13
+msgid "Email Subscription"
+msgstr "E-mail"
+
+#: admin.php:622
+#, php-format
+msgid "Email with edit code sent to subscriber (#%s)."
+msgstr "E-mail com código de edição enviado ao assinante (#%s)."
+
+#: admin.php:1760
+msgid "Emails per request (max. 500)."
+msgstr "E-mails por solicitação (máx. 500)."
+
+#: admin.php:626
+msgid "Emptied trash."
+msgstr "Lixo Vazio."
+
+#: classes/class-subscribers-table.php:524
+msgid "Empty Trash"
+msgstr "Limpar Lixeira"
+
+#: admin.php:1962
+msgid "Enqueue again on update"
+msgstr "Enfileirar novamente na atualização"
+
+#: classes/class-notifications-table.php:551
+msgid "Enqueued"
+msgstr "Enfileirado"
+
+#: modal.php:139
+msgid ""
+"Enter your email address and code (found in all emails) to edit your "
+"subscription, or <button type=\"button\" class=\"fcnen-inline-button\" data-"
+"click-action=\"submit-mode\">go back</button> to subscribe with a new email "
+"address."
+msgstr ""
+"Digite seu e-mail e código (encontrado em todos os e-mails) para editar sua "
+"assinatura ou <button type=\"button\" class=\"fcnen-inline-button\" data-"
+"click-action=\"submit-mode\">volte</button> para assinar com um novo e-mail."
+
+#: actions.php:705 actions.php:706 actions.php:707
+msgid "Error"
+msgstr "Erro"
+
+#: admin.php:519
+#, php-format
+msgid "Error. %s could not be added."
+msgstr "Erro. %s não pôde ser adicionado."
+
+#: admin.php:710
+#, php-format
+msgid "Error. Could not add notification for \"%s\" (#%s)."
+msgstr "Erro. Não foi possível adicionar notificação para \"%s\" (#%s)."
+
+#: admin.php:582
+msgid "Error. Could not confirm subscribers."
+msgstr "Erro. Não foi possível confirmar os assinantes."
+
+#: admin.php:638
+#, php-format
+msgid "Error. Could not delete notification for \"%s\" (#%s)."
+msgstr "Erro. Não foi possível excluir a notificação de \"%s\" (#%s)."
+
+#: admin.php:678
+msgid "Error. Could not delete notifications."
+msgstr "Erro. Não foi possível excluir as notificações."
+
+#: admin.php:670
+msgid "Error. Could not delete sent notifications."
+msgstr "Erro. Não foi possível excluir as notificações enviadas."
+
+#: admin.php:614
+msgid "Error. Could not delete subscribers."
+msgstr "Erro. Não foi possível excluir assinantes."
+
+#: admin.php:662
+#, php-format
+msgid "Error. Could not mark notification for \"%s\" (#%s) as unsent."
+msgstr ""
+"Erro. Não foi possível marcar a notificação para \"%s\" (#%s) como não "
+"enviada."
+
+#: admin.php:686
+msgid "Error. Could not mark notifications as unsent."
+msgstr "Erro. Não foi possível marcar as notificações como não enviadas."
+
+#: admin.php:646
+#, php-format
+msgid "Error. Could not pause notification for \"%s\" (#%s)."
+msgstr "Erro. Não foi possível pausar a notificação para \"%s\" (#%s)."
+
+#: admin.php:694
+msgid "Error. Could not pause notifications."
+msgstr "Erro. Não foi possível pausar as notificações."
+
+#: admin.php:606
+msgid "Error. Could not restore subscribers."
+msgstr "Erro. Não foi possível restaurar assinantes."
+
+#: admin.php:598
+msgid "Error. Could not trash subscribers."
+msgstr "Erro. Não foi possível descartar assinantes."
+
+#: admin.php:590
+msgid "Error. Could not unconfirm subscribers."
+msgstr "Erro. Não foi possível desconfirmar os assinantes."
+
+#: admin.php:654
+#, php-format
+msgid "Error. Could not unpause notification for \"%s\" (#%s)."
+msgstr ""
+"Erro. Não foi possível cancelar a pausa da notificação para \"%s\" (#%s)."
+
+#: admin.php:702
+msgid "Error. Could not unpause notifications."
+msgstr "Erro. Não foi possível cancelar a pausa das notificações."
+
+#: actions.php:251
+msgid "Error. File could not be opened."
+msgstr "Erro. O arquivo não pôde ser aberto."
+
+#: actions.php:243
+msgid "Error. Invalid file."
+msgstr "Erro. Arquivo inválido."
+
+#: admin.php:734
+#, php-format
+msgid "Error. Post #%s is excluded from email notifications."
+msgstr "Erro. Post #%s foi excluído das notificações por e-mail."
+
+#: admin.php:738
+#, php-format
+msgid "Error. Post #%s is hidden."
+msgstr "Erro. O post #%s está oculto."
+
+#: admin.php:722
+#, php-format
+msgid "Error. Post #%s is not published."
+msgstr "Erro. O post #%s não foi publicado."
+
+#: admin.php:730
+#, php-format
+msgid "Error. Post #%s is of an invalid type."
+msgstr "Erro. O post #%s é de um tipo inválido."
+
+#: admin.php:726
+#, php-format
+msgid "Error. Post #%s is protected."
+msgstr "Erro. O post #%s está protegido."
+
+#: admin.php:718
+#, php-format
+msgid "Error. Post #%s not found."
+msgstr "Erro. Post #%s não encontrado."
+
+#: admin.php:528
+#, php-format
+msgid "Error. Subscriber (#%s) could not be confirmed."
+msgstr "Erro. O assinante (#%s) não pôde ser confirmado."
+
+#: admin.php:572
+#, php-format
+msgid "Error. Subscriber (#%s) could not be deleted."
+msgstr "Erro. O assinante (#%s) não pôde ser excluído."
+
+#: admin.php:561
+#, php-format
+msgid "Error. Subscriber (#%s) could not be restored."
+msgstr "Erro. O assinante (#%s) não pôde ser restaurado."
+
+#: admin.php:550
+#, php-format
+msgid "Error. Subscriber (#%s) could not be trashed."
+msgstr "Erro. O assinante (#%s) não pôde ser descartado."
+
+#: admin.php:539
+#, php-format
+msgid "Error. Subscriber (#%s) could not be unconfirmed."
+msgstr "Erro. O assinante (#%s) não pôde ser desconfirmado."
+
+#: admin.php:511
+msgid "Error. Subscriber with that email address already exists."
+msgstr "Erro. Já existe um assinante com esse endereço de e-mail."
+
+#: actions.php:238
+msgid "Error. The file is empty."
+msgstr "Erro. O arquivo está vazio."
+
+#: actions.php:226
+msgid "Error. The file was not uploaded properly."
+msgstr "Erro. O arquivo não foi carregado corretamente."
+
+#: admin.php:714
+#, php-format
+msgid "Error. There is already an unsent notification queued for \"%s\" (#%s)."
+msgstr "Erro. Já existe uma notificação não enviada na fila para \"%s\" (#%s)."
+
+#: admin.php:1147 modal.php:191 classes/class-subscribers-table.php:423
+msgid "Everything"
+msgstr "Tudo"
+
+#: admin.php:1673
+msgid "Excerpts"
+msgstr "Trechos"
+
+#: admin.php:1969
+msgid "Exclude from notifications"
+msgstr "Excluir de notificações"
+
+#: admin.php:1702
+msgid "Excluded Authors"
+msgstr "Autores Excluídos"
+
+#: admin.php:1713
+msgid "Excluded Emails"
+msgstr "E-mails Excluídos"
+
+#: admin.php:1691
+msgid "Excluded Posts"
+msgstr "Posts Excluídos"
+
+#: classes/class-subscribers-table.php:537
+msgid "Export CSV"
+msgstr "Exportar CSV"
+
+#. Name of the plugin
+#: admin.php:187
+msgid "Fictioneer Email Notifications"
+msgstr "Notificações por e-mail do Fictioneer"
+
+#: admin.php:256
+msgid ""
+"Fictioneer Email Notifications requires the Fictioneer theme or a child "
+"theme. The plugin has been deactivated."
+msgstr ""
+"O Fictioneer Email Notifications requer o tema Fictioneer ou um tema filho. "
+"O plug-in foi desativado."
+
+#: admin.php:273
+msgid ""
+"Fictioneer Email Notifications requires the Fictioneer theme, version 5.19.0 "
+"or higher. The plugin has been deactivated."
+msgstr ""
+"O Fictioneer Email Notifications requer o tema Fictioneer, versão 5.19.0 ou "
+"superior. O plug-in foi desativado."
+
+#: fictioneer-email-notifications.php:752 admin.php:2078
+msgid ""
+"Found in notification emails. If compromised, delete and renew subscription."
+msgstr ""
+"Encontrado em e-mails de notificação. Se comprometido, exclua e renove a "
+"assinatura."
+
+#: admin.php:1622
+msgctxt "From email address placeholder."
+msgid "noreply@your-site.com"
+msgstr "naoresponda@seu-site.com.br"
+
+#: admin.php:1631
+msgctxt "From email name placeholder."
+msgid "Your Site"
+msgstr "Seu site"
+
+#: classes/class-notifications-table.php:327
+#: classes/class-notifications-table.php:335
+msgid "Hidden"
+msgstr "Oculto"
+
+#. Author URI of the plugin
+msgid "https://github.com/Tetrakern"
+msgstr "https://github.com/Tetrakern"
+
+#. URI of the plugin
+msgid "https://github.com/Tetrakern/fictioneer-email-notifications"
+msgstr "https://github.com/Tetrakern/fictioneer-email-notifications"
+
+#: classes/class-subscribers-table.php:117
+msgid "ID"
+msgstr "ID"
+
+#: admin.php:1188
+msgid "Import"
+msgstr "Importar"
+
+#: admin.php:1173 classes/class-subscribers-table.php:545
+msgid "Import CSV"
+msgstr "Importar CSV"
+
+#: admin.php:1175
+msgid ""
+"Import subscribers from a CSV file. Keep in mind that scopes are saved as "
+"IDs and may not match if the associated terms have changed."
+msgstr ""
+"Importa assinantes de um arquivo CSV. Lembre-se de que os escopos são salvos "
+"como IDs e podem não corresponder se os termos associados tiverem sido "
+"alterados."
+
+#: actions.php:24 actions.php:100 actions.php:139 actions.php:221
+#: actions.php:376 actions.php:432 actions.php:597 actions.php:677 ajax.php:359
+msgid "Insufficient permissions."
+msgstr "Permissões insuficientes."
+
+#: ajax.php:68 ajax.php:171
+msgid "Invalid email address."
+msgstr "Endereço de e-mail inválido."
+
+#: ajax.php:19 ajax.php:43 ajax.php:154 ajax.php:219 ajax.php:347
+msgid "Invalid request."
+msgstr "Solicitação inválida."
+
+#: admin.php:214
+msgid "Ko-fi"
+msgstr "Ko-fi"
+
+#: classes/class-notifications-table.php:127
+msgid "Last Sent"
+msgstr "Último envio"
+
+#: utility.php:1876
+msgctxt "Last Sent: Never."
+msgid "Never"
+msgstr "Nunca"
+
+#: ajax.php:264 modal.php:236
+msgctxt "List item label."
+msgid "Story"
+msgstr "História"
+
+#: utility.php:83
+msgctxt "List item term label."
+msgid "Cat"
+msgstr "Categoria"
+
+#: utility.php:87
+msgctxt "List item term label."
+msgid "Character"
+msgstr "Personagen"
+
+#: utility.php:86
+msgctxt "List item term label."
+msgid "Fandom"
+msgstr "Fandom"
+
+#: utility.php:85
+msgctxt "List item term label."
+msgid "Genre"
+msgstr "Gênero"
+
+#: utility.php:84
+msgctxt "List item term label."
+msgid "Tag"
+msgstr "Tag"
+
+#: utility.php:88
+msgctxt "List item term label."
+msgid "Warning"
+msgstr "Aviso"
+
+#: admin.php:1717
+msgid "List of excluded email addresses, one per line."
+msgstr "Lista de endereços de e-mail excluídos, um por linha."
+
+#: ajax.php:308 modal.php:263
+msgid "Loading…"
+msgstr "Carregando…"
+
+#: admin.php:1818
+msgid "Log"
+msgstr "Registro"
+
+#: utility.php:756
+msgctxt "Log file."
+msgid "AJAX"
+msgstr "AJAX"
+
+#: utility.php:749
+msgctxt "Log file."
+msgid "Unknown"
+msgstr "Desconhecido"
+
+#: utility.php:752
+msgctxt "Log file."
+msgid "WP Cron"
+msgstr "WP Cron"
+
+#: classes/class-notifications-table.php:569
+msgid "Mailed"
+msgstr "Enviado"
+
+#: admin.php:1944
+msgid "Mailed on"
+msgstr "Enviado em"
+
+#: admin.php:1736
+msgid "MailerSend"
+msgstr "MailerSend"
+
+#: admin.php:682
+#, php-format
+msgid "Marked %s notifications as unsent."
+msgstr "%s notificações marcadas como não enviadas."
+
+#: admin.php:1677
+msgid ""
+"Maximum characters for generated excerpts. Custom excerpts are not limited."
+msgstr ""
+"Máximo de caracteres para trechos gerados. Os trechos personalizados não são "
+"limitados."
+
+#: modal.php:222
+msgid "Maximum reached!"
+msgstr "Máximo alcançado!"
+
+#: admin.php:1686
+msgid ""
+"Maximum subscription items per category, tag, and taxonomies. Disable with 0."
+msgstr ""
+"Máximo de itens de assinatura por categoria, tag e taxonomias. Desabilite "
+"com 0."
+
+#: admin.php:1682
+msgid "Maximums"
+msgstr "Máximos"
+
+#: actions.php:37
+msgid "Missing or invalid email address."
+msgstr "Endereço de e-mail ausente ou inválido."
+
+#: classes/class-subscribers-table.php:482
+#: classes/class-subscribers-table.php:487
+#: classes/class-subscribers-table.php:498
+msgid "Move to Trash"
+msgstr "Mover para a lixeira"
+
+#: admin.php:523 admin.php:529 admin.php:534 admin.php:540 admin.php:545
+#: admin.php:551 admin.php:556 admin.php:562 admin.php:567 admin.php:573
+#: admin.php:618 admin.php:622
+msgid "n/a"
+msgstr "n/a"
+
+#: admin.php:1179
+msgid "No file chosen"
+msgstr "Nenhum arquivo escolhido"
+
+#: utility.php:794
+msgid "No log entries yet."
+msgstr "Ainda não há registros."
+
+#: ajax.php:315
+msgid "No matches found."
+msgstr "Correspondências não encontradas."
+
+#: actions.php:454
+msgid "No matching notifications queued."
+msgstr "Não há notificações correspondentes na fila."
+
+#: ajax.php:185
+msgid "No matching subscription found."
+msgstr "Assinatura correspondente não encontrada."
+
+#: fictioneer-email-notifications.php:720 admin.php:2066
+msgid ""
+"No matching subscription found. Please check your email address and code."
+msgstr ""
+"Assinatura correspondente não encontrada. Verifique seu endereço de e-mail e "
+"código."
+
+#: modal.php:224 modal.php:267
+msgid "No search query."
+msgstr "Nenhuma consulta de pesquisa."
+
+#: actions.php:19 actions.php:95 actions.php:134 actions.php:216
+#: actions.php:371 actions.php:427
+msgid "Nonce verification failed."
+msgstr "Falha de verificação nonce."
+
+#: ajax.php:48 ajax.php:159 ajax.php:224 ajax.php:353
+msgid "Nonce verification failed. Please reload and try again."
+msgstr "Falha de verificação nonce. Recarregue e tente novamente."
+
+#: actions.php:508 actions.php:562 actions.php:593 actions.php:673
+#: classes/class-notifications-table.php:61
+#: classes/class-notifications-table.php:68
+#: classes/class-subscribers-table.php:47
+#: classes/class-subscribers-table.php:54
+msgid "Nonce verification failed. Please try again."
+msgstr "Falha de verificação nonce. Tente novamente."
+
+#: admin.php:963
+msgid "Nothing to send."
+msgstr "Nada a enviar."
+
+#: admin.php:658
+#, php-format
+msgid "Notification for \"%s\" (#%s) marked as unsent."
+msgstr "Notificação para \"%s\" (#%s) marcada como não enviada."
+
+#: admin.php:1311
+msgid "Notification Layout"
+msgstr "Layout de Notificação"
+
+#: classes/class-notifications-table.php:504
+msgctxt "Notification list table status column."
+msgid "Blocked"
+msgstr "Bloqueado"
+
+#: classes/class-notifications-table.php:466
+msgctxt "Notification list table status column."
+msgid "Blocked:<br>Deleted"
+msgstr "Bloqueado:<br>Apagado"
+
+#: classes/class-notifications-table.php:498
+msgctxt "Notification list table status column."
+msgid "Blocked:<br>Excluded"
+msgstr "Bloqueado:<br>Excluído"
+
+#: classes/class-notifications-table.php:474
+msgctxt "Notification list table status column."
+msgid "Blocked:<br>Excluded Author"
+msgstr "Bloqueado:<br>Autor Excluído"
+
+#: classes/class-notifications-table.php:478
+msgctxt "Notification list table status column."
+msgid "Blocked:<br>Excluded Post"
+msgstr "Bloqueado:<br>Post Excluído"
+
+#: classes/class-notifications-table.php:501
+msgctxt "Notification list table status column."
+msgid "Blocked:<br>Hidden"
+msgstr "Bloqueado:<br>Oculto"
+
+#: classes/class-notifications-table.php:495
+msgctxt "Notification list table status column."
+msgid "Blocked:<br>Invalid"
+msgstr "Bloqueado:<br>Inválido"
+
+#: classes/class-notifications-table.php:492
+msgctxt "Notification list table status column."
+msgid "Blocked:<br>Protected"
+msgstr "Bloqueado:<br>Protegido"
+
+#: classes/class-notifications-table.php:470
+msgctxt "Notification list table status column."
+msgid "Blocked:<br>Trashed"
+msgstr "Bloqueado:<br>No Lixo"
+
+#: classes/class-notifications-table.php:489
+msgctxt "Notification list table status column."
+msgid "Blocked:<br>Unpublished"
+msgstr "Bloqueado:<br>Não publicado"
+
+#: classes/class-notifications-table.php:462
+msgctxt "Notification list table status column."
+msgid "Paused"
+msgstr "Pausado"
+
+#: classes/class-notifications-table.php:482
+msgctxt "Notification list table status column."
+msgid "Ready"
+msgstr "Pronto"
+
+#: classes/class-notifications-table.php:458
+msgctxt "Notification list table status column."
+msgid "Sent"
+msgstr "Enviado"
+
+#: classes/class-notifications-table.php:342
+#, php-format
+msgctxt "Notification list table title column."
+msgid "<a href=\"%1$s\">%2$s</a> %3$s %4$s"
+msgstr "<a href=\"%1$s\">%2$s</a> %3$s %4$s"
+
+#: classes/class-notifications-table.php:350
+#, php-format
+msgctxt "Notification list table title column."
+msgid "<span>%1$s</span> %2$s %3$s"
+msgstr "<span>%1$s</span> %2$s %3$s"
+
+#: actions.php:464
+msgid "Notification Preview"
+msgstr "Visualização de Notificação"
+
+#: admin.php:876
+msgid "Notifications"
+msgstr "Notificações"
+
+#: admin.php:844
+msgid "Notifications per page"
+msgstr "Notificações por página"
+
+#: fictioneer-email-notifications.php:774
+msgid "Open Modal"
+msgstr "Abrir Modal"
+
+#: admin.php:1636
+msgid "Options"
+msgstr "Opções"
+
+#: admin.php:216
+msgid "Patreon"
+msgstr "Patreon"
+
+#: classes/class-notifications-table.php:385
+#: classes/class-notifications-table.php:583
+msgid "Pause"
+msgstr "Pausa"
+
+#: admin.php:690
+#, php-format
+msgid "Paused %s notifications."
+msgstr "%s notificações pausadas."
+
+#: classes/class-notifications-table.php:678
+#, php-format
+msgid "Paused <span class=\"count\">(%s)</span>"
+msgstr "Em pausa <span class=\"count\">(%s)</span>"
+
+#: admin.php:642
+#, php-format
+msgid "Paused notification for \"%s\" (#%s)."
+msgstr "Notificação pausada para \"%s\" (#%s)."
+
+#: classes/class-subscribers-table.php:246
+msgid "Pending"
+msgstr "Pendente"
+
+#: classes/class-subscribers-table.php:614
+#, php-format
+msgid "Pending <span class=\"count\">(%s)</span>"
+msgstr "Pendentes <span class=\"count\">(%s)</span>"
+
+#: admin.php:610
+#, php-format
+msgid "Permanently deleted %s subscribers."
+msgstr "Assinantes %s excluídos permanentemente."
+
+#: utility.php:1660
+msgid "Post"
+msgstr "Post"
+
+#: classes/class-notifications-table.php:124
+msgid "Post ID"
+msgstr "ID do Post"
+
+#: admin.php:1312
+msgid "Post Loop Partial"
+msgstr "Post Loop Parcial"
+
+#: admin.php:1540 classes/class-subscribers-table.php:292
+msgid "Preview"
+msgstr "Prévia"
+
+#: admin.php:1277
+msgctxt "Preview replacement string."
+msgid "Amnesia, Dystopian, Magical Girls"
+msgstr "Amnésia, Distopia, Meninas Mágicas"
+
+#: admin.php:1265
+msgctxt "Preview replacement string."
+msgid "Author"
+msgstr "Autor"
+
+#: admin.php:1274
+msgctxt "Preview replacement string."
+msgid "Blogs, Stories, Chapters"
+msgstr "Blogs, Histórias, Capítulos"
+
+#: admin.php:1275
+msgctxt "Preview replacement string."
+msgid "Dracula, Sherlock Holmes, My Immortal"
+msgstr "Drácula, Sherlock Holmes, Meu Imortal"
+
+#: admin.php:1276
+msgctxt "Preview replacement string."
+msgid "External, Wholesome, Creepy"
+msgstr "Externo, Saudável, Sssustador"
+
+#: admin.php:1268
+msgctxt "Preview replacement string."
+msgid ""
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel lacus "
+"luctus, laoreet augue vitae, dignissim arcu. Curabitur fermentum euismod "
+"justo et luctus. Cras sit amet gravida libero."
+msgstr ""
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel lacus "
+"luctus, laoreet augue vitae, dignissim arcu. Curabitur fermentum euismod "
+"justo et luctus. Cras sit amet gravida libero."
+
+#: admin.php:1279
+msgctxt "Preview replacement string."
+msgid "Original, Sol Bianca, Little Witch Academia"
+msgstr "Original, Sol Bianca, Little Witch Academia"
+
+#: admin.php:1267
+msgctxt "Preview replacement string."
+msgid "Preview Story Title"
+msgstr "Prévia do Título da História"
+
+#: admin.php:1266
+msgctxt "Preview replacement string."
+msgid "Preview Title"
+msgstr "Previa do Título"
+
+#: admin.php:1281
+msgctxt "Preview replacement string."
+msgid "Profanity, Violence, Gore"
+msgstr "Baixo-Calão, Violência, Gore"
+
+#: admin.php:1278
+msgctxt "Preview replacement string."
+msgid "Science Fiction, Solarpunk, Cosmic Horror"
+msgstr "Ficção Científica, Solarpunk, Horror ósmico"
+
+#: admin.php:1272
+msgctxt "Preview replacement string."
+msgid "subscriber@email.com"
+msgstr "assinante@email.com"
+
+#: admin.php:1280
+msgctxt "Preview replacement string."
+msgid "Twilight Sparkle, Luz Noceda, Rebecca"
+msgstr "Twilight Sparkle, Luz Noceda, Rebecca"
+
+#: admin.php:1273
+msgctxt "Preview replacement string."
+msgid "Type"
+msgstr "Tipo"
+
+#: admin.php:1015
+msgid "Previous Queue (Incomplete)"
+msgstr "Fila Anterior (Incompleta)"
+
+#: fictioneer-email-notifications.php:745
+msgctxt "Profile label for subscription code."
+msgid "Subscription Code"
+msgstr "Código de Assinatura"
+
+#: fictioneer-email-notifications.php:730
+msgctxt "Profile label for subscription email address."
+msgid "Subscription Email Address"
+msgstr "E-mail de assinatura"
+
+#: admin.php:1018
+msgid "Queue"
+msgstr "Fila"
+
+#: utility.php:1933
+#, php-format
+msgctxt "Queue error message."
+msgid "Error: %s"
+msgstr "Erro: %s"
+
+#: fictioneer-email-notifications.php:1577
+msgid "Queue is empty."
+msgstr "A fila está vazia."
+
+#: admin.php:1003
+msgctxt "Queue statistics."
+msgid "Batch"
+msgid_plural "Batches"
+msgstr[0] "Lote"
+msgstr[1] "Lotes"
+
+#: admin.php:983
+msgctxt "Queue statistics."
+msgid "Blocked"
+msgstr "Bloqueado"
+
+#: admin.php:990
+msgctxt "Queue statistics."
+msgid "Email"
+msgid_plural "Emails"
+msgstr[0] "E-mail"
+msgstr[1] "E-mails"
+
+#: admin.php:1009
+msgctxt "Queue statistics."
+msgid "Last Sent"
+msgstr "Último Envio"
+
+#: admin.php:976
+msgctxt "Queue statistics."
+msgid "Post"
+msgid_plural "Posts"
+msgstr[0] "Post"
+msgstr[1] "Posts"
+
+#: admin.php:997
+#, php-format
+msgctxt "Queue statistics: Batches | Size."
+msgid "%s | %s"
+msgstr "%s | %s"
+
+#: utility.php:1872
+#, php-format
+msgctxt "Queue time format string."
+msgid "%1$s \\<\\b\\r\\> %2$s"
+msgstr "%1$s \\<\\b\\r\\> %2$s"
+
+#: actions.php:704
+#, php-format
+msgid "Quota: %s | Remaining: %s | Reset: %s"
+msgstr "Quota: %s | Restante: %s | Redefinir: %s"
+
+#: classes/class-notifications-table.php:669
+#, php-format
+msgid "Ready <span class=\"count\">(%s)</span>"
+msgstr "Pronto <span class=\"count\">(%s)</span>"
+
+#: modal.php:172
+msgid ""
+"Receive email notifications about new content. Uncheck \"everything\" to "
+"filter for specific types or stories. You can <button type=\"button\" "
+"class=\"fcnen-inline-button\" data-click-action=\"auth-mode\">edit or "
+"cancel</button> at any time."
+msgstr ""
+"Receba notificações por e-mail de novos conteúdos. Desmarque \"tudo\" para "
+"filtrar tipos ou histórias específicas. Você pode <button type=\"button\" "
+"class=\"fcnen-inline-button\" data-click-action=\"auth-mode\">editar ou "
+"cancelar</button> a qualquer momento."
+
+#: modal.php:170
+msgid ""
+"Receive email notifications about new content. Uncheck \"everything\" to "
+"filter for specific types, stories, tags, or taxonomies. You can <button "
+"type=\"button\" class=\"fcnen-inline-button\" data-click-action=\"auth-"
+"mode\">edit or cancel</button> at any time."
+msgstr ""
+"Recebea notificações por e-mail sobre novos conteúdos. Desmarque \"tudo\" "
+"para filtrar tipos, histórias, tags ou taxonomias específicas. Você pode "
+"<button type=\"button\" class=\"fcnen-inline-button\" data-click-"
+"action=\"auth-mode\">editar ou cancelar</button> a qualquer momento."
+
+#: modal.php:174
+msgid ""
+"Receive email notifications about new content. Uncheck \"everything\" to "
+"filter for specific types, tags, or taxonomies. You can <button "
+"type=\"button\" class=\"fcnen-inline-button\" data-click-action=\"auth-"
+"mode\">edit or cancel</button> at any time."
+msgstr ""
+"Receba notificações por e-mail de novos conteúdos. Desmarque \"tudo\" para "
+"filtrar tipos, tags ou taxonomias específicos. Você pode <button "
+"type=\"button\" class=\"fcnen-inline-button\" data-click-action=\"auth-"
+"mode\">editar ou cancelar</button> a qualquer momento."
+
+#: modal.php:176
+msgid ""
+"Receive email notifications about new content. You can <button "
+"type=\"button\" class=\"fcnen-inline-button\" data-click-action=\"auth-"
+"mode\">edit or cancel</button> at any time."
+msgstr ""
+"Receba notificações por e-mail de novos conteúdos. Você pode <button "
+"type=\"button\" class=\"fcnen-inline-button\" data-click-action=\"auth-"
+"mode\">editar ou cancelar</button> a qualquer momento."
+
+#: admin.php:115
+msgid "Release Notes"
+msgstr "Notas de Lançamento"
+
+#: classes/class-notifications-table.php:416
+#: classes/class-notifications-table.php:586
+msgid "Remove"
+msgstr "Remover"
+
+#: classes/class-notifications-table.php:613
+msgid "Remove Sent"
+msgstr "Remover Enviado"
+
+#: classes/class-subscribers-table.php:331
+msgid "Resend Confirmation Email"
+msgstr "Reenviar e-mail de confirmação"
+
+#: admin.php:1183
+msgid "Reset Scopes"
+msgstr "Redefinir Escopos"
+
+#: classes/class-subscribers-table.php:370
+#: classes/class-subscribers-table.php:491
+msgid "Restore"
+msgstr "Restaurar"
+
+#: admin.php:602
+#, php-format
+msgid "Restored %s subscribers."
+msgstr "Assinantes %s restaurados."
+
+#: admin.php:1026
+msgid "Retry"
+msgstr "Tentar Novamente"
+
+#: admin.php:1766
+msgid "Save Changes"
+msgstr "Salvar Alterações"
+
+#: admin.php:1342 admin.php:1371 admin.php:1408 admin.php:1437 admin.php:1465
+#: admin.php:1498 admin.php:1533
+msgid "Save Templates"
+msgstr "Salvar Modelos"
+
+#: classes/class-subscribers-table.php:119
+msgid "Scopes"
+msgstr "Escopos"
+
+#: modal.php:55
+msgid "Search for stories or taxonomies…"
+msgstr "Pesquise histórias ou taxonomias…"
+
+#: modal.php:72
+msgid "Search for stories…"
+msgstr "Pesquise histórias…"
+
+#: modal.php:68
+msgid "Search for taxonomies…"
+msgstr "Pesquisar taxonomias…"
+
+#: classes/class-subscribers-table.php:344
+msgid "Send Code"
+msgstr "Enviar Código"
+
+#: admin.php:968 admin.php:1026
+msgid "Send Emails"
+msgstr "Enviar e-mails"
+
+#: admin.php:1619
+msgid "Sender Email"
+msgstr "E-mail do Remetente"
+
+#: admin.php:1628
+msgid "Sender Name"
+msgstr "Nome do remetente"
+
+#: fictioneer-email-notifications.php:1678
+#, php-format
+msgid "Sending Error: %s"
+msgstr "Erro de envio: %s"
+
+#: fictioneer-email-notifications.php:1672
+#, php-format
+msgid "Sending Response: Status %s | %s"
+msgstr "Enviando resposta: Status %s | %s"
+
+#: classes/class-notifications-table.php:687
+#, php-format
+msgid "Sent <span class=\"count\">(%s)</span>"
+msgstr "Enviado <span class=\"count\">(%s)</span>"
+
+#: fictioneer-email-notifications.php:227 admin.php:212 admin.php:1607
+msgid "Settings"
+msgstr "Configurações"
+
+#: classes/class-notifications-table.php:122
+#: classes/class-subscribers-table.php:120
+msgid "Status"
+msgstr "Status"
+
+#: admin.php:1155 modal.php:201 modal.php:217
+#: classes/class-subscribers-table.php:415
+msgid "Stories"
+msgstr "Histórias"
+
+#: utility.php:1661
+msgid "Story"
+msgstr "História"
+
+#: admin.php:1313
+msgid "Story Loop Partial"
+msgstr "Loop de história parcial"
+
+#: admin.php:1319 admin.php:1348 admin.php:1377 admin.php:1414
+msgid "Subject"
+msgstr "Assunto"
+
+#: ajax.php:63
+msgid ""
+"Submission successful. If everything is in order, you will get an email."
+msgstr "Envio bem-sucedido. Se tudo estiver em ordem, você receberá um e-mail."
+
+#: classes/class-subscribers-table.php:249
+#, php-format
+msgid "Submitted<br>%s"
+msgstr "Enviado<br>%s"
+
+#: modal.php:65
+msgid "Subscribe"
+msgstr "Assine"
+
+#: fictioneer-email-notifications.php:798
+msgid "Subscribe for email updates…"
+msgstr "Assine para receber atualizações por e-mail…"
+
+#: admin.php:2088
+msgid "Subscribe to Stories by Following (not retroactive)"
+msgstr "Assinar histórias usando Seguir (não retroativo)"
+
+#: fictioneer-email-notifications.php:767
+msgid "Subscribe to stories by Following (not retroactive)"
+msgstr "Assinar histórias usando Seguir (não retroativo)"
+
+#: admin.php:515 admin.php:519
+msgid "Subscriber"
+msgstr "Assinante"
+
+#: admin.php:523
+#, php-format
+msgid "Subscriber (#%s) confirmed."
+msgstr "Assinante (#%s) confirmado."
+
+#: admin.php:567
+#, php-format
+msgid "Subscriber (#%s) permanently deleted."
+msgstr "Assinante (#%s) excluído permanentemente."
+
+#: admin.php:556
+#, php-format
+msgid "Subscriber (#%s) restored."
+msgstr "Assinante (#%s) restaurado."
+
+#: admin.php:545
+#, php-format
+msgid "Subscriber (#%s) trashed."
+msgstr "Assinante (#%s) descartado."
+
+#: admin.php:534
+#, php-format
+msgid "Subscriber (#%s) unconfirmed."
+msgstr "Assinante (#%s) não confirmado."
+
+#: actions.php:444
+msgid "Subscriber not found."
+msgstr "Assinante não encontrado."
+
+#: admin.php:1117
+msgid "Subscribers"
+msgstr "Assinantes"
+
+#: admin.php:1085
+msgid "Subscribers per page"
+msgstr "Assinantes por página"
+
+#: fictioneer-email-notifications.php:646
+#: fictioneer-email-notifications.php:668
+msgid "Subscription"
+msgstr "Assinatura"
+
+#: fictioneer-email-notifications.php:1188
+msgid "Subscription has been confirmed."
+msgstr "Assinatura confirmada."
+
+#: fictioneer-email-notifications.php:1226
+msgid "Subscription has been deleted."
+msgstr "Assinatura excluída."
+
+#: fictioneer-email-notifications.php:1191
+msgid "Subscription not found or already confirmed."
+msgstr "Assinatura não encontrada ou já confirmada."
+
+#: fictioneer-email-notifications.php:1229
+msgid "Subscription not found."
+msgstr "Assinatura não encontrada."
+
+#: utility.php:432
+msgctxt "Subscription scope."
+msgid "Blogs"
+msgstr "Blogs"
+
+#: utility.php:434
+msgctxt "Subscription scope."
+msgid "Chapters"
+msgstr "Capítulos"
+
+#: utility.php:409
+msgctxt "Subscription scope."
+msgid "Everything"
+msgstr "Tudo"
+
+#: utility.php:433
+msgctxt "Subscription scope."
+msgid "Stories"
+msgstr "Histórias"
+
+#: admin.php:2068
+msgid "Subscription successfully linked."
+msgstr "Assinatura vinculada com sucesso."
+
+#: ajax.php:166
+msgid "Successfully unsubscribed."
+msgstr "Assinatura cancelada."
+
+#: classes/class-subscribers-table.php:418
+msgid "Tags"
+msgstr "Tags"
+
+#: modal.php:218 classes/class-subscribers-table.php:419
+msgid "Taxonomies"
+msgstr "Taxonomias"
+
+#: admin.php:1293
+msgid "Templates"
+msgstr "Modelos"
+
+#. Author of the plugin
+msgid "Tetrakern"
+msgstr "Tetrakern"
+
+#: fictioneer-email-notifications.php:739
+msgid "The email address used for your subscription."
+msgstr "O endereço de e-mail usado para sua assinatura."
+
+#: admin.php:1737
+msgid ""
+"The plugin composes the email bodies and pushes them in batches to the "
+"service, which in turn sends the emails."
+msgstr ""
+"O plug-in compõe os corpos dos e-mails e os encaminha, em lotes, para o "
+"serviço, que, por sua vez, envia os e-mails."
+
+#: admin.php:1822
+#, php-format
+msgid ""
+"These are the most recent 200 log items. Up to %s items are saved in the "
+"actual log file in the wp-content directory. Note that due to privacy "
+"concerns, only administrative and system actions are logged and only with "
+"IDs instead of email addresses. Datetime in YYYY-MM-DD HH:MM:SS (GMT/UTC)."
+msgstr ""
+"Esses são os 200 itens de registro mais recentes. Até %s itens são salvos no "
+"arquivo de registro real no diretório wp-content. Observe que, por questões "
+"de privacidade, apenas as ações administrativas e do sistema são registradas "
+"e somente com IDs em vez de endereços de e-mail. Data e hora em AAAA-MM-DD "
+"HH:MM:SS (GMT/UTC)."
+
+#: admin.php:1346
+msgid ""
+"This email can be manually triggered in the subscriber list, sending the "
+"edit code to a confirmed subscriber along with an edit link for convenience. "
+"This should normally not be required since the code should be included in "
+"all other emails anyway, but people are people."
+msgstr ""
+"Esse e-mail pode ser acionado manualmente na lista de assinantes, enviando o "
+"código de edição para um assinante confirmado juntamente com um link de "
+"edição para conveniência. Normalmente, isso não deve ser necessário, pois o "
+"código deve ser incluído em todos os outros e-mails de qualquer forma, mas "
+"pessoas são pessoas."
+
+#: admin.php:1412
+msgid ""
+"This email is sent for actual update notifications and consists of multiple "
+"parts: layout and loop partials. While this layout provides the surrounding "
+"body with some nice text of your choice (and the code, really important), "
+"the loop partials render the individual content matching the subscriber’s "
+"preferences."
+msgstr ""
+"Esse e-mail é enviado para as notificações de atualização de fato e consiste "
+"em várias partes: layout e partes de loop. Embora esse layout forneça o "
+"corpo ao redor com um texto agradável de sua escolha (e o código, realmente "
+"importante), as partes do loop renderizam o conteúdo individual de acordo "
+"com as preferências do assinante."
+
+#: admin.php:1317
+msgid ""
+"This email is sent when a new subscription is submitted, prompting the "
+"subscriber to confirm as security measure against fraudulent submissions. "
+"Anyone could enter anyone’s email address, after all. If not confirmed "
+"within 24 hours, the subscription and all data will be deleted once the "
+"cleanup cron job runs (every 12 hours)."
+msgstr ""
+"Esse e-mail é enviado quando uma nova assinatura é enviada, solicitando que "
+"o assinante confirme como medida de segurança contra envios fraudulentos. "
+"Afinal, qualquer pessoa pode inserir o endereço de e-mail de qualquer "
+"pessoa. Se não for confirmada dentro de 24 horas, a assinatura e todos os "
+"dados serão excluídos quando o cron job de limpeza for executado (a cada 12 "
+"horas)."
+
+#: admin.php:1375
+msgid ""
+"This email is sent whenever a subscriber updates their preferences, both as "
+"confirmation and security notification about the change. Just in case a "
+"malicious actor managed to acquire both their email address and code."
+msgstr ""
+"Esse e-mail é enviado sempre que um assinante atualiza suas preferências, "
+"tanto como confirmação quanto como notificação de segurança sobre a "
+"alteração. Para o caso de um agente mal-intencionado conseguir obter o "
+"endereço de e-mail e o código."
+
+#: admin.php:1502
+msgid ""
+"This partial renders chapter updates in notification emails inside the "
+"<code>{{updates}}</code> replacement token."
+msgstr ""
+"Essa parcial mostra as atualizações de capítulo nos e-mails de notificação "
+"dentro do token de substituição <code>{{updates}}</code>."
+
+#: admin.php:1441
+msgid ""
+"This partial renders post updates in notification emails inside the "
+"<code>{{updates}}</code> replacement token."
+msgstr ""
+"Essa parcial mostra as atualizações de posts nos e-mails de notificação "
+"dentro do token de substituição <code>{{updates}}</code>."
+
+#: admin.php:1469
+msgid ""
+"This partial renders story updates in notification emails inside the "
+"<code>{{updates}}</code> replacement token."
+msgstr ""
+"Essa parcial mostra atualizações de histórias nos e-mails de notificação "
+"dentro do token de substituição <code>{{updates}}</code>."
+
+#: admin.php:1919 admin.php:1933
+#, php-format
+msgctxt "Time format string."
+msgid "%1$s \\a\\t %2$s"
+msgstr "%1$s \\a\\t %2$s"
+
+#: classes/class-notifications-table.php:121
+msgid "Title"
+msgstr "Título"
+
+#: classes/class-subscribers-table.php:357
+msgid "Trash"
+msgstr "Lixo"
+
+#: classes/class-subscribers-table.php:623
+#, php-format
+msgid "Trash <span class=\"count\">(%s)</span>"
+msgstr "Lixeira <span class=\"count\">(%s)</span>"
+
+#: admin.php:594
+#, php-format
+msgid "Trashed %s subscribers."
+msgstr "%s Assinantes na lixeira."
+
+#: classes/class-notifications-table.php:125
+msgid "Type"
+msgstr "Tipo"
+
+#: classes/class-subscribers-table.php:416
+msgid "Types"
+msgstr "Tipos"
+
+#: admin.php:500 classes/class-notifications-table.php:719
+msgid "UNAVAILABLE"
+msgstr "NÃO DISPONÍVEL"
+
+#: admin.php:1660
+msgid "Unblock notifications for hidden posts"
+msgstr "Desbloquear notificações de postagens ocultas"
+
+#: admin.php:1654
+msgid "Unblock notifications for protected posts"
+msgstr "Desbloquear notificações de postagens protegidas"
+
+#: classes/class-subscribers-table.php:318
+#: classes/class-subscribers-table.php:481
+#: classes/class-subscribers-table.php:497
+msgid "Unconfirm"
+msgstr "Desconfirmar"
+
+#: admin.php:586
+#, php-format
+msgid "Unconfirmed %s subscribers."
+msgstr "Assinantes %s não confirmados."
+
+#: utility.php:1728
+msgid "Unknown Author"
+msgstr "Autor Desconhecido"
+
+#: classes/class-notifications-table.php:401
+#: classes/class-notifications-table.php:584
+msgid "Unpause"
+msgstr "Retomar"
+
+#: admin.php:698
+#, php-format
+msgid "Unpaused %s notifications."
+msgstr "Notificações %s retomadas."
+
+#: admin.php:650
+#, php-format
+msgid "Unpaused notification for \"%s\" (#%s)."
+msgstr "Notificação retomadas para \"%s\" (#%s)."
+
+#: classes/class-notifications-table.php:369
+#: classes/class-notifications-table.php:585
+msgid "Unsent"
+msgstr "Não enviado"
+
+#: modal.php:65
+msgid "Update"
+msgstr "Atualizar"
+
+#: modal.php:163
+msgid ""
+"Update your subscription or <button type=\"button\" class=\"fcnen-inline-"
+"button\" data-click-action=\"fcnen-delete-subscription\">delete</button> it. "
+"Do not forget to save."
+msgstr ""
+"Atualize sua assinatura ou <button type=\"button\" class=\"fcnen-inline-"
+"button\" data-click-action=\"fcnen-delete-subscription\">exclua-a</button>. "
+"Não se esqueça de salvar."
+
+#: admin.php:208
+#, php-format
+msgid "Version %s"
+msgstr "Versão %s"
+
+#: admin.php:1021
+msgid "Waiting for API reset"
+msgstr "Aguardando a reinicialização da API"
+
+#: actions.php:520
+msgid "Wrong user or not logged-in."
+msgstr "Usuário errado ou não conectado."
+
+#: admin.php:895
+msgid ""
+"You can add blog posts, stories, and chapters by ID (you can find that in "
+"the URL). Make sure the post is not excluded, private, duplicate, and so "
+"forth."
+msgstr ""
+"Você pode adicionar posts, histórias e capítulos por ID (você pode encontrá-"
+"lo na URL). Certifique-se de que a postagem não seja excluída, privada, "
+"duplicada e assim por diante."
+
+#: admin.php:1295
+msgid ""
+"You can edit the subject, layout, and style of emails. Make sure to always "
+"include the necessary replacement tokens. Use <code>{{#token}}</"
+"code>content<code>{{/token}}</code> to only render the middle part if the "
+"token is <em>not</em> empty, and  <code>{{^token}}</code>content<code>{{/"
+"token}}</code> for when the token <em>is empty.</em>"
+msgstr ""
+"Você pode editar o assunto, o layout e o estilo dos e-mails. Certifique-se "
+"de incluir sempre os tokens de substituição necessários. Use "
+"<code>{{{#token}}</code>content<code>{{/token}}</code> para mostrar somente "
+"a parte do meio se o token <em>não</em> estiver vazio e <code>{{^token}}</"
+"code>content<code>{{/token}}</code> para quando o token <em>está vazio.</em>"
+
+#: admin.php:1748
+#, php-format
+msgid ""
+"You can get that from your <a href=\"%s\" target=\"_blank\">MailerSend</a> "
+"account."
+msgstr ""
+"Você pode obter isso em sua conta do <a href=\"%s\" "
+"target=\"_blank\">MailerSend</a>."
+
+#: admin.php:868 admin.php:946 admin.php:1109 admin.php:1232 admin.php:1591
+#: admin.php:1813
+msgid "You do not have permission to access this page."
+msgstr "Você não tem permissão para acessar esta página."
+
+#: fictioneer-email-notifications.php:715 admin.php:2059
+msgid ""
+"Your email subscription for selected content updates is kept separate from "
+"your account, meaning you can use a different email address. But you also "
+"need to authenticate with your code every time you wish to view or update "
+"your subscription. For convenience, you can link your subscription here."
+msgstr ""
+"Sua assinatura de atualizações por e-mail do conteúdo selecionado é separada "
+"da sua conta, o que significa que você pode usar um endereço de e-mail "
+"diferente. Mas você também precisa se autenticar com seu código sempre que "
+"desejar visualizar ou atualizar sua assinatura. Para sua conveniência, você "
+"pode vincular sua assinatura aqui."
+
+#: admin.php:1307
+msgid "— Select a template to edit —"
+msgstr "— Selecione um modelo para editar —"
