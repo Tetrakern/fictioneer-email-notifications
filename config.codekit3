@@ -7,7 +7,7 @@
       "uuidString" : "DB120F8A-61FE-4E84-A9E8-F4DDEDA93CC5"
     }
   ],
-  "creatorBuild" : "34592",
+  "creatorBuild" : "34627",
   "files" : {
     "\/.gitattributes" : {
       "cB" : 0,
@@ -192,7 +192,6 @@
       "aP" : 0,
       "bl" : 0,
       "co" : 0,
-      "dP" : 10,
       "ec" : 0,
       "ft" : 4,
       "ma" : 0,
@@ -200,14 +199,12 @@
       "oAP" : "\/css\/fcnen-admin.css",
       "oF" : 2,
       "oS" : 3,
-      "pg" : 0,
-      "sct" : 0
+      "pg" : 0
     },
     "\/src\/scss\/fcnen-frontend.scss" : {
       "aP" : 0,
       "bl" : 0,
       "co" : 0,
-      "dP" : 10,
       "ec" : 0,
       "ft" : 4,
       "ma" : 0,
@@ -215,8 +212,7 @@
       "oAP" : "\/css\/fcnen-frontend.css",
       "oF" : 2,
       "oS" : 3,
-      "pg" : 0,
-      "sct" : 0
+      "pg" : 0
     },
     "\/stubs.php" : {
       "cB" : 0,
@@ -1686,11 +1682,9 @@
       "autoOutputPathReplace1" : "sass",
       "autoOutputPathReplace2" : "css",
       "autoOutputPathStyle" : 0,
-      "compilerType" : 0,
       "cssoStyle" : 0,
-      "decimalPrecision" : 10,
       "emitCharset" : 1,
-      "outputStyle" : 0,
+      "outputStyle" : 1,
       "purgeCSSStyle" : 0,
       "shouldRunAutoprefixer" : 0,
       "shouldRunBless" : 0,
@@ -1805,6 +1799,7 @@
     ],
     "rollupTreeshakingEnabled" : 1,
     "rollupTreeshakingModuleSideEffects" : 1,
+    "sassWarningStyle" : 1,
     "skippedFoldersString" : "cache,\/languages,\/storage\/framework\/sessions,node_modules,_logs,_cache,.idea,log,\/repo,logs",
     "sourceFolderName" : "source",
     "susyVersion" : 3,
