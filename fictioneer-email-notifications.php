@@ -15,8 +15,8 @@
 defined( 'ABSPATH' ) OR exit;
 
 // Version
-define( 'FCNEN_VERSION', '1.0.3' );
-define( 'FCNEN_RELEASE_TAG', 'v1.0.3' );
+define( 'FCNEN_VERSION', '1.0.4' );
+define( 'FCNEN_RELEASE_TAG', 'v1.0.4' );
 
 // =======================================================================================
 // CONSTANTS & DEFAULTS
