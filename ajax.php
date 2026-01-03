@@ -20,7 +20,7 @@ function fictioneer_ajax_fcnen_get_form_content() {
   }
 
   // Get form
-  $html = fictioneer_minify_html( fcnen_get_modal_content() );
+  $html = fcnen_minify_html( fcnen_get_modal_content() );
 
   // Response
   wp_send_json_success( array( 'html' => $html ) );

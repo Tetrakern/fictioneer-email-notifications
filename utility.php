@@ -55,7 +55,7 @@ function fcnen_replace_placeholders( $string, $extra = [] ) {
 }
 
 /**
- * Extracts an array from $_POST
+ * Extract an array from $_POST.
  *
  * @since 0.1.0
  *
@@ -69,7 +69,7 @@ function fcnen_get_array_from_post_string( $key ) {
 }
 
 /**
- * Return label of a taxonomy
+ * Return label of a taxonomy.
  *
  * @since 0.1.0
  *
@@ -79,22 +79,27 @@ function fcnen_get_array_from_post_string( $key ) {
  */
 
 function fcnen_get_term_label( $term_name ) {
-  $term_labels = array(
-    'category' => _x( 'Cat', 'List item term label.', 'fcnen' ),
-    'post_tag' => _x( 'Tag', 'List item term label.', 'fcnen' ),
-    'fcn_genre' => _x( 'Genre', 'List item term label.', 'fcnen' ),
-    'fcn_fandom' => _x( 'Fandom', 'List item term label.', 'fcnen' ),
-    'fcn_character' => _x( 'Character', 'List item term label.', 'fcnen' ),
-    'fcn_content_warning' => _x( 'Warning', 'List item term label.', 'fcnen' )
-  );
+  static $term_labels = null;
 
-  $label = $term_labels[ $term_name ] ?? _x( 'Tax', 'Default term label.', 'fcnen' );
+  if ( $term_labels === null ) {
+    $term_labels = array(
+      'category' => _x( 'Cat', 'List item term label.', 'fcnen' ),
+      'post_tag' => _x( 'Tag', 'List item term label.', 'fcnen' ),
+      'fcn_genre' => _x( 'Genre', 'List item term label.', 'fcnen' ),
+      'fcn_fandom' => _x( 'Fandom', 'List item term label.', 'fcnen' ),
+      'fcn_character' => _x( 'Character', 'List item term label.', 'fcnen' ),
+      'fcn_content_warning' => _x( 'Warning', 'List item term label.', 'fcnen' ),
+      'default' => _x( 'Tax', 'Default term label.', 'fcnen' )
+    );
+  }
+
+  $label = $term_labels[ $term_name ] ?? $term_labels[ 'default' ];
 
   return $label;
 }
 
 /**
- * Return attribute of a taxonomy for HTML elements
+ * Return attribute of a taxonomy for HTML elements.
  *
  * @since 0.1.0
  *
@@ -682,6 +687,28 @@ function fcnen_sanitize_term_ids( $term_ids ) {
   );
 }
 
+/**
+ * Sanitize a boolean value.
+ *
+ * @since 1.0.4
+ *
+ * @param mixed $value    Raw value.
+ * @param bool  $numeric  Optional. Whether to return 1/0 instead of true/false. Default false.
+ *
+ * @return bool|int Sanitized boolean value.
+ */
+
+function fcnen_sanitize_bool( $value, $numeric = false ) {
+  if ( is_string( $value ) ) {
+    $value = trim( strtolower( $value ) );
+  }
+
+  $bool = filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+  $bool = ( $bool === true );
+
+  return $numeric ? (int) $bool : $bool;
+}
+
 // =======================================================================================
 // HTML
 // =======================================================================================
@@ -726,12 +753,28 @@ function fcnen_get_selection_node( $args = [] ) {
   return "<li class='fcnen-dialog-modal__advanced-li _selected' data-type='{$type}' data-compare='{$type}-{$id}' data-id='{$id}'><span class='fcnen-item-label'>{$label}</span> <span class='fcnen-item-name'>{$title}</span><i class='fa-solid fa-minus fcnen-icon' data-click-action='fcnen-remove'></i><input type='hidden' name='{$name}[]' value='{$id}'></li>";
 }
 
+/**
+ * Minify a HTML string.
+ *
+ * This is not safe for `<pre>` or `<code>` tags!
+ *
+ * @since 1.0.4
+ *
+ * @param string $html  The HTML string to be minified.
+ *
+ * @return string The minified HTML string.
+ */
+
+function fcnen_minify_html( $html ) {
+  return preg_replace( '/\s+/', ' ', trim( $html ) );
+}
+
 // =======================================================================================
 // LOG
 // =======================================================================================
 
 /**
- * Returns (or creates) secret log hash used to obscure the log file name
+ * Return (or creates) secret log hash used to obscure the log file name.
  *
  * @since 1.0.2
  *
@@ -1286,6 +1329,37 @@ function fcnen_delete_meta( $post_id ) {
   // Delete meta
   $sql = $wpdb->prepare( "DELETE FROM {$table_name} WHERE post_id = %d", $post_id );
   $wpdb->query( $sql );
+}
+
+// =======================================================================================
+// USER META
+// =======================================================================================
+
+/**
+ * Wrapper to update user meta.
+ *
+ * Note: If the meta value is truthy, the meta field is updated as normal.
+ * If not, the meta field is deleted instead to keep the database tidy.
+ *
+ * @since 1.0.4
+ *
+ * @param int    $user_id     The ID of the user.
+ * @param string $meta_key    The meta key to update.
+ * @param mixed  $meta_value  The new meta value. If empty, the meta key will be deleted.
+ * @param mixed  $prev_value  Optional. If specified, only updates existing metadata with this value.
+ *                            Otherwise, update all entries. Default empty.
+ *
+ * @return int|bool Meta ID if the key didn't exist on update, true on successful update or delete,
+ *                  false on failure or if the value passed to the function is the same as the one
+ *                  that is already in the database.
+ */
+
+function fcnen_update_user_meta( $user_id, $meta_key, $meta_value, $prev_value = '' ) {
+  if ( empty( $meta_value ) ) {
+    return delete_user_meta( $user_id, $meta_key );
+  } else {
+    return update_user_meta( $user_id, $meta_key, $meta_value, $prev_value );
+  }
 }
 
 // =======================================================================================
@@ -1916,11 +1990,12 @@ function fcnen_get_queue_statistics( $queue = null ) {
 }
 
 /**
- * Returns HTML for the sending queue
+ * Return HTML for the sending queue.
  *
  * @since 0.1.0
  *
- * @param $array $batches  Batches of bulk email payloads and their status.
+ * @param array $batches  Batches of bulk email payloads and their status.
+ * @param int   $index    Currently worked on batch. Default -1.
  *
  * @return string The HTML.
  */

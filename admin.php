@@ -331,7 +331,7 @@ function fcnen_register_settings() {
 add_action( 'admin_init', 'fcnen_register_settings' );
 
 /**
- * Sanitizes and returns a comma-separated list as array
+ * Sanitize and return a comma-separated list as array.
  *
  * @since 0.1.0
  *
@@ -341,16 +341,23 @@ add_action( 'admin_init', 'fcnen_register_settings' );
  */
 
 function fcnen_sanitize_comma_separated_list( $value ) {
+  if ( ! is_string( $value ) || $value === '' ) {
+    return [];
+  }
+
   if ( is_array( $value ) ) {
     return $value;
   }
 
   $value = sanitize_text_field( $value );
-  $value = fictioneer_explode_list( $value );
+  $value = str_replace( [ "\r", "\n" ], '', $value );
+  $value = array_map( 'trim', explode( ',', $value ) );
   $value = array_map( 'absint', $value );
   $value = array_map( 'strval', $value );
 
-  return array_unique( $value );
+  $value = array_filter( $value, static function( $v ) { return $v !== '' && $v !== '0' && $v !== 0; } );
+
+  return array_values( array_unique( $value ) );
 }
 
 /**
@@ -2099,7 +2106,7 @@ function fcnen_admin_account_profile_section( $profile_user ) {
 add_action( 'fictioneer_admin_user_sections', 'fcnen_admin_account_profile_section', 9 );
 
 /**
- * Update subscription section of the wp-admin user profile
+ * Update subscription section of the wp-admin user profile.
  *
  * @since 0.1.0
  *
@@ -2114,7 +2121,7 @@ function fcnen_update_admin_user_profile( $updated_user_id ) {
 
   // Subscriber email
   if ( isset( $_POST['fcnen_subscription_email'] ) ) {
-    fictioneer_update_user_meta(
+    fcnen_update_user_meta(
       $updated_user_id,
       'fcnen_subscription_email',
       sanitize_email( $_POST['fcnen_subscription_email'] ?? '' )
@@ -2123,7 +2130,7 @@ function fcnen_update_admin_user_profile( $updated_user_id ) {
 
   // Subscriber code
   if ( isset( $_POST['fcnen_subscription_code'] ) ) {
-    fictioneer_update_user_meta(
+    fcnen_update_user_meta(
       $updated_user_id,
       'fcnen_subscription_code',
       sanitize_text_field( $_POST['fcnen_subscription_code'] ?? '' )
@@ -2132,10 +2139,10 @@ function fcnen_update_admin_user_profile( $updated_user_id ) {
 
   // Subscribe by Following
   if ( get_option( 'fictioneer_enable_follows' ) && isset( $_POST['fcnen_enable_subscribe_by_follow'] ) ) {
-    fictioneer_update_user_meta(
+    fcnen_update_user_meta(
       $updated_user_id,
       'fcnen_enable_subscribe_by_follow',
-      fictioneer_sanitize_checkbox( $_POST['fcnen_enable_subscribe_by_follow'] ?? 0 )
+      fcnen_sanitize_bool( $_POST['fcnen_enable_subscribe_by_follow'] ?? 0, true )
     );
   }
 }

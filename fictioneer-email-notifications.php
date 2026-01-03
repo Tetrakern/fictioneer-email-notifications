@@ -394,7 +394,7 @@ register_activation_hook( __FILE__, 'fcnen_create_meta_table' );
 // =======================================================================================
 
 /**
- * Clean up when the plugin is deactivated
+ * Clean up when the plugin is deactivated.
  *
  * @since 0.1.0
  * @global wpdb $wpdb  The WordPress database object.
@@ -430,7 +430,7 @@ function fcnen_deactivation() {
   }
 
   // Delete log file
-  $log_hash = strval( get_option( 'fictioneer_log_hash' ) );
+  $log_hash = fcnen_get_log_hash();
 
   if ( ! empty( $log_hash ) ) {
     $log_file = WP_CONTENT_DIR . "/fcnen-{$log_hash}-log.log";
@@ -1326,7 +1326,7 @@ function fcnen_add_notification( $post_id ) {
 function fcnen_track_posts( $post_id, $post ) {
   // Prevent miss-fire
   if (
-    fictioneer_multi_save_guard( $post_id ) ||
+    fictioneer_save_guard( $post_id ) ||
     $post->post_status !== 'publish'
   ) {
     return;
